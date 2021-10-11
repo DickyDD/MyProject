@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:tes_database/app/data/widgets/input.dart';
+import 'package:tes_database/app/modules/home/widgets/input_jurusan_dan_pelajaran.dart';
 
 import '../widgets/input_jurusan_data.dart';
 import '../widgets/Input_tahun.dart';
@@ -17,6 +18,7 @@ class HomeView extends GetView<HomeController> {
       Dasboard(),
       InputTahunAjaran(),
       InputJurusan(),
+      InputPelajaran(),
       InputKelas(),
     ];
 
@@ -24,6 +26,7 @@ class HomeView extends GetView<HomeController> {
       'Dasboard',
       'Tahun',
       'Jurusan',
+      'Pelajaran',
       'Kelas',
       // 'Nilai',
       'Exit',
@@ -33,6 +36,7 @@ class HomeView extends GetView<HomeController> {
       Icons.dashboard_outlined,
       LineIcons.calendarPlus,
       LineIcons.book,
+      LineIcons.edit,
       LineIcons.userFriends,
       // Icons.person,
       LineIcons.arrowCircleLeft,
@@ -78,7 +82,7 @@ class HomeView extends GetView<HomeController> {
                           splashColor: Colors.blue[50],
                           highlightColor: Colors.blue[100],
                           onTap: () {
-                            if (index != 4) {
+                            if (index != inputIndex.length) {
                               controller.indexList.value = index;
                             } else {
                               Get.offNamed('/login');
@@ -163,7 +167,6 @@ class LoginGuru extends StatelessWidget {
   Widget build(BuildContext context) {
     final gmailC = TextEditingController(text: '2021-2022');
     final passwordC = TextEditingController(text: 'semester 1');
-    final controller = Get.find<HomeController>();
 
     return Column(
       children: [
@@ -171,19 +174,7 @@ class LoginGuru extends StatelessWidget {
         input(passwordC, 'Password'),
         TextButton(
             onPressed: () async {
-              // await controller.login().then((value) async {
-              //   if (value!.user != null) {
-              //     print(value.user!.email);
-              //     await controller.users
-              //         .collection('auth users')
-              //         .doc(passwordC.text)
-              //         .get()
-              //         .then((value) => print(value.data()));
-              //   } else {
-              //     controller.auth.signOut();
-              //     print('object');
-              //   }
-              // });
+
             },
             child: Text('data'))
       ],

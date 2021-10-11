@@ -16,7 +16,7 @@ import 'app/modules/siswa/views/siswa_view.dart';
 Future<void> main() async {
   setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
-  final auth = FirebaseAuth.instance.currentUser;
+  // final auth = FirebaseAuth.instance.currentUser;
   await Firebase.initializeApp();
   runApp(
     GetMaterialApp(

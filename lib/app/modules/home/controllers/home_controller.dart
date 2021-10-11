@@ -44,7 +44,7 @@ class HomeController extends GetxController with StateMixin {
   // final List<Kelas> listKelas = [];
   late Rx<Kelas> kelas =
       Rx(Kelas('Teknik Jaringan dan Komputer', 'TJk', 3, 2, 1));
-
+  final listPelajaran = [<TextEditingController>[]];
   final pelajaran = TextEditingController();
   final guru = TextEditingController();
   final jumlah = TextEditingController();
@@ -57,7 +57,7 @@ class HomeController extends GetxController with StateMixin {
 
   // Jurusan
 
-  Future getTahun() async {
+  Future getJurusan() async {
     try {
       onLoading.value = true;
       await users.collection('Data Sekolah').get().then((value) {
@@ -216,8 +216,13 @@ class HomeController extends GetxController with StateMixin {
           kelas.value.jumlahKelas11,
         );
       } else if (value.size == 0) {
-        kelas.value = Kelas(jurusan.value.namaLengkap.value,
-            jurusan.value.namaSingkat.value, 1, 1, 1,);
+        kelas.value = Kelas(
+          jurusan.value.namaLengkap.value,
+          jurusan.value.namaSingkat.value,
+          1,
+          1,
+          1,
+        );
 
         buildKelas(
           kelas.value.jumlahKelas9,
@@ -245,13 +250,6 @@ class HomeController extends GetxController with StateMixin {
   }
 
   inputKelas() async {
-    // await users.collection(panjangList.value).doc(kelas.value.namaJurusan).set({
-    //   'data': {
-    //     'jumlah kelas 9': listWaliKelas9.length,
-    //     'jumlah kelas 10': listWaliKelas10.length,
-    //     'jumlah kelas 11': listWaliKelas11.length,
-    //   }
-    // });
     for (var j = 0; j < listWaliKelasGmail9.length; j++) {
       await users
           .collection(panjangList.value)
@@ -264,16 +262,19 @@ class HomeController extends GetxController with StateMixin {
           'email': listWaliKelasGmail9[j].text,
         },
       );
-      await users.collection('auth users').doc('${listWaliKelas9[j].text} ${DateTime.now().month}').set(
-        {
-          'password': '${listWaliKelas9[j].text} ${DateTime.now().month}',
-          'tahun': panjangList.value,
-          'semester': semester.value.toLowerCase(),
-          'kelas': 'kelas 9 ${kelas.value.singkatanJurusan} ${j + 1}',
-          'walikelas': listWaliKelas9[j].text,
-          'email': listWaliKelasGmail9[j].text,
-        },
-      );
+      // await users
+      //     .collection('auth users')
+      //     .doc('${listWaliKelas9[j].text} ${DateTime.now().month}')
+      //     .set(
+      //   {
+      //     'password': '${listWaliKelas9[j].text} ${DateTime.now().month}',
+      //     'tahun': panjangList.value,
+      //     'semester': semester.value.toLowerCase(),
+      //     'kelas': 'kelas 9 ${kelas.value.singkatanJurusan} ${j + 1}',
+      //     'walikelas': listWaliKelas9[j].text,
+      //     'email': listWaliKelasGmail9[j].text,
+      //   },
+      // );
 
       print(listWaliKelas9[j].text);
     }
@@ -287,16 +288,19 @@ class HomeController extends GetxController with StateMixin {
         'walikelas': listWaliKelas10[j].text,
         'email': listWaliKelasGmail10[j].text,
       });
-      await users.collection('auth users').doc('${listWaliKelas10[j].text} ${DateTime.now().month}').set(
-        {
-          'password': '${listWaliKelas10[j].text} ${DateTime.now().month}',
-          'tahun': panjangList.value,
-          'semester': semester.value.toLowerCase(),
-          'kelas': 'kelas 10 ${kelas.value.singkatanJurusan} ${j + 1}',
-          'walikelas': listWaliKelas10[j].text,
-          'email': listWaliKelasGmail10[j].text,
-        },
-      );
+      // await users
+      //     .collection('auth users')
+      //     .doc('${listWaliKelas10[j].text} ${DateTime.now().month}')
+      //     .set(
+      //   {
+      //     'password': '${listWaliKelas10[j].text} ${DateTime.now().month}',
+      //     'tahun': panjangList.value,
+      //     'semester': semester.value.toLowerCase(),
+      //     'kelas': 'kelas 10 ${kelas.value.singkatanJurusan} ${j + 1}',
+      //     'walikelas': listWaliKelas10[j].text,
+      //     'email': listWaliKelasGmail10[j].text,
+      //   },
+      // );
       print(listWaliKelas10[j].text);
     }
     for (var j = 0; j < listWaliKelas11.length; j++) {
@@ -309,16 +313,19 @@ class HomeController extends GetxController with StateMixin {
         'walikelas': listWaliKelas11[j].text,
         'email': listWaliKelasGmail11[j].text,
       });
-      await users.collection('auth users').doc('${listWaliKelas11[j].text} ${DateTime.now().month}').set(
-        {
-          'password': '${listWaliKelas11[j].text} ${DateTime.now().month}',
-          'tahun': panjangList.value,
-          'semester': semester.value.toLowerCase(),
-          'kelas': 'kelas 11 ${kelas.value.singkatanJurusan} ${j + 1}',
-          'walikelas': listWaliKelas11[j].text,
-          'email': listWaliKelasGmail11[j].text,
-        },
-      );
+      // await users
+      //     .collection('auth users')
+      //     .doc('${listWaliKelas11[j].text} ${DateTime.now().month}')
+      //     .set(
+      //   {
+      //     'password': '${listWaliKelas11[j].text} ${DateTime.now().month}',
+      //     'tahun': panjangList.value,
+      //     'semester': semester.value.toLowerCase(),
+      //     'kelas': 'kelas 11 ${kelas.value.singkatanJurusan} ${j + 1}',
+      //     'walikelas': listWaliKelas11[j].text,
+      //     'email': listWaliKelasGmail11[j].text,
+      //   },
+      // );
 
       print(listWaliKelas11[j].text);
     }
@@ -401,27 +408,97 @@ class HomeController extends GetxController with StateMixin {
     print('removeeee.. Kelas');
   }
 
-  void lessKelas(
+  Future<void> lessKelas(
     List<TextEditingController> listWaliKelas,
     List<TextEditingController> listWaliKelasGmail,
     TextEditingController itemKelas,
     TextEditingController itemKelasGmail,
-  ) {
-    listWaliKelas.removeWhere((element) => element == itemKelas);
+    int i,
+    String namaKelas,
+  ) async {
+    if (i == 0) {
+      listWaliKelasGmail9.remove(itemKelasGmail);
+      listWaliKelas9.remove(itemKelas);
+      listWalikelas![i] = listWaliKelas9;
+      listWalikelasGmail![i] = listWaliKelasGmail9;
+      await users
+          .collection(panjangList.value)
+          .doc(kelas.value.namaJurusan)
+          .collection(semester.value.toLowerCase())
+          .doc(namaKelas)
+          .delete();
+    } else if (i == 1) {
+      listWaliKelasGmail10.remove(itemKelasGmail);
+      listWaliKelas10.remove(itemKelas);
+      listWalikelas![i] = listWaliKelas10;
+      listWalikelasGmail![i] = listWaliKelasGmail10;
+      await users
+          .collection(panjangList.value)
+          .doc(kelas.value.namaJurusan)
+          .collection(semester.value.toLowerCase())
+          .doc(namaKelas)
+          .delete();
+    } else {
+      listWaliKelasGmail11.remove(itemKelasGmail);
+      listWaliKelas11.remove(itemKelas);
+      listWalikelas![i] = listWaliKelas11;
+      listWalikelasGmail![i] = listWaliKelasGmail11;
+      await users
+          .collection(panjangList.value)
+          .doc(kelas.value.namaJurusan)
+          .collection(semester.value.toLowerCase())
+          .doc(namaKelas)
+          .delete();
+    }
 
-    listWaliKelasGmail.removeWhere((element) => element == itemKelasGmail);
+    print(listWaliKelas9.length);
+    print(listWaliKelasGmail9.length);
   }
 
   void addKelas(
     int i,
   ) {
-    listWalikelas![i] = [...listWalikelas![i], TextEditingController()];
-
-    listWalikelasGmail![i] = [
-      ...listWalikelasGmail![i],
-      TextEditingController()
-    ];
+    if (i == 0) {
+      listWaliKelasGmail9 = [...listWaliKelasGmail9, TextEditingController()];
+      listWaliKelas9 = [...listWaliKelas9, TextEditingController()];
+      listWalikelas![i] = listWaliKelas9;
+      listWalikelasGmail![i] = listWaliKelasGmail9;
+    } else if (i == 1) {
+      listWaliKelasGmail10 = [...listWaliKelasGmail10, TextEditingController()];
+      listWaliKelas10 = [...listWaliKelas10, TextEditingController()];
+      listWalikelas![i] = listWaliKelas10;
+      listWalikelasGmail![i] = listWaliKelasGmail10;
+    } else {
+      listWaliKelasGmail11 = [...listWaliKelasGmail11, TextEditingController()];
+      listWaliKelas11 = [...listWaliKelas11, TextEditingController()];
+      listWalikelas![i] = listWaliKelas11;
+      listWalikelasGmail![i] = listWaliKelasGmail11;
+    }
   }
+
+  //  Pelajaran
+
+  Future getPelajaran() async {
+    await users
+        .collection('Data Sekolah')
+        .doc('Data Pelajaran')
+        .collection('Pelajaran Khusus')
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              print(element.data());
+            }));
+    await users
+        .collection('Data Sekolah')
+        .doc('Data Pelajaran')
+        .collection('Pelajaran Umum')
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              print(element.data());
+            }));
+  }
+
+  void lessPelajran() {}
+  void addPelajran() {}
 
   // getDataKelas() async {}
 
@@ -441,7 +518,7 @@ class HomeController extends GetxController with StateMixin {
 
   @override
   void onInit() async {
-    await getTahun();
+    await getJurusan();
     jurusan = listNamaJurusan[0].obs;
     await getDataKelas();
 

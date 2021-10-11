@@ -148,42 +148,77 @@ class InputKelas extends StatelessWidget {
                                                       'Kelas ${9 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}'),
                                                   TextButton(
                                                       onPressed: () {
-                                                        controller.onLoading
-                                                            .value = true;
-                                                        controller.lessKelas(
-                                                          controller
-                                                              .listWalikelas![i],
-                                                          controller
-                                                              .listWalikelasGmail![i],
-                                                          controller
-                                                                  .listWalikelas![
-                                                              i][indx],
-                                                          controller
-                                                                  .listWalikelasGmail![
-                                                              i][indx],
+                                                        Get.defaultDialog(
+                                                          title: 'Hapus?',
+                                                          middleText:
+                                                              'Anda Yakin',
+                                                          actions: [
+                                                            ElevatedButton(
+                                                              onPressed: () {
+                                                                controller
+                                                                    .onLoading
+                                                                    .value = true;
+                                                                controller.lessKelas(
+                                                                    controller
+                                                                            .listWalikelas![
+                                                                        i],
+                                                                    controller
+                                                                            .listWalikelasGmail![
+                                                                        i],
+                                                                    controller
+                                                                            .listWalikelas![i]
+                                                                        [indx],
+                                                                    controller
+                                                                            .listWalikelasGmail![
+                                                                        i][indx],
+                                                                    i,
+                                                                    'kelas ${9 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}');
+                                                                if (i == 0) {
+                                                                  controller
+                                                                      .kelas
+                                                                      .update(
+                                                                          (val) {
+                                                                    val!.jumlahKelas9--;
+                                                                  });
+                                                                  controller
+                                                                      .onLoading
+                                                                      .value = false;
+                                                                } else if (i ==
+                                                                    1) {
+                                                                  controller
+                                                                      .kelas
+                                                                      .update(
+                                                                          (val) {
+                                                                    val!.jumlahKelas10--;
+                                                                  });
+                                                                  controller
+                                                                      .onLoading
+                                                                      .value = false;
+                                                                } else {
+                                                                  controller
+                                                                      .kelas
+                                                                      .update(
+                                                                          (val) {
+                                                                    val!.jumlahKelas11--;
+                                                                  });
+                                                                  controller
+                                                                      .onLoading
+                                                                      .value = false;
+                                                                }
+                                                                Get.back();
+                                                              },
+                                                              child:
+                                                                  Text('Yakin'),
+                                                            ),
+                                                            ElevatedButton(
+                                                              onPressed: () {
+                                                                Get.back();
+                                                              },
+                                                              child:
+                                                                  Text('Tidak'),
+                                                            ),
+                                                          ],
                                                         );
-                                                        if (i == 0) {
-                                                          controller.kelas
-                                                              .update((val) {
-                                                            val!.jumlahKelas9--;
-                                                          });
-                                                          controller.onLoading
-                                                              .value = false;
-                                                        } else if (i == 1) {
-                                                          controller.kelas
-                                                              .update((val) {
-                                                            val!.jumlahKelas10--;
-                                                          });
-                                                          controller.onLoading
-                                                              .value = false;
-                                                        } else {
-                                                          controller.kelas
-                                                              .update((val) {
-                                                            val!.jumlahKelas11--;
-                                                          });
-                                                          controller.onLoading
-                                                              .value = false;
-                                                        }
                                                       },
                                                       child: Text('-'))
                                                 ],
@@ -243,7 +278,6 @@ class DropdownKelas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.find<HomeController>();
     var width = MediaQuery.of(context).size.width;
     return Obx(() => DropdownButton<Jurusan>(
           value: dropdownValue.value,
@@ -252,25 +286,11 @@ class DropdownKelas extends StatelessWidget {
           elevation: 16,
           style: const TextStyle(color: Colors.deepPurple),
           underline: SizedBox(),
-          onChanged: (newValue)  {
+          onChanged: (newValue) {
             changeDrobdown();
-            // buildTextEditing([
-            //   newValue!.jumlahKelas9,
-            //   newValue.jumlahKelas10,
-            //   newValue.jumlahKelas11
-            // ]);
             dropdownValue.value = newValue!;
+            buildTextEditing();
 
-            // await controller.getDataKelas();
-             buildTextEditing();
-            // controller.listKelas.forEach((element) {
-            //   if (element.namaJurusan == newValue.namaLengkap.value) {
-            //     controller.kelas.value = element;
-            //   } else {
-            //     print(element.namaJurusan);
-            //   }
-            // });
-            //  controller.kelas.value = controller.listKelas.where((element) => element.namaJurusan == newValue.namaLengkap.value);
           },
           items: list.map<DropdownMenuItem<Jurusan>>((value) {
             return DropdownMenuItem(

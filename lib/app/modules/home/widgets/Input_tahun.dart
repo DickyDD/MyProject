@@ -27,7 +27,7 @@ class InputTahunAjaran extends StatelessWidget {
           onPressed: () {
             controller.inputTahun().whenComplete(() {
               controller.removeClassJurusan();
-              controller.getTahun();
+              controller.getJurusan();
             });
           },
           child: Text('Input siswa'),
