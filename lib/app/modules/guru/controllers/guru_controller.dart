@@ -399,6 +399,7 @@ class GuruController extends GetxController {
 }
 
 class ListPelajaran {
+  //Hello
   final String type;
   final String name;
 
