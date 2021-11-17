@@ -1,13 +1,14 @@
 import 'package:easy_mask/easy_mask.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tes_database/app/data/widgets/button.dart';
 import 'package:tes_database/app/data/widgets/card_shadow.dart';
 import 'package:tes_database/app/data/widgets/input.dart';
 import '../controllers/home_controller.dart';
 
-class InputTahunAjaran extends StatelessWidget {
-  const InputTahunAjaran({
+class InputKepalaSekolah extends StatelessWidget {
+  const InputKepalaSekolah({
     Key? key,
   }) : super(key: key);
 
@@ -20,10 +21,24 @@ class InputTahunAjaran extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: input(
-              controller.tahunAjaran,
-              'Tahun Ajaran',
+              controller.kepalaSekolahNama,
+              'Nama',
+              null,
+              null,
+            ),
+          ),
+        ),
+        CardShadow(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: input(
+              controller.kepalaSekolahNIP,
+              'NIP',
               TextInputType.number,
-              [TextInputMask(mask: '9999-9999')],
+              // TextInputType.number,
+              [
+                TextInputMask(mask: '99999 999999 9 999'),
+              ],
             ),
           ),
         ),
@@ -31,7 +46,7 @@ class InputTahunAjaran extends StatelessWidget {
           height: 40,
         ),
         ButtonCustom(
-            nama: 'Input Tahun',
+            nama: 'Save',
             onTap: () async {
               Get.defaultDialog(
                   title: 'Masukan Data',
@@ -41,12 +56,8 @@ class InputTahunAjaran extends StatelessWidget {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.red),
                       ),
-                      onPressed: () {
-                        controller.inputTahun().whenComplete(() {
-                          controller.removeClassJurusan();
-                          controller.changeDrobdown();
-                          controller.getJurusan();
-                        });
+                      onPressed: () async {
+                        await controller.inputkepalaSekolah();
                         Get.back();
                       },
                       child: Text('Yakin'),

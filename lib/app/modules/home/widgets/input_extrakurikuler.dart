@@ -4,31 +4,27 @@ import 'package:tes_database/app/data/widgets/button.dart';
 import 'package:tes_database/app/data/widgets/card_shadow.dart';
 import '../controllers/home_controller.dart';
 
-class InputJurusan extends StatelessWidget {
-  const InputJurusan({
+class InputExtrakurikuler extends StatelessWidget {
+  const InputExtrakurikuler({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
-    final jumlahJurusan = controller.listJurusan.length.obs;
+    // final jumlahJurusan = controller.listJurusan.length.obs;
     var width = MediaQuery.of(context).size.width;
-    final sizeJurusan = controller.listJurusan.length.obs;
+    final sizeJurusan = controller.listEXR.length.obs;
+    final listString = List.generate(sizeJurusan.value, (index) => Rx(''));
 
     return Obx(
-      () => jumlahJurusan.value != 0
+      () => sizeJurusan.value != 0
           ? ListView.builder(
               itemCount: sizeJurusan.value,
               itemBuilder: (context, i) {
-                final jurusanC = controller.listJurusan[i];
-                final jsingkatanC = controller.listSingkatanJurusan[i];
-                var namaJurusan = controller.listNamaJurusan;
-                final namaJurusanLengkap = namaJurusan[i].namaLengkap;
-                final namaJurusanSingkat = namaJurusan[i].namaSingkat;
-
-                jurusanC.text = namaJurusanLengkap.value;
-                jsingkatanC.text = namaJurusanSingkat.value;
+                var extrakurikuler = controller.extrakurikuler[i];
+                extrakurikuler.value.text = controller.listEXR[i].value;
+                listString[i].value = extrakurikuler.value.text;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -38,7 +34,7 @@ class InputJurusan extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Text(
-                              'Jurusan',
+                              'Extrakurikuler',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w600,
@@ -48,8 +44,7 @@ class InputJurusan extends StatelessWidget {
                           Spacer(),
                           CardShadow(
                             child: TextButton(
-                                onPressed: () =>
-                                    controller.addJurusan(sizeJurusan),
+                                onPressed: () => controller.addPKL(sizeJurusan),
                                 child: Text('+')),
                           ),
                         ],
@@ -68,10 +63,8 @@ class InputJurusan extends StatelessWidget {
                               ),
                               child: Text(
                                 width > 575
-                                    ? 'Jurusan ${namaJurusanLengkap.value == '' ? i + 1 : namaJurusanLengkap.value + ' (${namaJurusanSingkat.value})'}'
-                                    : width >= 466
-                                        ? namaJurusanLengkap.value
-                                        : namaJurusanSingkat.value,
+                                    ? 'Extrakurikuler ${listString[i].value == '' ? i + 1 : listString[i].value}'
+                                    : listString[i].value,
                               ),
                             ),
                           ),
@@ -91,19 +84,13 @@ class InputJurusan extends StatelessWidget {
                                             ),
                                             child: Text('Yakin'),
                                             onPressed: () async {
-                                              controller.lessJurusan(
-                                                namaJurusan[i],
-                                                sizeJurusan,
-                                                jurusanC,
-                                                jsingkatanC,
-                                              );
-                                              await controller.delete(
-                                                jurusanC.text,
-                                              );
-                                              controller.listPelajaranKhusus
-                                                  .removeWhere((e) =>
-                                                      e.id == jurusanC.text);
-                                              // controller.listPelajaranKhusus.removeWhere((e)=>e.id==jurusanC.text);
+                                              // controller.lessPKL(
+                                              //   namaJurusan[i],
+                                              //   sizeJurusan,
+                                              //   mitraC,
+
+                                              // );
+                                              // controller.listPelajaranKhusus.removeWhere((e)=>e.id==mitraC.text);
                                               Get.back();
                                             })
                                       ]);
@@ -119,19 +106,11 @@ class InputJurusan extends StatelessWidget {
                         child: Column(
                           children: [
                             TextField(
-                              controller: jurusanC,
+                              controller: extrakurikuler.value,
                               onChanged: (val) {
-                                namaJurusanLengkap.value = val;
+                                listString[i].value = val;
                               },
-                              decoration: InputDecoration(hintText: 'Jurusan'),
-                            ),
-                            TextField(
-                              controller: jsingkatanC,
-                              onChanged: (val) {
-                                namaJurusanSingkat.value = val;
-                              },
-                              decoration:
-                                  InputDecoration(hintText: 'Singkatan'),
+                              decoration: InputDecoration(hintText: 'Mitra'),
                             ),
                           ],
                         ),
@@ -145,13 +124,7 @@ class InputJurusan extends StatelessWidget {
                         child: ButtonCustom(
                           nama: 'Save',
                           onTap: () async {
-                            controller.inputJurusan().whenComplete(() {
-                              controller.onLoading.value = true;
-                              controller.removeListKhusus();
-                              controller.getPelajaranKhusus().whenComplete(
-                                    () => controller.onLoading.value = false,
-                                  );
-                            });
+                            controller.inputPKL();
                           },
                         ),
                       ),

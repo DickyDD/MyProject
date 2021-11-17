@@ -6,12 +6,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tes_database/app/modules/guru/controllers/guru_controller.dart';
+import 'package:tes_database/app/modules/home/controllers/home_controller.dart';
 
-class SiswaController extends GetxController {
-  // final Map data = Get.arguments;
+class GuruController extends GetxController {
+  final Map data = Get.arguments;
 
-  final data = Get.arguments;
+  late int jumlah = 1;
+  List<String> namaIndex = [
+    'Akun',
+    'Input',
+    'Lihat',
+    'Exit',
+  ];
+
+  var listDataEXR = <String>[];
+  var nilaiEXR = <TextEditingController>[];
+  var listDataPKL = <ListPelajaran>[];
+  var nialiPKL = <TextEditingController>[];
+  var lamaPKL = <TextEditingController>[];
+
+  final formKey = GlobalKey<FormState>();
 
   late String tahunAjaran = '2021-2022',
       jurusan = 'Bisnis Konstruksi dan Property',
@@ -24,41 +38,44 @@ class SiswaController extends GetxController {
 
   final users = FirebaseFirestore.instance;
   final imagePiker = ImagePicker();
-  final onEdit = true.obs;
 
   var panjangKhusus = 1.obs;
   var panjangUmum = 1.obs;
-  final formKey = GlobalKey<FormState>();
+
   // final DataSiswa listDataSiswa = [];
 
   final indexList = 0.obs;
   final onLoading = false.obs;
   final onLoadingImage = false.obs;
 
-  var listDataEXR = <String>[];
-  var nilaiEXR = <TextEditingController>[];
-  var listDataPKL = <ListPelajaran>[];
-  var nialiPKL = <TextEditingController>[];
-  var lamaPKL = <TextEditingController>[];
-
-  var dropdownValueEXR = <Rx<String>>[];
-  var dropdownValuePKL = <Rx<ListPelajaran>>[];
-
-  final List<String> listKehadiran = [];
-
-  late List<String> listDPK = [];
-
-  var nialiKehadiran = <TextEditingController>[];
-  var nilaiDPK = <TextEditingController>[];
-
   //List Pelajaran
   var pelajranUmum;
   late RxString singkatanUmum = ''.obs;
   late RxString singkatanKhusus = ''.obs;
   late List<ListPelajaran> listGabunganKhusus = [];
+  late List<ListPelajaran> listKhususC3 = [];
   late List<ListPelajaran> listGabunganUmum = [];
+  final List<String> listKehadiran = ['Sakit', 'Izin', 'Tanpa Keterangan'];
+
+  final List<String> listDPK = [
+    'Integritas',
+    'Religius',
+    'Nasionalis',
+    'Mandiri',
+    'Gotong-royong'
+  ];
+
+  var nialiKehadiran = <TextEditingController>[];
+  var nilaiDPK = <TextEditingController>[];
+  var pelajranKhususC1;
+  var pelajranKhususC2;
+  var pelajranKhususC3;
   var dropdownValueKhusus = <Rx<ListPelajaran>>[];
+
   var dropdownValueUmum = <Rx<ListPelajaran>>[];
+
+  var dropdownValueEXR = <Rx<String>>[];
+  var dropdownValuePKL = <Rx<ListPelajaran>>[];
 
   // siswa
   final Rx<XFile> imageSiswa = Rx(XFile(''));
@@ -83,13 +100,16 @@ class SiswaController extends GetxController {
       TextEditingController(text: guru + ' ' + kelas);
 
   Future<Uint8List> getImages(Rx<XFile> imagevalue) async {
-    onLoadingImage.value = true;
+    // onLoadingImage.value = true;
     imagevalue.value =
         (await imagePiker.pickImage(source: ImageSource.gallery))!;
     Uint8List file = await imagevalue.value.readAsBytes();
-    // url = imagevalue.value.path;
 
-    onLoadingImage.value = false;
+    if (imagevalue.value == XFile('')) {
+      onLoadingImage.value = false;
+    }
+    print(imagevalue.value);
+    // onLoadingImage.value = false;
     // return result!.files.first.bytes!;
     return file;
   }
@@ -229,128 +249,172 @@ class SiswaController extends GetxController {
     );
   }
 
+  Stream<DocumentSnapshot<Map<String, dynamic>>>? streamData;
+
+  Future getDataPelajaranKhusus() async {
+    var data = await users
+        .collection('Data Sekolah')
+        .doc('Data Pelajaran')
+        .collection('Pelajaran Khusus')
+        .doc(jurusan)
+        .get();
+    data.data()!.forEach((key, value) {
+      pelajranKhususC1 = value['C1'];
+      pelajranKhususC2 = value['C2'];
+      pelajranKhususC3 = value['C3'];
+      // print(panjangNilai.value++);
+    });
+  }
+
+  late List<PelajaranUmum> listPelajaranUmum = <PelajaranUmum>[];
+  late RxList<int> panjangListUmum = <int>[].obs;
+  Future getPelajaranUmum() async {
+    await users
+        .collection('Data Sekolah')
+        .doc('Data Pelajaran')
+        .collection('Pelajaran Umum')
+        .get()
+        .then((value) {
+      print(value.size);
+      value.docs.forEach((element) {
+        element.data().forEach(
+              (key, value) => listPelajaranUmum.add(
+                PelajaranUmum(
+                  key,
+                  value['umum'] as List,
+                  value['kknUmum'] as List,
+                  element.id,
+                ),
+              ),
+            );
+      });
+    });
+    listPelajaranUmum.forEach((element) {
+      print(element.namaSingkat);
+      panjangListUmum.add(element.pelajaran.length);
+    });
+  }
+
+// Data Sekolah/Data Extrakurikuler
+
+  Future getEXR() async {
+    var data =
+        await users.collection('Data Sekolah').doc('Data Extrakurikuler').get();
+    data.data()!['data'].forEach((value) {
+      listDataEXR.add(value);
+      print(value);
+    });
+  }
+
+  Future getPKL() async {
+    var data = await users.collection('Data Sekolah').doc('Data PKL').get();
+    data.data()!['data'].forEach((key, value) {
+      listDataPKL.add(ListPelajaran(key.toString(), value.toString()));
+      print(value);
+    });
+  }
+
   @override
   void dispose() {
     nilaiKhusus.forEach((c) => c.dispose());
     super.dispose();
   }
 
-  var dataDropUmum = <ListPelajaran>[];
-  var dataListUmum = <int>[];
-  var dataDropKhusus = <ListPelajaran>[];
-  var dataListKhusus = <int>[];
-  var dataDropPKL = <ListPelajaran>[];
-  var dataListPKL = <int>[];
-  var dataDropEXR = <ListPelajaran>[];
-  var dataListEXR = <int>[];
-  var dataDropKehadiran = <ListPelajaran>[];
-  var dataListKehadiran = <int>[];
-  var dataDropDPK = <ListPelajaran>[];
-  var dataListDPK = <int>[];
-
   @override
   void onInit() async {
-    print(data);
+    if (Get.arguments != null) {
+      onLoading.value = true;
+      jumlah = int.parse(data['jumlah']);
+      tahunAjaran = data['tahun'];
+      jurusan = data['jurusan'];
+      semester = data['semester'];
+      kelas = data['kelas'];
+      guru = data['guru'];
+      await getDataPelajaranKhusus();
+      await getPelajaranUmum();
+      await getEXR();
+      await getPKL();
+      // ...pelajranKhususC1, ...pelajranKhususC2
 
-    listGabunganKhusus = data[0];
-    listGabunganUmum = data[1];
-    listDataPKL = data[2];
-    listDataEXR = data[3];
-    nama.text = data[4];
-    nis.text = data[5];
-    noOrtu.text = data[6];
-    catatanAkademik.text = data[7];
-    // data["lKehadiran"] = listKehadiran;
-    // listDPK = data["lDPK"];
-    // print(listGabunganKhusus[0].name);
-    var nilai_umum = data[8] as List;
-    nilai_umum.forEach((element) {
-      element.forEach((key, value) {
-        dataDropUmum.add(ListPelajaran(key, value["nama"]));
-        nilaiUmum.add(TextEditingController(text: value["nilai"]));
+      if (kelas.split(' ')[1] != '9') {
+        var listC3 = <ListPelajaran>[];
+        var list3 = pelajranKhususC3 as List;
+        list3.forEach((element) {
+          listC3.add(
+            ListPelajaran(
+              'C3',
+              element,
+            ),
+          );
+        });
+        listKhususC3 = [...listC3];
+      } else {
+        var list1 = pelajranKhususC1 as List;
+        var list2 = pelajranKhususC2 as List;
+        var listC1 = <ListPelajaran>[];
+        var listC2 = <ListPelajaran>[];
+        list1.forEach((element) {
+          listC1.add(
+            ListPelajaran(
+              'C1',
+              element,
+            ),
+          );
+        });
+        list2.forEach((element) {
+          listC2.add(
+            ListPelajaran(
+              'C2',
+              element,
+            ),
+          );
+        });
+        listGabunganKhusus = [...listC1, ...listC2];
+      }
+      listPelajaranUmum.forEach((element) {
+        element.pelajaran.forEach((e) {
+          listGabunganUmum.add(ListPelajaran(element.id, e));
+        });
       });
-    });
-
-    dataDropUmum.forEach((element) {
-      var dataUmum = listGabunganUmum
-          .asMap()
-          .entries
-          .where((entry) {
-            return entry.value.type == element.type &&
-                entry.value.name == element.name;
-          })
-          .map((val) => val.key)
-          .first;
-      dataListUmum.add(dataUmum);
-    });
-
-    var nilai_khusus = data[9] as List;
-    nilai_khusus.forEach((element) {
-      element.forEach((key, value) {
-        dataDropKhusus.add(ListPelajaran(key, value["nama"]));
-        nilaiKhusus.add(TextEditingController(text: value["nilai"]));
-      });
-    });
-
-    dataDropKhusus.forEach((element) {
-      var datakhusus = listGabunganKhusus
-          .asMap()
-          .entries
-          .where((entry) {
-            return entry.value.type == element.type &&
-                entry.value.name == element.name;
-          })
-          .map((val) => val.key)
-          .first;
-      dataListKhusus.add(datakhusus);
-    });
-
-    var nilai_pkl = data[10] as List;
-    nilai_pkl.forEach((element) {
-      element.forEach((key, value) {
-        dataDropPKL.add(ListPelajaran(key, value["lokasi"]));
-        nialiPKL.add(TextEditingController(text: value["nilai"]));
-        lamaPKL.add(TextEditingController(text: value['lama']));
-      });
-    });
-
-    dataDropPKL.forEach((element) {
-      var dataPKL = listDataPKL
-          .asMap()
-          .entries
-          .where((entry) {
-            return entry.value.type == element.type &&
-                entry.value.name == element.name;
-          })
-          .map((val) => val.key)
-          .first;
-      dataListPKL.add(dataPKL);
-    });
-
-    var nilai_EXR = data[11] as List;
-    nilai_EXR.forEach((element) {
-      element.forEach((key, value) {
-        dropdownValueEXR.add(key.toString().obs);
-        nilaiEXR.add(TextEditingController(text: value["nilai"]));
-      });
-    });
-    var nilai_Kehadiran = data[12] as List;
-    nilai_Kehadiran.forEach((element) {
-      element.forEach((key, value) {
-        listKehadiran.add(key);
-        nialiKehadiran.add(TextEditingController(text: value["nilai"]));
-      });
-    });
-    var nilai_DPK = data[13] as List;
-    nilai_DPK.forEach((element) {
-      element.forEach((key, value) {
-        listDPK.add(key);
-        nilaiDPK.add(TextEditingController(text: value["nilai"]));
-      });
-    });
-
-    image = data[15];
-
+      print(listGabunganUmum);
+      streamData = users
+          .collection(tahunAjaran)
+          .doc(jurusan)
+          .collection(semester)
+          .doc(kelas)
+          .snapshots();
+      listKhususC3.add(ListPelajaran("C3", "tetw"));
+      listKhususC3
+          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      listGabunganKhusus
+          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      listGabunganUmum
+          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      onLoading.value = false;
+    } else {
+      Get.offAllNamed('/login');
+    }
     super.onInit();
   }
+}
+
+class ListPelajaran {
+  final String type;
+  final String name;
+
+  ListPelajaran(this.type, this.name);
+}
+
+class DataSiswa {
+  final String noOrtu;
+  final String nama;
+  final String id;
+  final File image;
+
+  DataSiswa(
+    this.noOrtu,
+    this.nama,
+    this.id,
+    this.image,
+  );
 }

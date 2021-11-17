@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:tes_database/app/data/widgets/input.dart';
-import 'package:tes_database/app/modules/home/widgets/input_jurusan_dan_pelajaran.dart';
+import 'package:tes_database/app/modules/home/widgets/input_PKL.dart';
+import 'package:tes_database/app/modules/home/widgets/input_extrakurikuler.dart';
+import 'package:tes_database/app/modules/home/widgets/input_kepala_sekolah.dart';
+import 'package:tes_database/app/modules/home/widgets/input_pelajaran.dart';
 
 import '../widgets/input_jurusan_data.dart';
 import '../widgets/Input_tahun.dart';
@@ -16,29 +18,37 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     List<Widget> inputIndex = [
       Dasboard(),
+      InputKepalaSekolah(),
       InputTahunAjaran(),
       InputJurusan(),
       InputPelajaran(),
       InputKelas(),
+      InputPKL(),
+      InputExtrakurikuler()
     ];
 
     List<String> namaIndex = [
       'Dasboard',
+      'Kepala Sekolah',
       'Tahun',
       'Jurusan',
       'Pelajaran',
       'Kelas',
+      'PKL',
+      'Extrakurikuler',
       // 'Nilai',
       'Exit',
     ];
 
     List<IconData> iconIndex = [
       Icons.dashboard_outlined,
+      LineIcons.addressCard,
       LineIcons.calendarPlus,
       LineIcons.book,
       LineIcons.edit,
       LineIcons.userFriends,
-      // Icons.person,
+      LineIcons.clipboard,
+      LineIcons.award,
       LineIcons.arrowCircleLeft,
     ];
 
@@ -160,24 +170,3 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
-class LoginGuru extends StatelessWidget {
-  const LoginGuru({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final gmailC = TextEditingController(text: '2021-2022');
-    final passwordC = TextEditingController(text: 'semester 1');
-
-    return Column(
-      children: [
-        input(gmailC, 'Gmail'),
-        input(passwordC, 'Password'),
-        TextButton(
-            onPressed: () async {
-
-            },
-            child: Text('data'))
-      ],
-    );
-  }
-}

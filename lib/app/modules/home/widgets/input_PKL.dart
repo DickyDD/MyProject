@@ -4,28 +4,31 @@ import 'package:tes_database/app/data/widgets/button.dart';
 import 'package:tes_database/app/data/widgets/card_shadow.dart';
 import '../controllers/home_controller.dart';
 
-class InputPelajaran extends StatelessWidget {
-  const InputPelajaran({
+class InputPKL extends StatelessWidget {
+  const InputPKL({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
-    final jumlahJurusan = controller.listJurusan.length.obs;
+    // final jumlahJurusan = controller.listJurusan.length.obs;
     var width = MediaQuery.of(context).size.width;
-    final sizeJurusan = controller.listJurusan.length.obs;
+    final sizeJurusan = controller.listPKL.length.obs;
 
     return Obx(
-      () => jumlahJurusan.value != 0
+      () => sizeJurusan.value != 0
           ? ListView.builder(
               itemCount: sizeJurusan.value,
               itemBuilder: (context, i) {
-                final jurusanC = controller.listJurusan[i];
+                final mitraC = controller.listMitra[i];
+                final lokasiC = controller.listLokasi[i];
+                var namaJurusan = controller.listPKL;
+                final mitra = namaJurusan[i].namaLengkap;
+                final lokasi = namaJurusan[i].namaSingkat;
 
-                var namaJurusan = controller.listNamaJurusan;
-                final namaJurusanLengkap = namaJurusan[i].namaLengkap;
-                final namaJurusanSingkat = namaJurusan[i].namaSingkat;
+                mitraC.text = mitra.value;
+                lokasiC.text = lokasi.value;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -35,7 +38,7 @@ class InputPelajaran extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Text(
-                              'Jurusan',
+                              'Praktik Kerja Lapangan',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w600,
@@ -45,7 +48,7 @@ class InputPelajaran extends StatelessWidget {
                           Spacer(),
                           CardShadow(
                             child: TextButton(
-                                onPressed: () => controller.getPelajaran(),
+                                onPressed: () => controller.addPKL(sizeJurusan),
                                 child: Text('+')),
                           ),
                         ],
@@ -64,17 +67,40 @@ class InputPelajaran extends StatelessWidget {
                               ),
                               child: Text(
                                 width > 575
-                                    ? 'Jurusan ${namaJurusanLengkap.value == '' ? i + 1 : namaJurusanLengkap.value + ' (${namaJurusanSingkat.value})'}'
+                                    ? 'Mitra ${mitra.value == '' ? i + 1 : mitra.value + ' lokasi ${lokasi.value}'}'
                                     : width >= 466
-                                        ? namaJurusanLengkap.value
-                                        : namaJurusanSingkat.value,
+                                        ? mitra.value
+                                        : lokasi.value,
                               ),
                             ),
                           ),
                           Spacer(),
                           CardShadow(
                             child: TextButton(
-                                onPressed: () => controller.getPelajaran,
+                                onPressed: () {
+                                  Get.defaultDialog(
+                                      middleText: 'Yakin Ingin menghapus',
+                                      title: 'Hapus?',
+                                      actions: [
+                                        ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.red),
+                                            ),
+                                            child: Text('Yakin'),
+                                            onPressed: () async {
+                                              controller.lessPKL(
+                                                namaJurusan[i],
+                                                sizeJurusan,
+                                                mitraC,
+                                                lokasiC,
+                                              );
+                                              // controller.listPelajaranKhusus.removeWhere((e)=>e.id==mitraC.text);
+                                              Get.back();
+                                            })
+                                      ]);
+                                },
                                 child: Text('-')),
                           ),
                         ],
@@ -86,11 +112,18 @@ class InputPelajaran extends StatelessWidget {
                         child: Column(
                           children: [
                             TextField(
-                              controller: jurusanC,
+                              controller: mitraC,
                               onChanged: (val) {
-                                namaJurusanLengkap.value = val;
+                                mitra.value = val;
                               },
-                              decoration: InputDecoration(hintText: 'Jurusan'),
+                              decoration: InputDecoration(hintText: 'Mitra'),
+                            ),
+                            TextField(
+                              controller: lokasiC,
+                              onChanged: (val) {
+                                lokasi.value = val;
+                              },
+                              decoration: InputDecoration(hintText: 'Lokasi'),
                             ),
                           ],
                         ),
@@ -101,12 +134,13 @@ class InputPelajaran extends StatelessWidget {
                     ),
                     if (i == sizeJurusan.value - 1)
                       Center(
-                          child: ButtonCustom(
-                              nama: 'Save',
-                              onTap: () async {
-                                controller.inputJurusan();
-                                controller.getDataKelas();
-                              })),
+                        child: ButtonCustom(
+                          nama: 'Save',
+                          onTap: () async {
+                            controller.inputPKL();
+                          },
+                        ),
+                      ),
                   ],
                 );
               },
@@ -115,14 +149,5 @@ class InputPelajaran extends StatelessWidget {
               child: Text('data Null'),
             ),
     );
-  }
-}
-
-class DropDownPelajaran extends StatelessWidget {
-  const DropDownPelajaran({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

@@ -1,3 +1,5 @@
+import 'package:easy_mask/easy_mask.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
@@ -151,7 +153,7 @@ class InputKelas extends StatelessWidget {
                                                         Get.defaultDialog(
                                                           title: 'Hapus?',
                                                           middleText:
-                                                              'Anda Yakin',
+                                                              'Yakin  Ingin menghapus',
                                                           actions: [
                                                             ElevatedButton(
                                                               onPressed: () {
@@ -180,9 +182,6 @@ class InputKelas extends StatelessWidget {
                                                                           (val) {
                                                                     val!.jumlahKelas9--;
                                                                   });
-                                                                  controller
-                                                                      .onLoading
-                                                                      .value = false;
                                                                 } else if (i ==
                                                                     1) {
                                                                   controller
@@ -191,9 +190,6 @@ class InputKelas extends StatelessWidget {
                                                                           (val) {
                                                                     val!.jumlahKelas10--;
                                                                   });
-                                                                  controller
-                                                                      .onLoading
-                                                                      .value = false;
                                                                 } else {
                                                                   controller
                                                                       .kelas
@@ -201,14 +197,39 @@ class InputKelas extends StatelessWidget {
                                                                           (val) {
                                                                     val!.jumlahKelas11--;
                                                                   });
-                                                                  controller
-                                                                      .onLoading
-                                                                      .value = false;
                                                                 }
+                                                                controller
+                                                                        .onLoading
+                                                                        .value =
+                                                                    false;
                                                                 Get.back();
                                                               },
-                                                              child:
-                                                                  Text('Yakin'),
+                                                              style:
+                                                                  ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(Colors
+                                                                            .red),
+                                                              ),
+                                                              child: Text(
+                                                                  'Yakin Hapus'),
+                                                            ),
+                                                            ElevatedButton(
+                                                              onPressed: () {
+                                                                controller.users
+                                                                    .collection(
+                                                                        'auth users')
+                                                                    .doc(
+                                                                        '${controller.listWalikelas![i][indx].text} kelas ${9 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}')
+                                                                    .update({
+                                                                  "aktif":
+                                                                      false,
+                                                                });
+                                                                Get.back();
+                                                              },
+                                                              child: Text(
+                                                                'Non Aktif Auth',
+                                                              ),
                                                             ),
                                                             ElevatedButton(
                                                               onPressed: () {
@@ -225,14 +246,49 @@ class InputKelas extends StatelessWidget {
                                               ),
                                             ),
                                             input(
-                                                controller.listWalikelas![i]
-                                                    [indx],
-                                                'Nama WaliKelas ${9 + i}'),
+                                              controller.listWalikelas![i]
+                                                  [indx],
+                                              'Nama WaliKelas ${9 + i}',
+                                              null,
+                                              null,
+                                            ),
                                             input(
-                                                controller
-                                                        .listWalikelasGmail![i]
-                                                    [indx],
-                                                'Gmail WaliKelas ${9 + i}'),
+                                              controller.listWalikelasGmail![i]
+                                                  [indx],
+                                              'NIP WaliKelas ${9 + i}',
+                                              TextInputType.number,
+                                              // TextInputType.number,
+                                              [
+                                                TextInputMask(
+                                                    mask: '99999 999999 9 999'),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text('Non Aktif Akun'),
+                                                Obx(() => Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        vertical: 5,
+                                                      ),
+                                                      child: CupertinoSwitch(
+                                                        value: controller
+                                                            .gabungangKelasAktif[
+                                                                i][indx]
+                                                            .value,
+                                                        onChanged: (value) {
+                                                          controller
+                                                              .gabungangKelasAktif[
+                                                                  i][indx]
+                                                              .value = value;
+                                                        },
+                                                      ),
+                                                    )),
+                                              ],
+                                            )
                                           ],
                                         ),
                                       ),
@@ -290,7 +346,6 @@ class DropdownKelas extends StatelessWidget {
             changeDrobdown();
             dropdownValue.value = newValue!;
             buildTextEditing();
-
           },
           items: list.map<DropdownMenuItem<Jurusan>>((value) {
             return DropdownMenuItem(

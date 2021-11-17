@@ -13,13 +13,16 @@ dependencies:
   firebase_auth: ^3.1.1
   firebase_core: ^1.6.0
   firebase_storage: ^10.0.3
-  lottie: ^1.2.1
+  # flutter_svg: ^0.23.0+1
   flutter:
     sdk: flutter
 
   get: 4.3.8
-  image_picker: ^0.8.4
+  image_picker: ^0.8.4+4
   url_strategy: ^0.2.0
+  easy_mask: ^2.0.1
+  pdf: ^3.6.2
+  progressive_image: ^2.0.0
 
 dev_dependencies:
   flutter_test:
