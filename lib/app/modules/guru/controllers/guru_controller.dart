@@ -264,6 +264,9 @@ class GuruController extends GetxController {
       pelajranKhususC3 = value['C3'];
       // print(panjangNilai.value++);
     });
+    print(pelajranKhususC1);
+    print(pelajranKhususC2);
+    print(pelajranKhususC3);
   }
 
   late List<PelajaranUmum> listPelajaranUmum = <PelajaranUmum>[];
@@ -383,7 +386,6 @@ class GuruController extends GetxController {
           .collection(semester)
           .doc(kelas)
           .snapshots();
-      listKhususC3.add(ListPelajaran("C3", "tetw"));
       listKhususC3
           .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
       listGabunganKhusus

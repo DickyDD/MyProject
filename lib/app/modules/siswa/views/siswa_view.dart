@@ -725,12 +725,8 @@ class NilaiWidget extends StatelessWidget {
 
           // kehadirannnn
           Divider(),
-          Obx(() {
-            var list = controller.listKehadiran;
-
-            var panjangList = 3.obs;
-
-            return Column(
+         
+Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -749,7 +745,7 @@ class NilaiWidget extends StatelessWidget {
                 ),
                 Divider(),
                 ...List.generate(
-                  panjangList.value,
+                  3,
                   (index) => Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -761,7 +757,7 @@ class NilaiWidget extends StatelessWidget {
                                 padding: EdgeInsets.only(
                                     top: 22, bottom: 22, left: 8),
                                 child: Text(
-                                  list[index],
+                                  controller.listKehadiran[index],
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
@@ -794,8 +790,8 @@ class NilaiWidget extends StatelessWidget {
                   ),
                 ),
               ],
-            );
-          }),
+            
+          ),
           // kehadirannnn
           Divider(),
           Column(

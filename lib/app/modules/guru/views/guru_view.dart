@@ -10,6 +10,9 @@ import 'package:get/get.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:progressive_image/progressive_image.dart';
+import 'package:tes_database/app/data/api/pdf_api.dart';
+import 'package:tes_database/app/data/api/pdf_invoice_api.dart';
+import 'package:tes_database/app/data/model/invoice.dart';
 import 'package:tes_database/app/data/validator/nilai.dart';
 import 'package:tes_database/app/data/widgets/button.dart';
 // import 'package:tes_database/app/modules/guru/widgets/nilai_umum.dart';
@@ -1497,35 +1500,140 @@ class ViewDataSiswa extends StatelessWidget {
                                   style: TextStyle(fontSize: 20),
                                 ),
                                 Text(value['catatanAkademik'] ?? dataKososng),
-                                // ButtonCustom(
-                                //   nama: "Lihat Data",
-                                //   onTap: () async {
-                                //     // data[0].print(pkl[0]);
-                                //     Get.toNamed(
-                                //       '/siswa',
-                                //       arguments: [
-                                //         inputNilai != '9'
-                                //             ? controller.listKhususC3
-                                //             : controller.listGabunganKhusus,
-                                //         controller.listGabunganUmum,
-                                //         controller.listDataPKL,
-                                //         controller.listDataEXR,
-                                //         value['nama'] ?? dataKososng,
-                                //         value['nis'] ?? dataKososng,
-                                //         value['noOrtu'] ?? dataKososng,
-                                //         value['catatanAkademik'] ?? dataKososng,
-                                //         nilaiUmum as List,
-                                //         nilaiKhusus as List,
-                                //         pkl as List,
-                                //         extr as List,
-                                //         kehadiran as List,
-                                //         dpk as List,
-                                //         value.id,
-                                //         value['imageSiswa'],
-                                //       ],
-                                //     );
-                                //   },
-                                // ),
+                                ElevatedButton(
+                                    onPressed: () async {
+                                      int no = 1;
+                                      var dataUmum = <ListPelajaran>[];
+                                      var dataKhusus = <ListPelajaran>[];
+
+                                      nilaiUmum.forEach((element) {
+                                        element.forEach((key, value) {
+                                          dataUmum.add(
+                                            ListPelajaran(
+                                              value['nama'],
+                                              value['nilai'],
+                                            ),
+                                          );
+                                        });
+                                      });
+
+                                      nilaiKhusus.forEach((element) {
+                                        element.forEach((key, value) {
+                                          dataKhusus.add(
+                                            ListPelajaran(
+                                              value['nama'],
+                                              value['nilai'],
+                                            ),
+                                          );
+                                        });
+                                      });
+                                      final invoice = Invoice(
+                                        info: Info(
+                                          nama: value['nama'] ?? dataKososng,
+                                          nik: value['nis'] ?? dataKososng,
+                                          namaSekolah: 'SMK Negeri 10 Makassar',
+                                          alamat:
+                                              'Jl. Bontomanai No. 14 Gunungsari Baru Makassar',
+                                          kelas: controller.kelas
+                                              .split('kelas')
+                                              .join()
+                                              .trim(),
+                                          semester: controller.semester ==
+                                                  'semester 1'
+                                              ? "1 (Satu)"
+                                              : '2 (Dua)',
+                                          tahunPelajaran:
+                                              controller.tahunAjaran,
+                                        ),
+                                        itemsA: List.generate(
+                                          dataUmum.length,
+                                          (index) => InvoiceItem(
+                                            no: no++,
+                                            mP: dataUmum[index].type,
+                                            pengetahuan:
+                                                int.parse(dataUmum[index].name),
+                                            keterampilan:
+                                                int.parse(dataUmum[index].name),
+                                            predikat: "A",
+                                          ),
+                                        ),
+                                        itemsB: [
+                                          InvoiceItem(
+                                              no: no++,
+                                              mP: "DateTime.now()",
+                                              pengetahuan: 71,
+                                              keterampilan: 79,
+                                              predikat: 'A'),
+                                          InvoiceItem(
+                                              no: no++,
+                                              mP: "DateTime.now()",
+                                              pengetahuan: 75,
+                                              keterampilan: 79,
+                                              predikat: 'A'),
+                                          InvoiceItem(
+                                            no: no++,
+                                            mP: "DateTime.now()",
+                                            pengetahuan: 74,
+                                            keterampilan: 79,
+                                            predikat: 'A',
+                                          ),
+                                        ],
+                                        itemsC: [
+                                          InvoiceItem(
+                                              no: no++,
+                                              mP: "DateTime.now()",
+                                              pengetahuan: 71,
+                                              keterampilan: 79,
+                                              predikat: 'A'),
+                                          InvoiceItem(
+                                              no: no++,
+                                              mP: "DateTime.now()",
+                                              pengetahuan: 75,
+                                              keterampilan: 79,
+                                              predikat: 'A'),
+                                          InvoiceItem(
+                                            no: no++,
+                                            mP: "DateTime.now()",
+                                            pengetahuan: 74,
+                                            keterampilan: 79,
+                                            predikat: 'A',
+                                          ),
+                                        ],
+                                        itemsD: [
+                                          InvoiceItem(
+                                              no: no++,
+                                              mP: "DateTime.now()",
+                                              pengetahuan: 71,
+                                              keterampilan: 79,
+                                              predikat: 'A'),
+                                          InvoiceItem(
+                                              no: no++,
+                                              mP: "DateTime.now()",
+                                              pengetahuan: 75,
+                                              keterampilan: 79,
+                                              predikat: 'A'),
+                                          InvoiceItem(
+                                            no: no++,
+                                            mP: "DateTime.now()",
+                                            pengetahuan: 74,
+                                            keterampilan: 79,
+                                            predikat: 'A',
+                                          ),
+                                        ],
+                                        catatanAkademik: 'dsasdasdasd',
+                                        namaKepalaSekolah: 'fdsfds',
+                                        namaOrangTua: 'sdfdsf',
+                                        namaWalikelas: 'dfssdf',
+                                        nipKepalaSekolah: '123323',
+                                        nipWalikelas: '4234234',
+                                      );
+
+                                      final pdfFile =
+                                          await PdfInvoiceApi.generate(invoice);
+
+                                      PdfApi.openFile(pdfFile);
+                                    },
+                                    child: Text("PDF"))
                               ],
                             ),
                           ),
