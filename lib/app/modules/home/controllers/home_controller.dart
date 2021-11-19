@@ -291,6 +291,9 @@ class HomeController extends GetxController {
           "C1": [''],
           "C2": [''],
           "C3": [''],
+          "kknC1": [''],
+          "kknC2": [''],
+          "kknC3": [''],
         }
       });
     });
@@ -829,14 +832,7 @@ class HomeController extends GetxController {
         .doc(id)
         .delete();
   }
-  // Future deletePKL(String id) async {
-  //   await users
-  //       .collection('Data Sekolah')
-  //       .doc('Data Pelajaran')
-  //       .collection('Pelajaran Khusus')
-  //       .doc(id)
-  //       .delete();
-  // }
+
 
   void removeListKhusus() {
     panjangListKhususC1 = <int>[].obs;
