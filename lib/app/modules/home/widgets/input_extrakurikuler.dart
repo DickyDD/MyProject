@@ -69,6 +69,7 @@ class InputExtrakurikuler extends StatelessWidget {
                             ),
                           ),
                           Spacer(),
+                          if (sizeJurusan.value != 1)
                           CardShadow(
                             child: TextButton(
                                 onPressed: () {
