@@ -15,7 +15,7 @@ class InputKelas extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
     var data = controller.listNamaJurusan;
-    var jumlahData = controller.listWaliKelas9.length.obs;
+    var jumlahData = controller.listWalikelas!.length.obs;
     var listDropdown = [
       CardShadow(
         child: Padding(
@@ -147,115 +147,105 @@ class InputKelas extends StatelessWidget {
                                                         .spaceBetween,
                                                 children: [
                                                   Text(
-                                                      'Kelas ${10 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}'),
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Get.defaultDialog(
-                                                          title: 'Hapus?',
-                                                          middleText:
-                                                              'Yakin  Ingin menghapus',
-                                                          actions: [
-                                                            ElevatedButton(
-                                                              onPressed: () {
-                                                                controller
-                                                                    .onLoading
-                                                                    .value = true;
-                                                                controller.lessKelas(
-                                                                    controller
-                                                                            .listWalikelas![
-                                                                        i],
-                                                                    controller
-                                                                            .listWalikelasGmail![
-                                                                        i],
-                                                                    controller
-                                                                            .listWalikelas![i]
-                                                                        [indx],
-                                                                    controller
-                                                                            .listWalikelasGmail![
-                                                                        i][indx],
-                                                                    i,
-                                                                    'kelas ${10 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}');
-                                                                if (i == 0) {
+                                                    'Kelas ${controller.valueKelas[i]} ${controller.kelas.value.singkatanJurusan} ${indx + 1}',
+                                                  ),
+                                                  if (controller
+                                                          .listWalikelas![i]
+                                                          .length !=
+                                                      1)
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Get.defaultDialog(
+                                                            title: 'Hapus?',
+                                                            middleText:
+                                                                'Yakin  Ingin menghapus',
+                                                            actions: [
+                                                              ElevatedButton(
+                                                                onPressed: () {
                                                                   controller
-                                                                      .kelas
-                                                                      .update(
-                                                                          (val) {
-                                                                    val!.jumlahKelas9--;
-                                                                  });
-                                                                } else if (i ==
-                                                                    1) {
+                                                                      .onLoading
+                                                                      .value = true;
+                                                                  controller.lessKelas(
+                                                                      controller
+                                                                              .listWalikelas![
+                                                                          i],
+                                                                      controller
+                                                                              .listWalikelasGmail![
+                                                                          i],
+                                                                      controller
+                                                                              .listWalikelas![i]
+                                                                          [
+                                                                          indx],
+                                                                      controller
+                                                                              .listWalikelasGmail![i]
+                                                                          [
+                                                                          indx],
+                                                                      i,
+                                                                      'kelas ${controller.valueKelas[i]} ${controller.kelas.value.singkatanJurusan} ${indx + 1}');
+                                                                  if (i == 0) {
+                                                                    controller
+                                                                        .kelas
+                                                                        .update(
+                                                                            (val) {
+                                                                      val!.jumlahKelas9--;
+                                                                    });
+                                                                  } else if (i ==
+                                                                      1) {
+                                                                    controller
+                                                                        .kelas
+                                                                        .update(
+                                                                            (val) {
+                                                                      val!.jumlahKelas10--;
+                                                                    });
+                                                                  } else {
+                                                                    controller
+                                                                        .kelas
+                                                                        .update(
+                                                                            (val) {
+                                                                      val!.jumlahKelas11--;
+                                                                    });
+                                                                  }
                                                                   controller
-                                                                      .kelas
-                                                                      .update(
-                                                                          (val) {
-                                                                    val!.jumlahKelas10--;
-                                                                  });
-                                                                } else {
-                                                                  controller
-                                                                      .kelas
-                                                                      .update(
-                                                                          (val) {
-                                                                    val!.jumlahKelas11--;
-                                                                  });
-                                                                }
-                                                                controller
-                                                                        .onLoading
-                                                                        .value =
-                                                                    false;
-                                                                Get.back();
-                                                              },
-                                                              style:
-                                                                  ButtonStyle(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(Colors
-                                                                            .red),
+                                                                      .onLoading
+                                                                      .value = false;
+                                                                  Get.back();
+                                                                },
+                                                                style:
+                                                                    ButtonStyle(
+                                                                  backgroundColor:
+                                                                      MaterialStateProperty.all(
+                                                                          Colors
+                                                                              .red),
+                                                                ),
+                                                                child: Text(
+                                                                  'Yakin Hapus',
+                                                                ),
                                                               ),
-                                                              child: Text(
-                                                                  'Yakin Hapus'),
-                                                            ),
-                                                            ElevatedButton(
-                                                              onPressed: () {
-                                                                controller.users
-                                                                    .collection(
-                                                                        'auth users')
-                                                                    .doc(
-                                                                        '${controller.listWalikelas![i][indx].text} kelas ${10 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}')
-                                                                    .update({
-                                                                  "aktif":
-                                                                      false,
-                                                                });
-                                                                Get.back();
-                                                              },
-                                                              child: Text(
-                                                                'Non Aktif Auth',
+                                                              ElevatedButton(
+                                                                onPressed: () {
+                                                                  Get.back();
+                                                                },
+                                                                child: Text(
+                                                                    'Tidak'),
                                                               ),
-                                                            ),
-                                                            ElevatedButton(
-                                                              onPressed: () {
-                                                                Get.back();
-                                                              },
-                                                              child:
-                                                                  Text('Tidak'),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                      child: Text('-'))
+                                                            ],
+                                                          );
+                                                        },
+                                                        child: Text('-'))
                                                 ],
                                               ),
                                             ),
                                             input(
                                               controller.listWalikelas![i]
                                                   [indx],
-                                              'Nama WaliKelas ${10 + i}',
+                                              'Nama WaliKelas ${controller.valueKelas[i]}',
                                               null,
                                               null,
                                             ),
                                             input(
                                               controller.listWalikelasGmail![i]
                                                   [indx],
-                                              'NIP WaliKelas ${10 + i}',
+                                              'NIP WaliKelas ${controller.valueKelas[i]}',
                                               TextInputType.number,
                                               // TextInputType.number,
                                               [

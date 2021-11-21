@@ -18,6 +18,12 @@ class HomeController extends GetxController {
   late final sizeKhusus = 0;
   final sizeUmum = 0;
 
+  final pelajaran = false.obs;
+  final listInputPelajaran = ["Pelajaran Umum", "Pelajaran Khusus"];
+  final valuePelajaran = "Pelajaran Umum".obs;
+
+  final valueKelas = ["X", "XI", "XII"];
+
   // List Jurusan
   late List<String> tahun = [];
 
@@ -453,7 +459,7 @@ class HomeController extends GetxController {
       await users
           .collection('auth users')
           .doc(
-              '${listWaliKelas9[j].text} kelas X ${kelas.value.singkatanJurusan} ${j + 1}')
+              'kelas X ${kelas.value.singkatanJurusan} ${j + 1}')
           .set(
         {
           'aktif': kelas9Aktif[j].value,
@@ -485,7 +491,7 @@ class HomeController extends GetxController {
       await users
           .collection('auth users')
           .doc(
-              '${listWaliKelas10[j].text} kelas XI ${kelas.value.singkatanJurusan} ${j + 1}')
+              'kelas XI ${kelas.value.singkatanJurusan} ${j + 1}')
           .set(
         {
           'aktif': kelas10Aktif[j].value,
@@ -516,7 +522,7 @@ class HomeController extends GetxController {
       await users
           .collection('auth users')
           .doc(
-              '${listWaliKelas11[j].text} kelas XII ${kelas.value.singkatanJurusan} ${j + 1}')
+              'kelas XII ${kelas.value.singkatanJurusan} ${j + 1}')
           .set(
         {
           'aktif': kelas11Aktif[j].value,
@@ -695,9 +701,8 @@ class HomeController extends GetxController {
       listWaliKelas9 = [...listWaliKelas9, TextEditingController()];
       listWalikelas![i] = listWaliKelas9;
       listWalikelasGmail![i] = listWaliKelasGmail9;
-      // kelas9Auth = [...kelas9Auth, true.obs];
       kelas9Aktif = [...kelas9Aktif, true.obs];
-      // gabungangKelasAuth[i] = kelas9Auth;
+      gabungangKelasAktif[i] = kelas9Aktif;
     } else if (i == 1) {
       listWaliKelasGmail10 = [...listWaliKelasGmail10, TextEditingController()];
       listWaliKelas10 = [...listWaliKelas10, TextEditingController()];
@@ -706,6 +711,7 @@ class HomeController extends GetxController {
       // kelas10Auth = [...kelas10Auth, true.obs];
       kelas10Aktif = [...kelas10Aktif, true.obs];
       // gabungangKelasAuth[i] = kelas10Auth;
+      gabungangKelasAktif[i] = kelas10Aktif;
     } else {
       listWaliKelasGmail11 = [...listWaliKelasGmail11, TextEditingController()];
       listWaliKelas11 = [...listWaliKelas11, TextEditingController()];
@@ -713,7 +719,7 @@ class HomeController extends GetxController {
       listWalikelasGmail![i] = listWaliKelasGmail11;
       // kelas11Auth = [...kelas11Auth, true.obs];
       kelas11Aktif = [...kelas11Aktif, true.obs];
-      // gabungangKelasAuth[i] = kelas11Auth;
+      gabungangKelasAktif[i] = kelas11Aktif;
     }
   }
 

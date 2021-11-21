@@ -123,11 +123,12 @@ class HomeView extends GetView<HomeController> {
                                       child: Text(
                                         namaIndex[index],
                                         style: TextStyle(
-                                            color: index ==
-                                                    controller.indexList.value
-                                                ? Colors.white.withOpacity(0.95)
-                                                : Colors.blue,
-                                            fontWeight: FontWeight.bold),
+                                          color: index ==
+                                                  controller.indexList.value
+                                              ? Colors.white.withOpacity(0.95)
+                                              : Colors.blue,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
@@ -169,4 +170,3 @@ class HomeView extends GetView<HomeController> {
     );
   }
 }
-

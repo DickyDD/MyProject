@@ -7,6 +7,17 @@ import 'package:tes_database/app/data/widgets/button.dart';
 import 'package:tes_database/app/data/widgets/card_shadow.dart';
 import '../controllers/home_controller.dart';
 
+class ExpandeblePelajaran extends StatelessWidget {
+  const ExpandeblePelajaran({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: InputPelajaran(),
+    );
+  }
+}
+
 class InputPelajaran extends StatelessWidget {
   const InputPelajaran({
     Key? key,
@@ -22,6 +33,7 @@ class InputPelajaran extends StatelessWidget {
     final sizeKhususKKNC1 = controller.panjangListKhususKKNC1;
     final sizeKhususKKNC3 = controller.panjangListKhususKKNC3;
     final sizeKhususKKNC2 = controller.panjangListKhususKKNC2;
+    
     return Obx(
       () => jumlahJurusan.value != 0
           ? Form(
@@ -34,43 +46,42 @@ class InputPelajaran extends StatelessWidget {
                   _isValid = isValid;
                 }
               },
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: Get.height,
-                      color: Colors.blue[50],
-                      child: PelajaranWidget(
-                        sizeJurusan: controller.panjangListUmum.length,
-                        controller: controller,
-                        listData: controller.listPelajaranUmum,
-                        jenis: 'Umum',
-                        listPanjang: controller.panjangListUmum,
-                        input: () => controller.inputPelajaranUmum(),
-                        listPanjangKKN: controller.panjangListUmumKKN,
+              child: SizedBox(
+                child: controller.pelajaran.value == false
+                    ? Expanded(
+                        child: Container(
+                          height: Get.height,
+                          color: Colors.blue[50],
+                          child: PelajaranWidget(
+                            sizeJurusan: controller.panjangListUmum.length,
+                            controller: controller,
+                            listData: controller.listPelajaranUmum,
+                            
+                            listPanjang: controller.panjangListUmum,
+                            input: () => controller.inputPelajaranUmum(),
+                            listPanjangKKN: controller.panjangListUmumKKN,
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: Container(
+                          height: Get.height,
+                          color: Colors.red[50],
+                          child: PelajaranWidgetKhusus(
+                            sizeJurusan: controller.listPelajaranKhusus.length,
+                            controller: controller,
+                            listData: controller.listPelajaranKhusus,
+                            
+                            input: () => controller.inputPelajaranKhusus(),
+                            listPanjangC1: sizeKhususC1,
+                            listPanjangC2: sizeKhususC2,
+                            listPanjangC3: sizeKhususC3,
+                            listPanjangKKNC1: sizeKhususKKNC1,
+                            listPanjangKKNC2: sizeKhususKKNC2,
+                            listPanjangKKNC3: sizeKhususKKNC3,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: Get.height,
-                      color: Colors.red[50],
-                      child: PelajaranWidgetKhusus(
-                        sizeJurusan: controller.listPelajaranKhusus.length,
-                        controller: controller,
-                        listData: controller.listPelajaranKhusus,
-                        jenis: 'Khusus',
-                        input: () => controller.inputPelajaranKhusus(),
-                        listPanjangC1: sizeKhususC1,
-                        listPanjangC2: sizeKhususC2,
-                        listPanjangC3: sizeKhususC3,
-                        listPanjangKKNC1: sizeKhususKKNC1,
-                        listPanjangKKNC2: sizeKhususKKNC2,
-                        listPanjangKKNC3: sizeKhususKKNC3,
-                      ),
-                    ),
-                  ),
-                ],
               ),
             )
           : Center(
@@ -84,14 +95,14 @@ class PelajaranWidget extends StatelessWidget {
   final List<PelajaranUmum> listData;
   final List<int> listPanjang;
   final List<int> listPanjangKKN;
-  final String jenis;
+  
   final Function() input;
   const PelajaranWidget({
     Key? key,
     required this.sizeJurusan,
     required this.controller,
     required this.listData,
-    required this.jenis,
+    
     required this.listPanjang,
     required this.input,
     required this.listPanjangKKN,
@@ -114,16 +125,35 @@ class PelajaranWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (i == 0)
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Text(
-                    'Pelajaran $jenis',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+                Obx(() => DropdownButton<String>(
+                      value: controller.valuePelajaran.value,
+                      icon: const Icon(LineIcons.arrowCircleDown),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.deepPurple),
+                      underline: SizedBox(),
+                      onChanged: (newValue) async {
+                        controller.pelajaran.value =
+                            !controller.pelajaran.value;
+                        controller.valuePelajaran.value = newValue!;
+                      },
+                      items: controller.listInputPelajaran
+                          .map<DropdownMenuItem<String>>((value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Text(
+                              value,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    )),
               SizedBox(
                 height: 30,
               ),
@@ -294,14 +324,14 @@ class PelajaranWidgetKhusus extends StatelessWidget {
   final RxList<int> listPanjangKKNC1;
   final RxList<int> listPanjangKKNC2;
   final RxList<int> listPanjangKKNC3;
-  final String jenis;
+
   final Function() input;
   const PelajaranWidgetKhusus({
     Key? key,
     required this.sizeJurusan,
     required this.controller,
     required this.listData,
-    required this.jenis,
+
     required this.listPanjangC1,
     required this.listPanjangC2,
     required this.listPanjangC3,
@@ -328,20 +358,35 @@ class PelajaranWidgetKhusus extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (i == 0)
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Pelajaran $jenis',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                Obx(() => DropdownButton<String>(
+                      value: controller.valuePelajaran.value,
+                      icon: const Icon(LineIcons.arrowCircleDown),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.deepPurple),
+                      underline: SizedBox(),
+                      onChanged: (newValue) async {
+                        controller.pelajaran.value =
+                            !controller.pelajaran.value;
+                        controller.valuePelajaran.value = newValue!;
+                      },
+                      items: controller.listInputPelajaran
+                          .map<DropdownMenuItem<String>>((value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Text(
+                              value,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    )),
               SizedBox(
                 height: 30,
               ),
