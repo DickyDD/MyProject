@@ -86,11 +86,13 @@ class InputExtrakurikuler extends StatelessWidget {
                                             onPressed: () async {
                                               controller.lessEXR(sizeJurusan,listString[i].value);
                                               Get.back();
-                                            })
+                                            }),
+                                             ElevatedButton(onPressed: (){Get.back();}, child: Text('Tidak'))
                                       ]);
                                 },
                                 child: Text('-')),
                           ),
+                         
                         ],
                       ),
                     ),

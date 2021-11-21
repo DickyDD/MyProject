@@ -98,11 +98,13 @@ class InputPKL extends StatelessWidget {
                                               );
                                               // controller.listPelajaranKhusus.removeWhere((e)=>e.id==mitraC.text);
                                               Get.back();
-                                            })
+                                            }),
+                                             ElevatedButton(onPressed: (){Get.back();}, child: Text('Tidak'))
                                       ]);
                                 },
                                 child: Text('-')),
                           ),
+                         
                         ],
                       ),
                     ),
