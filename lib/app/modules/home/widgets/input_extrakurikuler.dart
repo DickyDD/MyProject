@@ -133,7 +133,7 @@ class InputExtrakurikuler extends StatelessWidget {
               },
             )
           : Center(
-              child: Text('data Null'),
+              child: Text('Data Kosong'),
             ),
     );
   }

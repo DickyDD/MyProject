@@ -16,7 +16,6 @@ class HomeController extends GetxController {
 
   // Tahun Ajaran
 
-
   // Semester
   final semester = 'Semester 1'.obs;
   late final sizeKhusus = 0;
@@ -121,16 +120,31 @@ class HomeController extends GetxController {
   }
 
   Future inputTahun() async {
-    var data = [];
-    for (var i = 0; i < tahun.length; i++) {
-      data.add(tahun[i]);
-    }
-    await users.collection('Data Sekolah').doc('Data Tahun').set({
-      'Tahun': data
-    });
+    await users
+        .collection('Data Sekolah')
+        .doc('Data Tahun')
+        .set({'Tahun': tahun});
   }
 
   // Jurusan
+
+  Future getTahun() async {
+    onLoading.value = true;
+    tahun = [];
+    ListTahun = [];
+
+    await users.collection('Data Sekolah').get().then((value) {
+      value.docs.forEach((element) {
+        if (element.id == 'Data Tahun') {
+          var listTahun = element.data()['Tahun'] as List;
+          listTahun.forEach((element) {
+            tahun.add(element.toString());
+          });
+        }
+      });
+    }).whenComplete(() => ListTahun =
+        List.generate(tahun.length, (index) => TextEditingController().obs));
+  }
 
   Future getJurusan() async {
     try {
@@ -222,6 +236,7 @@ class HomeController extends GetxController {
     sizeJurusan.value = listEXR.length;
     onLoading.value = false;
   }
+
   void addTahun(
     RxInt sizeJurusan,
   ) {
@@ -243,6 +258,7 @@ class HomeController extends GetxController {
     sizeJurusan.value = tahun.length;
     onLoading.value = false;
   }
+
   void lessEXR(
     RxInt sizeJurusan,
     String value,
@@ -474,7 +490,7 @@ class HomeController extends GetxController {
   var kelas11Aktif = [false.obs];
   var gabungangKelasAktif = [<RxBool>[]];
 
- Future inputKelas() async {
+  Future inputKelas() async {
     for (var j = 0; j < listWaliKelasGmail9.length; j++) {
       await users
           .collection(panjangList.value)

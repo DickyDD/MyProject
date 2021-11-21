@@ -66,7 +66,9 @@
 //   }
 // }
 
+import 'package:easy_mask/easy_mask.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tes_database/app/data/widgets/button.dart';
 import 'package:tes_database/app/data/widgets/card_shadow.dart';
@@ -92,6 +94,8 @@ class InputTahunAjaran extends StatelessWidget {
               itemBuilder: (context, i) {
                 var Tahun = controller.ListTahun[i];
                 Tahun.value.text = controller.tahun[i];
+
+                var tampil = controller.tahun[i].obs;
                 // controller.listEXR[i].value = Tahun.value.text;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,8 +136,8 @@ class InputTahunAjaran extends StatelessWidget {
                               ),
                               child: Text(
                                 width > 575
-                                    ? 'Tahun ${controller.tahun[i] == '' ? i + 1 : controller.tahun[i]}'
-                                    : controller.tahun[i],
+                                    ? 'Tahun ${tampil.value == '' ? i + 1 : tampil.value}'
+                                    : tampil.value,
                               ),
                             ),
                           ),
@@ -180,9 +184,15 @@ class InputTahunAjaran extends StatelessWidget {
                             TextField(
                               controller: Tahun.value,
                               onChanged: (val) {
-                                controller.listEXR[i].value = val;
+                                controller.tahun[i] = val;
+                                tampil.value = val;
                               },
-                              decoration: InputDecoration(hintText: 'Mitra'),
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                TextInputMask(mask: '9999-9999')
+                              ],
+                              decoration:
+                                  InputDecoration(hintText: '2021-2022'),
                             ),
                           ],
                         ),
@@ -196,14 +206,14 @@ class InputTahunAjaran extends StatelessWidget {
                         child: ButtonCustom(
                           nama: 'Save',
                           onTap: () async {
-                             controller.inputTahun().whenComplete(() {
-                          controller.removeClassJurusan();
-                          controller.changeDrobdown();
-                          controller
-                                  .getJurusan()
+                            controller.inputTahun().whenComplete(() {
+                              controller
+                                  .getTahun()
                                   .whenComplete(() => controller.saveData());
-                        });
-                        Get.back();
+                              controller.onLoading.value = false;
+                            });
+
+                            Get.back();
                           },
                         ),
                       ),
@@ -212,7 +222,7 @@ class InputTahunAjaran extends StatelessWidget {
               },
             )
           : Center(
-              child: Text('data Null'),
+              child: Text('Data Kosong'),
             ),
     );
   }
