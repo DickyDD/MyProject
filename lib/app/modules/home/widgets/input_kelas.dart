@@ -100,34 +100,38 @@ class InputKelas extends StatelessWidget {
                                             Text(
                                                 "Jumlah ${listJumlah[i].toString()}"),
                                             TextButton(
-                                                onPressed: () {
+                                              onPressed: () {
+                                                controller.onLoading.value =
+                                                    true;
+                                                controller.addKelas(i);
+                                                if (i == 0) {
+                                                  controller.kelas
+                                                      .update((val) {
+                                                    val!.jumlahKelas9++;
+                                                  });
                                                   controller.onLoading.value =
-                                                      true;
-                                                  controller.addKelas(i);
-                                                  if (i == 0) {
-                                                    controller.kelas
-                                                        .update((val) {
-                                                      val!.jumlahKelas9++;
-                                                    });
-                                                    controller.onLoading.value =
-                                                        false;
-                                                  } else if (i == 1) {
-                                                    controller.kelas
-                                                        .update((val) {
-                                                      val!.jumlahKelas10++;
-                                                    });
-                                                    controller.onLoading.value =
-                                                        false;
-                                                  } else {
-                                                    controller.kelas
-                                                        .update((val) {
-                                                      val!.jumlahKelas11++;
-                                                    });
-                                                    controller.onLoading.value =
-                                                        false;
-                                                  }
-                                                },
-                                                child: Text('+'))
+                                                      false;
+                                                } else if (i == 1) {
+                                                  controller.kelas
+                                                      .update((val) {
+                                                    val!.jumlahKelas10++;
+                                                  });
+                                                  controller.onLoading.value =
+                                                      false;
+                                                } else {
+                                                  controller.kelas
+                                                      .update((val) {
+                                                    val!.jumlahKelas11++;
+                                                  });
+                                                  controller.onLoading.value =
+                                                      false;
+                                                }
+                                              },
+                                              child: Text(
+                                                '+',
+                                                style: TextStyle(fontSize: 24),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),

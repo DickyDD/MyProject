@@ -33,7 +33,7 @@ class InputPelajaran extends StatelessWidget {
     final sizeKhususKKNC1 = controller.panjangListKhususKKNC1;
     final sizeKhususKKNC3 = controller.panjangListKhususKKNC3;
     final sizeKhususKKNC2 = controller.panjangListKhususKKNC2;
-    
+
     return Obx(
       () => jumlahJurusan.value != 0
           ? Form(
@@ -56,7 +56,6 @@ class InputPelajaran extends StatelessWidget {
                             sizeJurusan: controller.panjangListUmum.length,
                             controller: controller,
                             listData: controller.listPelajaranUmum,
-                            
                             listPanjang: controller.panjangListUmum,
                             input: () => controller.inputPelajaranUmum(),
                             listPanjangKKN: controller.panjangListUmumKKN,
@@ -71,7 +70,6 @@ class InputPelajaran extends StatelessWidget {
                             sizeJurusan: controller.listPelajaranKhusus.length,
                             controller: controller,
                             listData: controller.listPelajaranKhusus,
-                            
                             input: () => controller.inputPelajaranKhusus(),
                             listPanjangC1: sizeKhususC1,
                             listPanjangC2: sizeKhususC2,
@@ -95,14 +93,13 @@ class PelajaranWidget extends StatelessWidget {
   final List<PelajaranUmum> listData;
   final List<int> listPanjang;
   final List<int> listPanjangKKN;
-  
+
   final Function() input;
   const PelajaranWidget({
     Key? key,
     required this.sizeJurusan,
     required this.controller,
     required this.listData,
-    
     required this.listPanjang,
     required this.input,
     required this.listPanjangKKN,
@@ -178,7 +175,25 @@ class PelajaranWidget extends StatelessWidget {
                     flex: 1,
                     child: IconButton(
                       onPressed: () {
-                        controller.addPelajranUmum(i);
+                        Get.defaultDialog(
+                            middleText: "Anda Yakin Ingggin Tambah",
+                            title: "Tambah?",
+                            actions: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    controller.addPelajranUmum(i);
+                                  },
+                                  child: Text("Yakin")),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.greenAccent,
+                                ),
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text("Tidak"),
+                              ),
+                            ]);
                       },
                       icon: Container(
                         decoration: new BoxDecoration(
@@ -331,7 +346,6 @@ class PelajaranWidgetKhusus extends StatelessWidget {
     required this.sizeJurusan,
     required this.controller,
     required this.listData,
-
     required this.listPanjangC1,
     required this.listPanjangC2,
     required this.listPanjangC3,
@@ -430,7 +444,28 @@ class PelajaranWidgetKhusus extends StatelessWidget {
                                     flex: 1,
                                     child: IconButton(
                                       onPressed: () {
-                                        controller.addPelajranKhususC1(i);
+                                        Get.defaultDialog(
+                                            middleText:
+                                                "Anda Yakin Ingggin Tambah",
+                                            title: "Tambah?",
+                                            actions: [
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  controller
+                                                      .addPelajranKhususC1(i);
+                                                },
+                                                child: Text("Yakin"),
+                                              ),
+                                              ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    primary: Colors.greenAccent,
+                                                  ),
+                                                  onPressed: () {
+                                                    Get.back();
+                                                  },
+                                                  child: Text("Tidak"))
+                                            ]);
                                       },
                                       icon: Container(
                                         decoration: new BoxDecoration(
@@ -570,7 +605,25 @@ class PelajaranWidgetKhusus extends StatelessWidget {
                                 flex: 1,
                                 child: IconButton(
                                   onPressed: () {
-                                    controller.addPelajranKhususC2(i);
+                                    Get.defaultDialog(
+                                        middleText: "Anda Yakin Ingggin Tambah",
+                                        title: "Tambah?",
+                                        actions: [
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                controller
+                                                    .addPelajranKhususC2(i);
+                                              },
+                                              child: Text("Yakin")),
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Colors.greenAccent,
+                                              ),
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                              child: Text("Tidak"))
+                                        ]);
                                   },
                                   icon: Container(
                                     decoration: new BoxDecoration(
@@ -706,7 +759,25 @@ class PelajaranWidgetKhusus extends StatelessWidget {
                                 flex: 1,
                                 child: IconButton(
                                   onPressed: () {
-                                    controller.addPelajranKhususC3(i);
+                                    Get.defaultDialog(
+                                        middleText: "Anda Yakin Ingggin Tambah",
+                                        title: "Tambah?",
+                                        actions: [
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                controller
+                                                    .addPelajranKhususC3(i);
+                                              },
+                                              child: Text("Yakin")),
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Colors.greenAccent,
+                                              ),
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                              child: Text("Tidak"))
+                                        ]);
                                   },
                                   icon: Container(
                                     decoration: new BoxDecoration(
