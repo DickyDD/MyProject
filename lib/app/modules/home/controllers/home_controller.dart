@@ -951,6 +951,8 @@ class HomeController extends GetxController {
       jurusan = listNamaJurusan[0].obs;
       await getDataKelas();
       await getKepalaSekolah();
+      extrakurikuler =
+          List.generate(listEXR.length, (index) => TextEditingController().obs);
     } else {
       Get.offAllNamed('/login');
     }
