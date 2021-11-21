@@ -105,7 +105,8 @@ class InputJurusan extends StatelessWidget {
                                                       e.id == jurusanC.text);
                                               // controller.listPelajaranKhusus.removeWhere((e)=>e.id==jurusanC.text);
                                               Get.back();
-                                            })
+                                            }),
+                                            ElevatedButton(onPressed: (){Get.back();}, child: Text('Tidak'))
                                       ]);
                                 },
                                 child: Text('-')),

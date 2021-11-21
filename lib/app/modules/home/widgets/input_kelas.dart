@@ -218,7 +218,7 @@ class InputKelas extends StatelessWidget {
                                                                               .red),
                                                                 ),
                                                                 child: Text(
-                                                                  'Yakin Hapus',
+                                                                  'Yakin',
                                                                 ),
                                                               ),
                                                               ElevatedButton(
