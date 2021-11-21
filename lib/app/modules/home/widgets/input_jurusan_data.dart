@@ -48,8 +48,27 @@ class InputJurusan extends StatelessWidget {
                           Spacer(),
                           CardShadow(
                             child: TextButton(
-                                onPressed: () =>
-                                    controller.addJurusan(sizeJurusan),
+                                onPressed: () => Get.defaultDialog(
+                                      middleText: "Anda Yakin Ingggin Tambah",
+                                      title: "Tambah?",
+                                      actions: [
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              controller
+                                                  .addJurusan(sizeJurusan);
+                                            },
+                                            child: Text("Yakin")),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.greenAccent,
+                                          ),
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: Text("Tidak"),
+                                        ),
+                                      ],
+                                    ),
                                 child: Text('+')),
                           ),
                         ],
@@ -91,22 +110,31 @@ class InputJurusan extends StatelessWidget {
                                             ),
                                             child: Text('Yakin'),
                                             onPressed: () async {
+                                              controller.onLoading.value = true;
                                               controller.lessJurusan(
                                                 namaJurusan[i],
                                                 sizeJurusan,
                                                 jurusanC,
                                                 jsingkatanC,
                                               );
-                                              await controller.delete(
-                                                jurusanC.text,
-                                              );
+                                              await controller
+                                                  .delete(
+                                                    jurusanC.text,
+                                                  )
+                                                  .whenComplete(() => controller
+                                                      .onLoading.value = false);
                                               controller.listPelajaranKhusus
                                                   .removeWhere((e) =>
                                                       e.id == jurusanC.text);
                                               // controller.listPelajaranKhusus.removeWhere((e)=>e.id==jurusanC.text);
+
                                               Get.back();
                                             }),
-                                            ElevatedButton(onPressed: (){Get.back();}, child: Text('Tidak'))
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Get.back();
+                                            },
+                                            child: Text('Tidak'))
                                       ]);
                                 },
                                 child: Text('-')),
@@ -146,12 +174,15 @@ class InputJurusan extends StatelessWidget {
                         child: ButtonCustom(
                           nama: 'Save',
                           onTap: () async {
+                            controller.onLoading.value = true;
                             controller.inputJurusan().whenComplete(() {
-                              controller.onLoading.value = true;
                               controller.removeListKhusus();
                               controller.getPelajaranKhusus().whenComplete(
-                                    () => controller.onLoading.value = false,
-                                  );
+                                () {
+                                  controller.onLoading.value = false;
+                                  controller.saveData();
+                                },
+                              );
                             });
                           },
                         ),

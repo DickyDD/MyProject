@@ -57,7 +57,9 @@ class InputPelajaran extends StatelessWidget {
                             controller: controller,
                             listData: controller.listPelajaranUmum,
                             listPanjang: controller.panjangListUmum,
-                            input: () => controller.inputPelajaranUmum(),
+                            input: () => controller
+                                .inputPelajaranUmum()
+                                .whenComplete(() => controller.saveData()),
                             listPanjangKKN: controller.panjangListUmumKKN,
                           ),
                         ),
@@ -70,7 +72,9 @@ class InputPelajaran extends StatelessWidget {
                             sizeJurusan: controller.listPelajaranKhusus.length,
                             controller: controller,
                             listData: controller.listPelajaranKhusus,
-                            input: () => controller.inputPelajaranKhusus(),
+                            input: () => controller
+                                .inputPelajaranKhusus()
+                                .whenComplete(() => controller.saveData()),
                             listPanjangC1: sizeKhususC1,
                             listPanjangC2: sizeKhususC2,
                             listPanjangC3: sizeKhususC3,

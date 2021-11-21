@@ -260,9 +260,7 @@ class SiswaController extends GetxController {
     nis.text = data[5];
     noOrtu.text = data[6];
     catatanAkademik.text = data[7];
-    // data["lKehadiran"] = listKehadiran;
-    // listDPK = data["lDPK"];
-    // print(listGabunganKhusus[0].name);
+
     var nilai_umum = data[8] as List;
     nilai_umum.forEach((element) {
       element.forEach((key, value) {
@@ -272,16 +270,19 @@ class SiswaController extends GetxController {
     });
 
     dataDropUmum.forEach((element) {
-      var dataUmum = listGabunganUmum
-          .asMap()
-          .entries
-          .where((entry) {
-            return entry.value.type == element.type &&
-                entry.value.name == element.name;
-          })
-          .map((val) => val.key)
-          .first;
-      dataListUmum.add(dataUmum);
+      var dataUmum = listGabunganUmum.asMap().entries.where((entry) {
+        return entry.value.type == element.type &&
+            entry.value.name == element.name;
+      }).map((val) => val.key);
+      var i = 0;
+      if (dataUmum.length == 0) {
+        listGabunganUmum.add(ListPelajaran(element.type, element.name));
+        i = listGabunganUmum.length;
+        dataListUmum.add(i - 1);
+      } else {
+        i = dataUmum.first;
+        dataListUmum.add(i);
+      }
     });
 
     var nilai_khusus = data[9] as List;
@@ -293,16 +294,19 @@ class SiswaController extends GetxController {
     });
 
     dataDropKhusus.forEach((element) {
-      var datakhusus = listGabunganKhusus
-          .asMap()
-          .entries
-          .where((entry) {
-            return entry.value.type == element.type &&
-                entry.value.name == element.name;
-          })
-          .map((val) => val.key)
-          .first;
-      dataListKhusus.add(datakhusus);
+      var datakhusus = listGabunganKhusus.asMap().entries.where((entry) {
+        return entry.value.type == element.type &&
+            entry.value.name == element.name;
+      }).map((val) => val.key);
+      var i = 0;
+      if (datakhusus.length == 0) {
+        listGabunganKhusus.add(ListPelajaran(element.type, element.name));
+        i = listGabunganKhusus.length;
+        dataListKhusus.add(i - 1);
+      } else {
+        i = datakhusus.first;
+        dataListKhusus.add(i);
+      }
     });
 
     var nilai_pkl = data[10] as List;
@@ -315,22 +319,32 @@ class SiswaController extends GetxController {
     });
 
     dataDropPKL.forEach((element) {
-      var dataPKL = listDataPKL
-          .asMap()
-          .entries
-          .where((entry) {
-            return entry.value.type == element.type &&
-                entry.value.name == element.name;
-          })
-          .map((val) => val.key)
-          .first;
-      dataListPKL.add(dataPKL);
+      var dataPKL = listDataPKL.asMap().entries.where((entry) {
+        return entry.value.type == element.type &&
+            entry.value.name == element.name;
+      }).map((val) => val.key);
+      var i = 0;
+      if (dataPKL.length == 0) {
+        listDataPKL.add(ListPelajaran(element.type, element.name));
+        i = listDataPKL.length;
+        dataListPKL.add(i - 1);
+      } else {
+        i = dataPKL.first;
+        dataListPKL.add(i);
+      }
     });
 
     var nilai_EXR = data[11] as List;
     nilai_EXR.forEach((element) {
       element.forEach((key, value) {
-        dropdownValueEXR.add(key.toString().obs);
+        var data = listDataEXR.where((element) => element == key.toString());
+        if (data.length == 0) {
+          listDataEXR.add(key.toString());
+          dropdownValueEXR.add(key.toString().obs);
+        } else {
+          dropdownValueEXR.add(key.toString().obs);
+        }
+
         nilaiEXR.add(TextEditingController(text: value["nilai"]));
       });
     });

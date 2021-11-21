@@ -139,7 +139,9 @@ class InputPKL extends StatelessWidget {
                         child: ButtonCustom(
                           nama: 'Save',
                           onTap: () async {
-                            controller.inputPKL();
+                            controller
+                                .inputPKL()
+                                .whenComplete(() => controller.saveData());
                           },
                         ),
                       ),

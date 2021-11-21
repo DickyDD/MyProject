@@ -4,6 +4,10 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeController extends GetxController {
+  void saveData({String nama = "Telah Tersimpan"}) {
+    Get.defaultDialog(middleText: "Data $nama", title: "Berhasil");
+  }
+
   final formKey = GlobalKey<FormState>();
   final users = FirebaseFirestore.instance;
 
@@ -11,7 +15,7 @@ class HomeController extends GetxController {
   final indexList = 0.obs;
 
   // Tahun Ajaran
-  final tahunAjaran = TextEditingController();
+
 
   // Semester
   final semester = 'Semester 1'.obs;
@@ -25,7 +29,11 @@ class HomeController extends GetxController {
   final valueKelas = ["X", "XI", "XII"];
 
   // List Jurusan
+  // late List<Rx<String>> Perubahan tahun = [];
   late List<String> tahun = [];
+  late List<Rx<TextEditingController>> ListTahun = [
+    Rx(TextEditingController(text: 'dsdsd'))
+  ];
 
   late List<TextEditingController> listJurusan = [];
   late List<TextEditingController> listSingkatanJurusan = [];
@@ -113,8 +121,12 @@ class HomeController extends GetxController {
   }
 
   Future inputTahun() async {
+    var data = [];
+    for (var i = 0; i < tahun.length; i++) {
+      data.add(tahun[i]);
+    }
     await users.collection('Data Sekolah').doc('Data Tahun').set({
-      'Tahun': [...tahun, '${tahunAjaran.text}']
+      'Tahun': data
     });
   }
 
@@ -129,7 +141,7 @@ class HomeController extends GetxController {
             if (element.id == 'Data Tahun') {
               var listTahun = element.data()['Tahun'] as List;
               listTahun.forEach((element) {
-                tahun.add(element);
+                tahun.add(element.toString());
               });
             } else if (element.id == 'Data PKL') {
               var mapPKL = element.data()['data'];
@@ -210,7 +222,27 @@ class HomeController extends GetxController {
     sizeJurusan.value = listEXR.length;
     onLoading.value = false;
   }
+  void addTahun(
+    RxInt sizeJurusan,
+  ) {
+    onLoading.value = true;
+    tahun = [...tahun, ""];
 
+    ListTahun = [...ListTahun, TextEditingController().obs];
+    sizeJurusan.value = tahun.length;
+    onLoading.value = false;
+  }
+
+  void lessTahun(
+    RxInt sizeJurusan,
+    int value,
+  ) {
+    onLoading.value = true;
+    tahun.removeAt(value);
+    ListTahun.removeAt(value);
+    sizeJurusan.value = tahun.length;
+    onLoading.value = false;
+  }
   void lessEXR(
     RxInt sizeJurusan,
     String value,
@@ -442,7 +474,7 @@ class HomeController extends GetxController {
   var kelas11Aktif = [false.obs];
   var gabungangKelasAktif = [<RxBool>[]];
 
-  inputKelas() async {
+ Future inputKelas() async {
     for (var j = 0; j < listWaliKelasGmail9.length; j++) {
       await users
           .collection(panjangList.value)
@@ -787,7 +819,7 @@ class HomeController extends GetxController {
     });
   }
 
-  void inputPelajaranUmum() {
+  Future inputPelajaranUmum() async {
     try {
       if (formKey.currentState!.validate()) {
         listPelajaranUmum.forEach((element) async {
@@ -815,7 +847,7 @@ class HomeController extends GetxController {
     }
   }
 
-  void inputPelajaranKhusus() {
+  Future inputPelajaranKhusus() async {
     try {
       if (formKey.currentState!.validate()) {
         listPelajaranKhusus.forEach((element) async {
@@ -848,12 +880,16 @@ class HomeController extends GetxController {
   }
 
   Future delete(String id) async {
-    await users
-        .collection('Data Sekolah')
-        .doc('Data Pelajaran')
-        .collection('Pelajaran Khusus')
-        .doc(id)
-        .delete();
+    try {
+      await users
+          .collection('Data Sekolah')
+          .doc('Data Pelajaran')
+          .collection('Pelajaran Khusus')
+          .doc(id)
+          .delete();
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future getJurursanKhusus() async {
@@ -929,8 +965,6 @@ class HomeController extends GetxController {
 
   @override
   void dispose() {
-    tahunAjaran.dispose();
-
     listJurusan.forEach((c) => c.dispose());
     listWaliKelas9.forEach((c) => c.dispose());
     listWaliKelas10.forEach((c) => c.dispose());
@@ -953,6 +987,8 @@ class HomeController extends GetxController {
       await getKepalaSekolah();
       extrakurikuler =
           List.generate(listEXR.length, (index) => TextEditingController().obs);
+      ListTahun =
+          List.generate(tahun.length, (index) => TextEditingController().obs);
     } else {
       Get.offAllNamed('/login');
     }

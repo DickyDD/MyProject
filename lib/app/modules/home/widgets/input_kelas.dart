@@ -301,7 +301,9 @@ class InputKelas extends StatelessWidget {
                 child: TextButton(
                     child: Text('Save'),
                     onPressed: () {
-                      controller.inputKelas();
+                      controller
+                          .inputKelas()
+                          .whenComplete(() => controller.saveData());
                     }),
               )
             ],
