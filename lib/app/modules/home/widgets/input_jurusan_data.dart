@@ -38,7 +38,7 @@ class InputJurusan extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Text(
-                              'Jurusan',
+                              'Kompetensi Keahlian',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w600,

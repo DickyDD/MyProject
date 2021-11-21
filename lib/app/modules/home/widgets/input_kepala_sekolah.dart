@@ -46,7 +46,7 @@ class InputKepalaSekolah extends StatelessWidget {
           height: 40,
         ),
         ButtonCustom(
-            nama: 'Save',
+            nama: 'Ganti',
             onTap: () async {
               Get.defaultDialog(
                   title: 'Masukan Data',
