@@ -125,14 +125,6 @@ class HomeController extends GetxController {
               listTahun.forEach((element) {
                 tahun.add(element);
               });
-            } else if (element.id == 'Data Jurusan') {
-              var mapJurusan = element.data()['Jurusan'];
-
-              mapJurusan.forEach((key, value) {
-                var namaLengkap = "$value".obs;
-                var namaSingkat = key.toString().obs;
-                listNamaJurusan.add(Jurusan(namaLengkap, namaSingkat));
-              });
             } else if (element.id == 'Data PKL') {
               var mapPKL = element.data()['data'];
 
@@ -202,6 +194,29 @@ class HomeController extends GetxController {
     onLoading.value = false;
   }
 
+  void addEXR(
+    RxInt sizeJurusan,
+  ) {
+    onLoading.value = true;
+    listEXR = [...listEXR, "".obs];
+
+    extrakurikuler = [...extrakurikuler, TextEditingController().obs];
+    sizeJurusan.value = listEXR.length;
+    onLoading.value = false;
+  }
+
+  void lessEXR(
+    RxInt sizeJurusan,
+    String value,
+  ) {
+    onLoading.value = true;
+    listEXR.remove(value);
+
+    extrakurikuler.remove(value);
+    sizeJurusan.value = listEXR.length;
+    onLoading.value = false;
+  }
+
   void lessJurusan(
     Jurusan namaLengkap,
     RxInt sizeJurusan,
@@ -214,6 +229,7 @@ class HomeController extends GetxController {
     );
     listJurusan.removeWhere((item) => item == jurusanC);
     listSingkatanJurusan.removeWhere((item) => item == jsingkatanC);
+
     sizeJurusan.value = listJurusan.length;
     onLoading.value = false;
   }
@@ -347,12 +363,12 @@ class HomeController extends GetxController {
         value.docs.forEach((element) {
           print(element.id);
           var kelas = element.id.split(' ');
-          if ("${kelas[0] + kelas[1]}" == "kelas11") {
+          if ("${kelas[0] + kelas[1]}" == "kelasXII") {
             jumlahKelas11++;
             listKelas11.add(NamaKelas(element.id, element.data()['walikelas'],
                 element.data()['nip'], element.data()['aktif'] ?? false));
             print(listKelas11);
-          } else if ("${kelas[0] + kelas[1]}" == 'kelas10') {
+          } else if ("${kelas[0] + kelas[1]}" == 'kelasXI') {
             jumlahKelas10++;
             listKelas10.add(NamaKelas(element.id, element.data()['walikelas'],
                 element.data()['nip'], element.data()['aktif'] ?? false));
@@ -426,7 +442,7 @@ class HomeController extends GetxController {
           .collection(panjangList.value)
           .doc(kelas.value.namaJurusan)
           .collection(semester.value.toLowerCase())
-          .doc('kelas 9 ${kelas.value.singkatanJurusan} ${j + 1}')
+          .doc('kelas X ${kelas.value.singkatanJurusan} ${j + 1}')
           .set(
         {
           'walikelas': listWaliKelas9[j].text,
@@ -437,16 +453,16 @@ class HomeController extends GetxController {
       await users
           .collection('auth users')
           .doc(
-              '${listWaliKelas9[j].text} kelas 9 ${kelas.value.singkatanJurusan} ${j + 1}')
+              '${listWaliKelas9[j].text} kelas X ${kelas.value.singkatanJurusan} ${j + 1}')
           .set(
         {
           'aktif': kelas9Aktif[j].value,
           'password':
-              '${listWaliKelas9[j].text.trim()} kelas 9 ${kelas.value.singkatanJurusan} ${j + 1}',
+              '${listWaliKelas9[j].text.trim()} kelas X ${kelas.value.singkatanJurusan} ${j + 1}',
           'tahun': panjangList.value,
           'jurusan': kelas.value.namaJurusan,
           'semester': semester.value.toLowerCase(),
-          'kelas': 'kelas 9 ${kelas.value.singkatanJurusan} ${j + 1}',
+          'kelas': 'kelas X ${kelas.value.singkatanJurusan} ${j + 1}',
           'walikelas': listWaliKelas9[j].text,
           'nip': listWaliKelasGmail9[j].text,
         },
@@ -460,7 +476,7 @@ class HomeController extends GetxController {
           .collection(panjangList.value)
           .doc(kelas.value.namaJurusan)
           .collection(semester.value.toLowerCase())
-          .doc('kelas 10 ${kelas.value.singkatanJurusan} ${j + 1}')
+          .doc('kelas XI ${kelas.value.singkatanJurusan} ${j + 1}')
           .set({
         'walikelas': listWaliKelas10[j].text,
         'nip': listWaliKelasGmail10[j].text,
@@ -469,16 +485,16 @@ class HomeController extends GetxController {
       await users
           .collection('auth users')
           .doc(
-              '${listWaliKelas10[j].text} kelas 10 ${kelas.value.singkatanJurusan} ${j + 1}')
+              '${listWaliKelas10[j].text} kelas XI ${kelas.value.singkatanJurusan} ${j + 1}')
           .set(
         {
           'aktif': kelas10Aktif[j].value,
           'password':
-              '${listWaliKelas10[j].text.trim()} kelas 10 ${kelas.value.singkatanJurusan} ${j + 1}',
+              '${listWaliKelas10[j].text.trim()} kelas XI ${kelas.value.singkatanJurusan} ${j + 1}',
           'tahun': panjangList.value,
           'semester': semester.value.toLowerCase(),
           'jurusan': kelas.value.namaJurusan,
-          'kelas': 'kelas 10 ${kelas.value.singkatanJurusan} ${j + 1}',
+          'kelas': 'kelas XI ${kelas.value.singkatanJurusan} ${j + 1}',
           'walikelas': listWaliKelas10[j].text,
           'nip': listWaliKelasGmail10[j].text,
         },
@@ -491,7 +507,7 @@ class HomeController extends GetxController {
           .collection(panjangList.value)
           .doc(kelas.value.namaJurusan)
           .collection(semester.value.toLowerCase())
-          .doc('kelas 11 ${kelas.value.singkatanJurusan} ${j + 1}')
+          .doc('kelas XII ${kelas.value.singkatanJurusan} ${j + 1}')
           .set({
         'walikelas': listWaliKelas11[j].text,
         'nip': listWaliKelasGmail11[j].text,
@@ -500,16 +516,16 @@ class HomeController extends GetxController {
       await users
           .collection('auth users')
           .doc(
-              '${listWaliKelas11[j].text} kelas 11 ${kelas.value.singkatanJurusan} ${j + 1}')
+              '${listWaliKelas11[j].text} kelas XII ${kelas.value.singkatanJurusan} ${j + 1}')
           .set(
         {
           'aktif': kelas11Aktif[j].value,
           'password':
-              '${listWaliKelas11[j].text.trim()} kelas 11 ${kelas.value.singkatanJurusan} ${j + 1}',
+              '${listWaliKelas11[j].text.trim()} kelas XII ${kelas.value.singkatanJurusan} ${j + 1}',
           'tahun': panjangList.value,
           'jurusan': kelas.value.namaJurusan,
           'semester': semester.value.toLowerCase(),
-          'kelas': 'kelas 11 ${kelas.value.singkatanJurusan} ${j + 1}',
+          'kelas': 'kelas XII ${kelas.value.singkatanJurusan} ${j + 1}',
           'walikelas': listWaliKelas11[j].text,
           'nip': listWaliKelasGmail11[j].text,
         },
@@ -738,20 +754,21 @@ class HomeController extends GetxController {
         .get()
         .then((value) {
       value.docs.forEach((element) {
-        element.data().forEach(
-              (key, value) => listPelajaranKhusus.add(
-                PelajaranKhusus(
-                  key,
-                  value['C1'] as List,
-                  value['C2'] as List,
-                  value['C3'] as List,
-                  value['kknC1'] as List,
-                  value['kknC2'] as List,
-                  value['kknC3'] as List,
-                  element.id,
-                ),
-              ),
-            );
+        element.data().forEach((key, value) {
+          listPelajaranKhusus.add(
+            PelajaranKhusus(
+              key,
+              value['C1'] as List,
+              value['C2'] as List,
+              value['C3'] as List,
+              value['kknC1'] as List,
+              value['kknC2'] as List,
+              value['kknC3'] as List,
+              element.id,
+            ),
+          );
+          listNamaJurusan.add(Jurusan(element.id.obs, key.obs));
+        });
       });
     });
     listPelajaranKhusus.forEach((element) {
@@ -833,6 +850,18 @@ class HomeController extends GetxController {
         .delete();
   }
 
+  Future getJurursanKhusus() async {
+    var data = await users
+        .collection('Data Sekolah')
+        .doc('Data Pelajaran')
+        .collection('Pelajaran Khusus')
+        .get();
+    data.docs.forEach((element) {
+      element.data().forEach((key, value) {
+        listNamaJurusan.add(Jurusan(element.id.obs, key.obs));
+      });
+    });
+  }
 
   void removeListKhusus() {
     panjangListKhususC1 = <int>[].obs;
@@ -908,10 +937,11 @@ class HomeController extends GetxController {
 
   @override
   void onInit() async {
-    if (Get.arguments != null) {
+    if (Get.arguments == null) {
+      await getPelajaranKhusus();
       await getJurusan();
       await getPelajaranUmum();
-      await getPelajaranKhusus();
+      // await getJurursanKhusus();
       jurusan = listNamaJurusan[0].obs;
       await getDataKelas();
       await getKepalaSekolah();

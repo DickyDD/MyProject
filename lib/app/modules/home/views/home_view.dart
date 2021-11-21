@@ -30,9 +30,9 @@ class HomeView extends GetView<HomeController> {
     List<String> namaIndex = [
       'Dasboard',
       'Kepala Sekolah',
-      'Tahun',
-      'Jurusan',
-      'Pelajaran',
+      'Tahun Pelajaran',
+      'kompetensi keahlian'.capitalize!,
+      'Mata Pelajaran',
       'Kelas',
       'PKL',
       'Extrakurikuler',

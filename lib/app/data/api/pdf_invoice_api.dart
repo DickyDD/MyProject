@@ -21,7 +21,6 @@ class PdfInvoiceApi {
     var datFontB = await rootBundle.load("assets/trmB.ttf");
     final myFont = pw.Font.ttf(datFont);
     final myFontB = pw.Font.ttf(datFontB);
-    // final robotoLight = await PdfGoogleFonts.robotoLight();
     var styleFont = pw.TextStyle(
       fontSize: 11,
       font: myFont,

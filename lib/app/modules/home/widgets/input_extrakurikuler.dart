@@ -44,7 +44,7 @@ class InputExtrakurikuler extends StatelessWidget {
                           Spacer(),
                           CardShadow(
                             child: TextButton(
-                                onPressed: () => controller.addPKL(sizeJurusan),
+                                onPressed: () => controller.addEXR(sizeJurusan),
                                 child: Text('+')),
                           ),
                         ],
@@ -84,13 +84,7 @@ class InputExtrakurikuler extends StatelessWidget {
                                             ),
                                             child: Text('Yakin'),
                                             onPressed: () async {
-                                              // controller.lessPKL(
-                                              //   namaJurusan[i],
-                                              //   sizeJurusan,
-                                              //   mitraC,
-
-                                              // );
-                                              // controller.listPelajaranKhusus.removeWhere((e)=>e.id==mitraC.text);
+                                              controller.lessEXR(sizeJurusan,listString[i].value);
                                               Get.back();
                                             })
                                       ]);

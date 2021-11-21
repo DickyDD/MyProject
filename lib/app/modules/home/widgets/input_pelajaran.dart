@@ -34,11 +34,12 @@ class InputPelajaran extends StatelessWidget {
                   _isValid = isValid;
                 }
               },
-              child: Row(
+              child: Column(
                 children: [
                   Expanded(
                     child: Container(
                       height: Get.height,
+                      color: Colors.blue[50],
                       child: PelajaranWidget(
                         sizeJurusan: controller.panjangListUmum.length,
                         controller: controller,
@@ -53,6 +54,7 @@ class InputPelajaran extends StatelessWidget {
                   Expanded(
                     child: Container(
                       height: Get.height,
+                      color: Colors.red[50],
                       child: PelajaranWidgetKhusus(
                         sizeJurusan: controller.listPelajaranKhusus.length,
                         controller: controller,
@@ -101,157 +103,185 @@ class PelajaranWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var sC = ScrollController();
-    return ListView.builder(
+    return Scrollbar(
+      isAlwaysShown: true,
       controller: sC,
-      itemCount: sizeJurusan,
-      itemBuilder: (context, i) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (i == 0)
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Text(
-                  'Pelajaran $jenis',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            SizedBox(
-              height: 30,
-            ),
-            Row(
-              children: [
-                CardShadow(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
+      child: ListView.builder(
+        controller: sC,
+        itemCount: sizeJurusan,
+        itemBuilder: (context, i) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (i == 0)
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Text(
+                    'Pelajaran $jenis',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
                     ),
-                    child: Text(listData[i].id),
                   ),
                 ),
-                Spacer(),
-                CardShadow(
-                  child: TextButton(
-                    onPressed: () {
-                      controller.addPelajranUmum(i);
-                    },
-                    child: Text('+'),
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: CardShadow(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        child: Text(listData[i].id),
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Obx(() {
-              var panjang = listPanjang[i].obs;
-              return Container(
-                child: Column(
-                  children: List<Widget>.generate(panjang.value, (index) {
-                    final dataC = listData[i].pelajaran[index];
-                    final dataKKN = listData[i].KKN[index];
-                    var C = TextEditingController(
-                      text: dataC.toString(),
-                    );
-                    var KKN = TextEditingController(
-                      text: dataKKN.toString(),
-                    );
-                    return Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: CardShadow(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                controller: C,
-                                onChanged: (str) =>
-                                    listData[i].pelajaran[index] = str,
-                                decoration: InputDecoration(
-                                  hintText: 'Pelajarana',
+                  Spacer(
+                    flex: 3,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      onPressed: () {
+                        controller.addPelajranUmum(i);
+                      },
+                      icon: Container(
+                        decoration: new BoxDecoration(
+                          color: Colors.greenAccent,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          LineIcons.plusCircle,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Obx(() {
+                var panjang = listPanjang[i].obs;
+                return Container(
+                  child: Column(
+                    children: List<Widget>.generate(panjang.value, (index) {
+                      final dataC = listData[i].pelajaran[index];
+                      final dataKKN = listData[i].KKN[index];
+                      var C = TextEditingController(
+                        text: dataC.toString(),
+                      );
+                      var KKN = TextEditingController(
+                        text: dataKKN.toString(),
+                      );
+                      return Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: CardShadow(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  controller: C,
+                                  onChanged: (str) =>
+                                      listData[i].pelajaran[index] = str,
+                                  decoration: InputDecoration(
+                                    hintText: 'Pelajarana',
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: CardShadow(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                controller: KKN,
-                                validator: (val) => validateNilai(val!),
-                                inputFormatters: [
-                                  TextInputMask(mask: '999'),
-                                ],
-                                keyboardType: TextInputType.number,
-                                onChanged: (str) =>
-                                    listData[i].KKN[index] = str,
-                                decoration: InputDecoration(
-                                  hintText: 'KKM',
+                          Expanded(
+                            flex: 3,
+                            child: CardShadow(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                  controller: KKN,
+                                  validator: (val) => validateNilai(val!),
+                                  inputFormatters: [
+                                    TextInputMask(mask: '999'),
+                                  ],
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (str) =>
+                                      listData[i].KKN[index] = str,
+                                  decoration: InputDecoration(
+                                    hintText: 'KKM',
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            splashRadius: 1,
-                            onPressed: () {
-                              Get.defaultDialog(
-                                middleText: 'Yakin Ingin menghapus',
-                                actions: [
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(Colors.red),
-                                    ),
-                                    onPressed: () {
-                                      controller.lessPelajranUmum(
-                                          i,
-                                          listData[i].pelajaran[index],
-                                          listData[i].KKN[index]);
+                          Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              // padding: EdgeInsets.zero,
+                              // splashRadius: 1,
+                              onPressed: () {
+                                Get.defaultDialog(
+                                  middleText: 'Yakin Ingin menghapus',
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Colors.red),
+                                      ),
+                                      onPressed: () {
+                                        controller.lessPelajranUmum(
+                                            i,
+                                            listData[i].pelajaran[index],
+                                            listData[i].KKN[index]);
 
-                                      Get.back();
-                                    },
-                                    child: Text('Yakin'),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                    child: Text('Tidak'),
-                                  ),
-                                ],
-                                title: 'Hapus?',
-                              );
-                            },
-                            icon: Icon(LineIcons.minusCircle),
+                                        Get.back();
+                                      },
+                                      child: Text('Yakin'),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                      child: Text('Tidak'),
+                                    ),
+                                  ],
+                                  title: 'Hapus?',
+                                );
+                              },
+                              icon: Container(
+                                decoration: new BoxDecoration(
+                                  color: Colors.redAccent,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  LineIcons.minusCircle,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            if (i == sizeJurusan - 1)
-              Center(
-                  child: ButtonCustom(
-                      nama: 'Save',
-                      onTap: () async {
-                        input();
-                      })),
-          ],
-        );
-      },
+                        ],
+                      );
+                    }),
+                  ),
+                );
+              }),
+              SizedBox(
+                height: 10,
+              ),
+              if (i == sizeJurusan - 1)
+                Center(
+                    child: ButtonCustom(
+                        nama: 'Save',
+                        onTap: () async {
+                          input();
+                        })),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -287,407 +317,482 @@ class PelajaranWidgetKhusus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var sC = ScrollController();
-    return ListView.builder(
+    return Scrollbar(
+      isAlwaysShown: true,
       controller: sC,
-      itemCount: sizeJurusan,
-      itemBuilder: (context, i) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (i == 0)
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Column(
-                  children: [
-                    Text(
-                      'Pelajaran $jenis',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
+      child: ListView.builder(
+        controller: sC,
+        itemCount: sizeJurusan,
+        itemBuilder: (context, i) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (i == 0)
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Pelajaran $jenis',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            SizedBox(
-              height: 30,
-            ),
-            Row(
-              children: [
-                CardShadow(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    child: Text(listData[i].id),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            Obx(() {
-              var panjangC1 = listPanjangC1[i].obs;
-              var panjangC2 = listPanjangC2[i].obs;
-              var panjangC3 = listPanjangC3[i].obs;
-              return Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Obx(() => Column(
-                          children: [
-                            Row(
-                              children: [
-                                CardShadow(
-                                    child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text('C1'),
-                                )),
-                                Spacer(),
-                                CardShadow(
-                                  child: TextButton(
-                                    onPressed: () {
-                                      controller.addPelajranKhususC1(i);
-                                    },
-                                    child: Text('+'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            ...List<Widget>.generate(panjangC1.value, (index) {
-                              final dataC = listData[i].pelajaranC1[index];
-                              var C = TextEditingController(
-                                text: dataC.toString(),
-                              );
-                              final dataKKN = listData[i].nilaiKKNC1[index];
-                              var KKN = TextEditingController(
-                                text: dataKKN.toString(),
-                              );
-                              return Row(
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                children: [
+                  CardShadow(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      child: Text(listData[i].id),
+                    ),
+                  ),
+                ],
+              ),
+              Obx(() {
+                var panjangC1 = listPanjangC1[i].obs;
+                var panjangC2 = listPanjangC2[i].obs;
+                var panjangC3 = listPanjangC3[i].obs;
+                return Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Obx(() => Column(
+                            children: [
+                              Row(
                                 children: [
                                   Expanded(
                                     flex: 3,
                                     child: CardShadow(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          controller: C,
-                                          onChanged: (str) => listData[i]
-                                              .pelajaranC1[index] = str,
-                                          decoration: InputDecoration(
-                                            hintText: 'Pelajarana',
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                        child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('C1'),
+                                    )),
                                   ),
-                                  Expanded(
+                                  Spacer(
                                     flex: 3,
-                                    child: CardShadow(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextFormField(
-                                          controller: KKN,
-                                          validator: (val) =>
-                                              validateNilai(val!),
-                                          inputFormatters: [
-                                            TextInputMask(mask: '999'),
-                                          ],
-                                          keyboardType: TextInputType.number,
-                                          onChanged: (str) => listData[i]
-                                              .nilaiKKNC1[index] = str,
-                                          decoration: InputDecoration(
-                                            hintText: 'KKM',
-                                          ),
-                                        ),
-                                      ),
-                                    ),
                                   ),
                                   Expanded(
                                     flex: 1,
                                     child: IconButton(
-                                      padding: EdgeInsets.zero,
-                                      splashRadius: 1,
                                       onPressed: () {
-                                        Get.defaultDialog(
-                                          middleText: 'Yakin Ingin menghapus',
-                                          actions: [
-                                            ElevatedButton(
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.red),
-                                              ),
-                                              onPressed: () {
-                                                controller.lessPelajranKhususC1(
-                                                  i,
-                                                  listData[i]
-                                                      .pelajaranC1[index],
-                                                  listData[i].nilaiKKNC1[index],
-                                                );
-
-                                                Get.back();
-                                              },
-                                              child: Text('Yakin'),
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Get.back();
-                                              },
-                                              child: Text('Tidak'),
-                                            ),
-                                          ],
-                                          title: 'Hapus?',
-                                        );
+                                        controller.addPelajranKhususC1(i);
                                       },
-                                      icon: Icon(LineIcons.minusCircle),
+                                      icon: Container(
+                                        decoration: new BoxDecoration(
+                                          color: Colors.greenAccent,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          LineIcons.plusCircle,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
-                              );
-                            }),
-                          ],
-                        )),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            CardShadow(
-                                child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('C2'),
-                            )),
-                            Spacer(),
-                            CardShadow(
-                              child: TextButton(
-                                onPressed: () {
-                                  controller.addPelajranKhususC2(i);
-                                },
-                                child: Text('+'),
                               ),
-                            ),
-                          ],
-                        ),
-                        ...List<Widget>.generate(panjangC2.value, (index) {
-                          final dataC = listData[i].pelajaranC2[index];
-                          var C = TextEditingController(
-                            text: dataC.toString(),
-                          );
-                          final dataKKN = listData[i].nilaiKKNC2[index];
-                          var KKN = TextEditingController(
-                            text: dataKKN.toString(),
-                          );
-                          return Row(
+                              ...List<Widget>.generate(panjangC1.value,
+                                  (index) {
+                                final dataC = listData[i].pelajaranC1[index];
+                                var C = TextEditingController(
+                                  text: dataC.toString(),
+                                );
+                                final dataKKN = listData[i].nilaiKKNC1[index];
+                                var KKN = TextEditingController(
+                                  text: dataKKN.toString(),
+                                );
+                                return Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: CardShadow(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextField(
+                                            controller: C,
+                                            onChanged: (str) => listData[i]
+                                                .pelajaranC1[index] = str,
+                                            decoration: InputDecoration(
+                                              hintText: 'Pelajarana',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: CardShadow(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextFormField(
+                                            controller: KKN,
+                                            validator: (val) =>
+                                                validateNilai(val!),
+                                            inputFormatters: [
+                                              TextInputMask(mask: '999'),
+                                            ],
+                                            keyboardType: TextInputType.number,
+                                            onChanged: (str) => listData[i]
+                                                .nilaiKKNC1[index] = str,
+                                            decoration: InputDecoration(
+                                              hintText: 'KKM',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        splashRadius: 1,
+                                        onPressed: () {
+                                          Get.defaultDialog(
+                                            middleText: 'Yakin Ingin menghapus',
+                                            actions: [
+                                              ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.red),
+                                                ),
+                                                onPressed: () {
+                                                  controller
+                                                      .lessPelajranKhususC1(
+                                                    i,
+                                                    listData[i]
+                                                        .pelajaranC1[index],
+                                                    listData[i]
+                                                        .nilaiKKNC1[index],
+                                                  );
+
+                                                  Get.back();
+                                                },
+                                                child: Text('Yakin'),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Get.back();
+                                                },
+                                                child: Text('Tidak'),
+                                              ),
+                                            ],
+                                            title: 'Hapus?',
+                                          );
+                                        },
+                                        icon: Container(
+                                          decoration: new BoxDecoration(
+                                            color: Colors.redAccent,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            LineIcons.minusCircle,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ],
+                          )),
+                      Column(
+                        children: [
+                          Row(
                             children: [
                               Expanded(
                                 flex: 3,
                                 child: CardShadow(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      controller: C,
-                                      onChanged: (str) =>
-                                          listData[i].pelajaranC2[index] = str,
-                                      decoration: InputDecoration(
-                                        hintText: 'Pelajarana',
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('C2'),
+                                )),
                               ),
-                              Expanded(
+                              Spacer(
                                 flex: 3,
-                                child: CardShadow(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField(
-                                      controller: KKN,
-                                      validator: (val) => validateNilai(val!),
-                                      inputFormatters: [
-                                        TextInputMask(mask: '999'),
-                                      ],
-                                      keyboardType: TextInputType.number,
-                                      onChanged: (str) =>
-                                          listData[i].nilaiKKNC2[index] = str,
-                                      decoration: InputDecoration(
-                                        hintText: 'KKM',
-                                      ),
-                                    ),
-                                  ),
-                                ),
                               ),
                               Expanded(
                                 flex: 1,
                                 child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  splashRadius: 1,
                                   onPressed: () {
-                                    Get.defaultDialog(
-                                      middleText: 'Yakin Ingin menghapus',
-                                      actions: [
-                                        ElevatedButton(
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.red),
-                                          ),
-                                          onPressed: () {
-                                            controller.lessPelajranKhususC2(
-                                              i,
-                                              listData[i].pelajaranC2[index],
-                                              listData[i].nilaiKKNC2[index],
-                                            );
-
-                                            Get.back();
-                                          },
-                                          child: Text('Yakin'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Get.back();
-                                          },
-                                          child: Text('Tidak'),
-                                        ),
-                                      ],
-                                      title: 'Hapus?',
-                                    );
+                                    controller.addPelajranKhususC2(i);
                                   },
-                                  icon: Icon(LineIcons.minusCircle),
+                                  icon: Container(
+                                    decoration: new BoxDecoration(
+                                      color: Colors.greenAccent,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      LineIcons.plusCircle,
+                                      // color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
-                          );
-                        }),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            CardShadow(
-                                child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('C3'),
-                            )),
-                            Spacer(),
-                            CardShadow(
-                              child: TextButton(
-                                onPressed: () {
-                                  controller.addPelajranKhususC3(i);
-                                },
-                                child: Text('+'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        ...List<Widget>.generate(panjangC3.value, (index) {
-                          final dataC = listData[i].pelajaranC3[index];
-                          var C = TextEditingController(
-                            text: dataC.toString(),
-                          );
-                          final dataKKN = listData[i].nilaiKKNC3[index];
-                          var KKN = TextEditingController(
-                            text: dataKKN.toString(),
-                          );
-                          return Row(
+                          ),
+                          ...List<Widget>.generate(panjangC2.value, (index) {
+                            final dataC = listData[i].pelajaranC2[index];
+                            var C = TextEditingController(
+                              text: dataC.toString(),
+                            );
+                            final dataKKN = listData[i].nilaiKKNC2[index];
+                            var KKN = TextEditingController(
+                              text: dataKKN.toString(),
+                            );
+                            return Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: CardShadow(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextField(
+                                        controller: C,
+                                        onChanged: (str) => listData[i]
+                                            .pelajaranC2[index] = str,
+                                        decoration: InputDecoration(
+                                          hintText: 'Pelajarana',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: CardShadow(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextFormField(
+                                        controller: KKN,
+                                        validator: (val) => validateNilai(val!),
+                                        inputFormatters: [
+                                          TextInputMask(mask: '999'),
+                                        ],
+                                        keyboardType: TextInputType.number,
+                                        onChanged: (str) =>
+                                            listData[i].nilaiKKNC2[index] = str,
+                                        decoration: InputDecoration(
+                                          hintText: 'KKM',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    splashRadius: 1,
+                                    onPressed: () {
+                                      Get.defaultDialog(
+                                        middleText: 'Yakin Ingin menghapus',
+                                        actions: [
+                                          ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.red),
+                                            ),
+                                            onPressed: () {
+                                              controller.lessPelajranKhususC2(
+                                                i,
+                                                listData[i].pelajaranC2[index],
+                                                listData[i].nilaiKKNC2[index],
+                                              );
+
+                                              Get.back();
+                                            },
+                                            child: Text('Yakin'),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Get.back();
+                                            },
+                                            child: Text('Tidak'),
+                                          ),
+                                        ],
+                                        title: 'Hapus?',
+                                      );
+                                    },
+                                    icon: Container(
+                                      decoration: new BoxDecoration(
+                                        color: Colors.redAccent,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        LineIcons.minusCircle,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Row(
                             children: [
                               Expanded(
                                 flex: 3,
                                 child: CardShadow(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      controller: C,
-                                      onChanged: (str) =>
-                                          listData[i].pelajaranC3[index] = str,
-                                      decoration: InputDecoration(
-                                        hintText: 'Pelajarana',
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('C3'),
+                                )),
                               ),
-                              Expanded(
+                              Spacer(
                                 flex: 3,
-                                child: CardShadow(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField(
-                                      controller: KKN,
-                                      validator: (val) => validateNilai(val!),
-                                      inputFormatters: [
-                                        TextInputMask(mask: '999'),
-                                      ],
-                                      keyboardType: TextInputType.number,
-                                      onChanged: (str) =>
-                                          listData[i].nilaiKKNC3[index] = str,
-                                      decoration: InputDecoration(
-                                        hintText: 'KKM',
-                                      ),
-                                    ),
-                                  ),
-                                ),
                               ),
                               Expanded(
                                 flex: 1,
                                 child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  splashRadius: 1,
                                   onPressed: () {
-                                    Get.defaultDialog(
-                                      middleText: 'Yakin Ingin menghapus',
-                                      actions: [
-                                        ElevatedButton(
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.red),
-                                          ),
-                                          onPressed: () {
-                                            controller.lessPelajranKhususC3(
-                                              i,
-                                              listData[i].pelajaranC3[index],
-                                              listData[i].nilaiKKNC3[index],
-                                            );
-
-                                            Get.back();
-                                          },
-                                          child: Text('Yakin'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Get.back();
-                                          },
-                                          child: Text('Tidak'),
-                                        ),
-                                      ],
-                                      title: 'Hapus?',
-                                    );
+                                    controller.addPelajranKhususC3(i);
                                   },
-                                  icon: Icon(LineIcons.minusCircle),
+                                  icon: Container(
+                                    decoration: new BoxDecoration(
+                                      color: Colors.greenAccent,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(LineIcons.minusCircle),
+                                  ),
                                 ),
                               ),
                             ],
-                          );
-                        }),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
-            if (i == sizeJurusan - 1)
-              Center(
-                  child: ButtonCustom(
-                      nama: 'Save',
-                      onTap: () async {
-                        input();
-                      })),
-          ],
-        );
-      },
+                          ),
+                          ...List<Widget>.generate(panjangC3.value, (index) {
+                            final dataC = listData[i].pelajaranC3[index];
+                            var C = TextEditingController(
+                              text: dataC.toString(),
+                            );
+                            final dataKKN = listData[i].nilaiKKNC3[index];
+                            var KKN = TextEditingController(
+                              text: dataKKN.toString(),
+                            );
+                            return Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: CardShadow(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextField(
+                                        controller: C,
+                                        onChanged: (str) => listData[i]
+                                            .pelajaranC3[index] = str,
+                                        decoration: InputDecoration(
+                                          hintText: 'Pelajarana',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: CardShadow(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextFormField(
+                                        controller: KKN,
+                                        validator: (val) => validateNilai(val!),
+                                        inputFormatters: [
+                                          TextInputMask(mask: '999'),
+                                        ],
+                                        keyboardType: TextInputType.number,
+                                        onChanged: (str) =>
+                                            listData[i].nilaiKKNC3[index] = str,
+                                        decoration: InputDecoration(
+                                          hintText: 'KKM',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    splashRadius: 1,
+                                    onPressed: () {
+                                      Get.defaultDialog(
+                                        middleText: 'Yakin Ingin menghapus',
+                                        actions: [
+                                          ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.red),
+                                            ),
+                                            onPressed: () {
+                                              controller.lessPelajranKhususC3(
+                                                i,
+                                                listData[i].pelajaranC3[index],
+                                                listData[i].nilaiKKNC3[index],
+                                              );
+
+                                              Get.back();
+                                            },
+                                            child: Text('Yakin'),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Get.back();
+                                            },
+                                            child: Text('Tidak'),
+                                          ),
+                                        ],
+                                        title: 'Hapus?',
+                                      );
+                                    },
+                                    icon: Container(
+                                      decoration: new BoxDecoration(
+                                        color: Colors.redAccent,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        LineIcons.minusCircle,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }),
+              SizedBox(
+                height: 10,
+              ),
+              if (i == sizeJurusan - 1)
+                Center(
+                    child: ButtonCustom(
+                        nama: 'Save',
+                        onTap: () async {
+                          input();
+                        })),
+            ],
+          );
+        },
+      ),
     );
   }
 }

@@ -12,12 +12,12 @@ class InputJurusan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
-    final jumlahJurusan = controller.listJurusan.length.obs;
+    // final jumlahJurusan = controller.listJurusan.length.obs;
     var width = MediaQuery.of(context).size.width;
     final sizeJurusan = controller.listJurusan.length.obs;
 
     return Obx(
-      () => jumlahJurusan.value != 0
+      () => sizeJurusan.value != 0
           ? ListView.builder(
               itemCount: sizeJurusan.value,
               itemBuilder: (context, i) {

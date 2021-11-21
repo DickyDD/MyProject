@@ -147,7 +147,7 @@ class InputKelas extends StatelessWidget {
                                                         .spaceBetween,
                                                 children: [
                                                   Text(
-                                                      'Kelas ${9 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}'),
+                                                      'Kelas ${10 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}'),
                                                   TextButton(
                                                       onPressed: () {
                                                         Get.defaultDialog(
@@ -174,7 +174,7 @@ class InputKelas extends StatelessWidget {
                                                                             .listWalikelasGmail![
                                                                         i][indx],
                                                                     i,
-                                                                    'kelas ${9 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}');
+                                                                    'kelas ${10 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}');
                                                                 if (i == 0) {
                                                                   controller
                                                                       .kelas
@@ -220,7 +220,7 @@ class InputKelas extends StatelessWidget {
                                                                     .collection(
                                                                         'auth users')
                                                                     .doc(
-                                                                        '${controller.listWalikelas![i][indx].text} kelas ${9 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}')
+                                                                        '${controller.listWalikelas![i][indx].text} kelas ${10 + i} ${controller.kelas.value.singkatanJurusan} ${indx + 1}')
                                                                     .update({
                                                                   "aktif":
                                                                       false,
@@ -248,14 +248,14 @@ class InputKelas extends StatelessWidget {
                                             input(
                                               controller.listWalikelas![i]
                                                   [indx],
-                                              'Nama WaliKelas ${9 + i}',
+                                              'Nama WaliKelas ${10 + i}',
                                               null,
                                               null,
                                             ),
                                             input(
                                               controller.listWalikelasGmail![i]
                                                   [indx],
-                                              'NIP WaliKelas ${9 + i}',
+                                              'NIP WaliKelas ${10 + i}',
                                               TextInputType.number,
                                               // TextInputType.number,
                                               [
