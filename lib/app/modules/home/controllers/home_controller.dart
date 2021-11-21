@@ -339,14 +339,14 @@ class HomeController extends GetxController {
   }
 
   Future inputPKL() async {
-    var data = {};
-    for (var i = 0; i < listPKL.length; i++) {
-      data.addAll({listMitra[i].text.trim(): listLokasi[i].text.trim()});
+    var data = [];
+    for (var i = 0; i < listEXR.length; i++) {
+      data.add(listEXR[i].value);
     }
     try {
       await users
           .collection('Data Sekolah')
-          .doc('Data PKL')
+          .doc('Data Extrakurikuler')
           .set({'data': data});
     } catch (e) {
       print(e);

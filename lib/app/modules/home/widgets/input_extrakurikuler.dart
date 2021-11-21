@@ -15,7 +15,7 @@ class InputExtrakurikuler extends StatelessWidget {
     // final jumlahJurusan = controller.listJurusan.length.obs;
     var width = MediaQuery.of(context).size.width;
     final sizeJurusan = controller.listEXR.length.obs;
-    final listString = List.generate(sizeJurusan.value, (index) => Rx(''));
+    // final controller.listEXR = List.generate(sizeJurusan.value, (index) => Rx(''));
 
     return Obx(
       () => sizeJurusan.value != 0
@@ -24,7 +24,7 @@ class InputExtrakurikuler extends StatelessWidget {
               itemBuilder: (context, i) {
                 var extrakurikuler = controller.extrakurikuler[i];
                 extrakurikuler.value.text = controller.listEXR[i].value;
-                listString[i].value = extrakurikuler.value.text;
+                // controller.listEXR[i].value = extrakurikuler.value.text;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -63,8 +63,8 @@ class InputExtrakurikuler extends StatelessWidget {
                               ),
                               child: Text(
                                 width > 575
-                                    ? 'Extrakurikuler ${listString[i].value == '' ? i + 1 : listString[i].value}'
-                                    : listString[i].value,
+                                    ? 'Extrakurikuler ${controller.listEXR[i].value == '' ? i + 1 : controller.listEXR[i].value}'
+                                    : controller.listEXR[i].value,
                               ),
                             ),
                           ),
@@ -84,7 +84,8 @@ class InputExtrakurikuler extends StatelessWidget {
                                             ),
                                             child: Text('Yakin'),
                                             onPressed: () async {
-                                              controller.lessEXR(sizeJurusan,listString[i].value);
+                                              controller.lessEXR(sizeJurusan,
+                                                  controller.listEXR[i].value);
                                               Get.back();
                                             }),
                                              ElevatedButton(onPressed: (){Get.back();}, child: Text('Tidak'))
@@ -104,7 +105,7 @@ class InputExtrakurikuler extends StatelessWidget {
                             TextField(
                               controller: extrakurikuler.value,
                               onChanged: (val) {
-                                listString[i].value = val;
+                                controller.listEXR[i].value = val;
                               },
                               decoration: InputDecoration(hintText: 'Mitra'),
                             ),
