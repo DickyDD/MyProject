@@ -459,12 +459,12 @@ class HomeController extends GetxController {
       await users
           .collection('auth users')
           .doc(
-              'kelas X ${kelas.value.singkatanJurusan} ${j + 1}')
+              'kelas X ${kelas.value.singkatanJurusan} ${j + 1} ${panjangList.value} ${semester.value.toLowerCase()}')
           .set(
         {
           'aktif': kelas9Aktif[j].value,
           'password':
-              '${listWaliKelas9[j].text.trim()} kelas X ${kelas.value.singkatanJurusan} ${j + 1}',
+              'kelas X ${kelas.value.singkatanJurusan} ${j + 1} ${panjangList.value} ${semester.value.toLowerCase()}',
           'tahun': panjangList.value,
           'jurusan': kelas.value.namaJurusan,
           'semester': semester.value.toLowerCase(),
@@ -491,12 +491,12 @@ class HomeController extends GetxController {
       await users
           .collection('auth users')
           .doc(
-              'kelas XI ${kelas.value.singkatanJurusan} ${j + 1}')
+              'kelas XI ${kelas.value.singkatanJurusan} ${j + 1} ${panjangList.value} ${semester.value.toLowerCase()}')
           .set(
         {
           'aktif': kelas10Aktif[j].value,
           'password':
-              '${listWaliKelas10[j].text.trim()} kelas XI ${kelas.value.singkatanJurusan} ${j + 1}',
+              'kelas XI ${kelas.value.singkatanJurusan} ${j + 1} ${panjangList.value} ${semester.value.toLowerCase()}',
           'tahun': panjangList.value,
           'semester': semester.value.toLowerCase(),
           'jurusan': kelas.value.namaJurusan,
@@ -522,12 +522,12 @@ class HomeController extends GetxController {
       await users
           .collection('auth users')
           .doc(
-              'kelas XII ${kelas.value.singkatanJurusan} ${j + 1}')
+              'kelas XII ${kelas.value.singkatanJurusan} ${j + 1} ${panjangList.value} ${semester.value.toLowerCase()}')
           .set(
         {
           'aktif': kelas11Aktif[j].value,
           'password':
-              '${listWaliKelas11[j].text.trim()} kelas XII ${kelas.value.singkatanJurusan} ${j + 1}',
+              'kelas XII ${kelas.value.singkatanJurusan} ${j + 1} ${panjangList.value} ${semester.value.toLowerCase()}',
           'tahun': panjangList.value,
           'jurusan': kelas.value.namaJurusan,
           'semester': semester.value.toLowerCase(),
