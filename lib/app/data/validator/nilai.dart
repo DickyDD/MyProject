@@ -7,3 +7,12 @@ String? validateNilai(String value) {
   }
   return null;
 }
+String? validateDPK(String value) {
+  var val = int.tryParse(value);
+  if (value.isEmpty) {
+    return "Tidak Boleh Kosong";
+  } else if (val! > 4) {
+    return "Nilai tidak boleh lebih dari 4";
+  }
+  return null;
+}

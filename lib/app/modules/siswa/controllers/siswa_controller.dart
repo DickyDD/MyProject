@@ -37,9 +37,12 @@ class SiswaController extends GetxController {
 
   var listDataEXR = <String>[];
   var nilaiEXR = <TextEditingController>[];
-  var listDataPKL = <ListPelajaran>[];
+  var keteranganEXR = <TextEditingController>[];
+  // var listDataPKL = <ListPelajaran>[];
   var nialiPKL = <TextEditingController>[];
   var lamaPKL = <TextEditingController>[];
+  var lokasiPKL = <TextEditingController>[];
+  var mitraPKL = <TextEditingController>[];
 
   var dropdownValueEXR = <Rx<String>>[];
   var dropdownValuePKL = <Rx<ListPelajaran>>[];
@@ -66,12 +69,19 @@ class SiswaController extends GetxController {
   var urlsSiswa = '';
   var panjangNilai = 0.obs;
   var nilaiKhusus = <TextEditingController>[];
+  var keterampilanKhusus = <TextEditingController>[];
   var nilaiUmum = <TextEditingController>[];
+  var keterampilanUmum = <TextEditingController>[];
+
+  var checkedValue = true.obs;
+  var lulus = "";
+  var tidakLulus = "";
 
   // var pelajaran = <Rx<String>>[];
   late TextEditingController nama = TextEditingController();
   late TextEditingController nis = TextEditingController();
   late TextEditingController noOrtu = TextEditingController();
+  late TextEditingController namaOrtu = TextEditingController();
   late TextEditingController catatanAkademik = TextEditingController();
 
   //Guru
@@ -115,6 +125,7 @@ class SiswaController extends GetxController {
 
   Future<void> inputDataSiswa() async {
     // urlsSiswa
+   // urlsSiswa
     var listNilaiKhusus = [];
     var listNilaiUmum = [];
     var listPl = [];
@@ -129,10 +140,10 @@ class SiswaController extends GetxController {
         {
           type: {
             'nilai': nilaiEXR[i].text,
+            'keterangan': keteranganEXR[i].text,
           }
         },
       );
-      nilaiEXR[i].clear();
     }
 
     for (var i = 0; i < listKehadiran.length; i++) {
@@ -145,7 +156,6 @@ class SiswaController extends GetxController {
           }
         },
       );
-      nialiKehadiran[i].clear();
     }
 
     for (var i = 0; i < listDPK.length; i++) {
@@ -158,7 +168,6 @@ class SiswaController extends GetxController {
           }
         },
       );
-      nilaiDPK[i].clear();
     }
 
     for (var i = 0; i < dropdownValueKhusus.length; i++) {
@@ -169,11 +178,11 @@ class SiswaController extends GetxController {
         {
           type: {
             'nama': name,
-            'nilai': nilaiKhusus[i].text,
+            'Pengetahuan': nilaiKhusus[i].text,
+            'Keterampilan': keterampilanKhusus[i].text,
           }
         },
       );
-      nilaiKhusus[i].clear();
     }
     for (var i = 0; i < dropdownValueUmum.length; i++) {
       var name = dropdownValueUmum[i].value.name;
@@ -183,27 +192,28 @@ class SiswaController extends GetxController {
         {
           type: {
             'nama': name,
-            'nilai': nilaiUmum[i].text,
+            'Pengetahuan': nilaiUmum[i].text,
+            'Keterampilan': keterampilanUmum[i].text,
           }
         },
       );
-      nilaiUmum[i].clear();
     }
     print(listNilaiUmum);
-    for (var i = 0; i < dropdownValuePKL.length; i++) {
-      var name = dropdownValuePKL[i].value.name;
-      var type = dropdownValuePKL[i].value.type;
-      print(nialiPKL[i].text);
-      listPl.add(
-        {
-          type: {
-            'lokasi': name,
-            'lama': lamaPKL[i].text,
-            'nilai': nialiPKL[i].text,
-          }
-        },
-      );
-      nialiPKL[i].clear();
+    if (kelas.split(' ')[1] != 'X') {
+      for (var i = 0; i < nialiPKL.length; i++) {
+        var lokasi = lokasiPKL[i].text;
+        var mitra = mitraPKL[i].text;
+        print(nialiPKL[i].text);
+        listPl.add(
+          {
+            mitra: {
+              'lokasi': lokasi,
+              'lama': lamaPKL[i].text,
+              'nilai': nialiPKL[i].text,
+            }
+          },
+        );
+      }
     }
 
     await users
@@ -212,7 +222,8 @@ class SiswaController extends GetxController {
         .collection(semester)
         .doc(kelas)
         .collection("Siswa")
-        .add(
+        .doc(data[13].toString())
+        .set(
       {
         'nama': nama.text,
         'nis': nis.text,
@@ -220,10 +231,12 @@ class SiswaController extends GetxController {
         "noOrtu": noOrtu.text,
         "nilai_umum": listNilaiUmum,
         "nilai_khusus": listNilaiKhusus,
+        "namaOrtu": namaOrtu.text,
         "pkl": listPl,
         "extr": x,
         "kehadiran": k,
         "dpk": d,
+        "lulus": checkedValue.value == true ? lulus : tidakLulus,
         "catatanAkademik": catatanAkademik.text,
       },
     );
@@ -239,8 +252,8 @@ class SiswaController extends GetxController {
   var dataListUmum = <int>[];
   var dataDropKhusus = <ListPelajaran>[];
   var dataListKhusus = <int>[];
-  var dataDropPKL = <ListPelajaran>[];
-  var dataListPKL = <int>[];
+  // var dataDropPKL = <ListPelajaran>[];
+  // var dataListPKL = <int>[];
   var dataDropEXR = <ListPelajaran>[];
   var dataListEXR = <int>[];
   var dataDropKehadiran = <ListPelajaran>[];
@@ -254,18 +267,20 @@ class SiswaController extends GetxController {
 
     listGabunganKhusus = data[0];
     listGabunganUmum = data[1];
-    listDataPKL = data[2];
-    listDataEXR = data[3];
-    nama.text = data[4];
-    nis.text = data[5];
-    noOrtu.text = data[6];
-    catatanAkademik.text = data[7];
+    // listDataPKL = data[2];
+    listDataEXR = data[2];
+    nama.text = data[3];
+    nis.text = data[4];
+    noOrtu.text = data[5];
+    catatanAkademik.text = data[6];
 
-    var nilai_umum = data[8] as List;
+    var nilai_umum = data[7] as List;
     nilai_umum.forEach((element) {
       element.forEach((key, value) {
         dataDropUmum.add(ListPelajaran(key, value["nama"]));
-        nilaiUmum.add(TextEditingController(text: value["nilai"]));
+        nilaiUmum.add(TextEditingController(text: value["Pengetahuan"]));
+        keterampilanUmum
+            .add(TextEditingController(text: value["Keterampilan"]));
       });
     });
 
@@ -285,11 +300,13 @@ class SiswaController extends GetxController {
       }
     });
 
-    var nilai_khusus = data[9] as List;
+    var nilai_khusus = data[8] as List;
     nilai_khusus.forEach((element) {
       element.forEach((key, value) {
         dataDropKhusus.add(ListPelajaran(key, value["nama"]));
-        nilaiKhusus.add(TextEditingController(text: value["nilai"]));
+        nilaiKhusus.add(TextEditingController(text: value["Pengetahuan"]));
+        keterampilanKhusus
+            .add(TextEditingController(text: value["Keterampilan"]));
       });
     });
 
@@ -309,32 +326,34 @@ class SiswaController extends GetxController {
       }
     });
 
-    var nilai_pkl = data[10] as List;
+    var nilai_pkl = data[9] as List;
     nilai_pkl.forEach((element) {
       element.forEach((key, value) {
-        dataDropPKL.add(ListPelajaran(key, value["lokasi"]));
+        // dataDropPKL.add(ListPelajaran(key, value["lokasi"]));
+        mitraPKL.add(TextEditingController(text: key.toString()));
+        lokasiPKL.add(TextEditingController(text: value["lokasi"]));
         nialiPKL.add(TextEditingController(text: value["nilai"]));
         lamaPKL.add(TextEditingController(text: value['lama']));
       });
     });
 
-    dataDropPKL.forEach((element) {
-      var dataPKL = listDataPKL.asMap().entries.where((entry) {
-        return entry.value.type == element.type &&
-            entry.value.name == element.name;
-      }).map((val) => val.key);
-      var i = 0;
-      if (dataPKL.length == 0) {
-        listDataPKL.add(ListPelajaran(element.type, element.name));
-        i = listDataPKL.length;
-        dataListPKL.add(i - 1);
-      } else {
-        i = dataPKL.first;
-        dataListPKL.add(i);
-      }
-    });
+    // dataDropPKL.forEach((element) {
+    //   var dataPKL = listDataPKL.asMap().entries.where((entry) {
+    //     return entry.value.type == element.type &&
+    //         entry.value.name == element.name;
+    //   }).map((val) => val.key);
+    //   var i = 0;
+    //   if (dataPKL.length == 0) {
+    //     listDataPKL.add(ListPelajaran(element.type, element.name));
+    //     i = listDataPKL.length;
+    //     dataListPKL.add(i - 1);
+    //   } else {
+    //     i = dataPKL.first;
+    //     dataListPKL.add(i);
+    //   }
+    // });
 
-    var nilai_EXR = data[11] as List;
+    var nilai_EXR = data[10] as List;
     nilai_EXR.forEach((element) {
       element.forEach((key, value) {
         var data = listDataEXR.where((element) => element == key.toString());
@@ -346,16 +365,17 @@ class SiswaController extends GetxController {
         }
 
         nilaiEXR.add(TextEditingController(text: value["nilai"]));
+        keteranganEXR.add(TextEditingController(text: value["keterangan"]));
       });
     });
-    var nilai_Kehadiran = data[12] as List;
+    var nilai_Kehadiran = data[11] as List;
     nilai_Kehadiran.forEach((element) {
       element.forEach((key, value) {
         listKehadiran.add(key);
         nialiKehadiran.add(TextEditingController(text: value["nilai"]));
       });
     });
-    var nilai_DPK = data[13] as List;
+    var nilai_DPK = data[12] as List;
     nilai_DPK.forEach((element) {
       element.forEach((key, value) {
         listDPK.add(key);
@@ -363,8 +383,33 @@ class SiswaController extends GetxController {
       });
     });
 
-    image = data[15];
+    image = data[14];
+    namaOrtu.text = data[15];
+    tahunAjaran = data[16];
+    jurusan = data[17];
+    kelas = data[18];
+    if (data[19].toString().split(" ")[0] == "Naik") {
+      checkedValue.value = true;
+    } else {
+      checkedValue.value = false;
+    }
 
+    if (semester.toLowerCase() == "semester 2") {
+      lulus = kelas.split(' ')[1] == 'X'
+          ? 'Naik ke Kelas XI'
+          : kelas.split(' ')[1] == 'XI'
+              ? 'Naik ke Kelas XII'
+              : 'Lulus';
+      tidakLulus = kelas.split(' ')[1] == 'X'
+          ? 'Tinggal di Kelas X'
+          : kelas.split(' ')[1] == 'XI'
+              ? 'Tinggal di Kelas XI'
+              : 'Tidak Lulus';
+    } else {
+      lulus = "";
+      tidakLulus = "";
+    }
+    
     super.onInit();
   }
 }

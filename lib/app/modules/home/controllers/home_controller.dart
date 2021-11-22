@@ -43,7 +43,6 @@ class HomeController extends GetxController {
   final onLoading = false.obs;
 
   // PKL
-  late List<Jurusan> listPKL = [];
   late List<TextEditingController> listMitra = [];
   late List<TextEditingController> listLokasi = [];
 
@@ -157,15 +156,6 @@ class HomeController extends GetxController {
               listTahun.forEach((element) {
                 tahun.add(element.toString());
               });
-            } else if (element.id == 'Data PKL') {
-              var mapPKL = element.data()['data'];
-
-              mapPKL.forEach((key, value) {
-                var lokasi = "$value".obs;
-                var mitra = key.toString().obs;
-                listPKL.add(Jurusan(mitra, lokasi));
-              });
-              print(mapPKL);
             } else if (element.id == 'Data Extrakurikuler') {
               var mapEKR = element.data()['data'];
 
@@ -189,7 +179,7 @@ class HomeController extends GetxController {
             ..namaLengkap
             ..namaSingkat);
           buildJurusan(listNamaJurusan.length);
-          buildPKL(listNamaJurusan.length);
+     
           panjangList.value = tahun[0];
         }
 
@@ -212,17 +202,6 @@ class HomeController extends GetxController {
     listJurusan = [...listJurusan, TextEditingController()];
     listSingkatanJurusan = [...listSingkatanJurusan, TextEditingController()];
     sizeJurusan.value = listJurusan.length;
-    onLoading.value = false;
-  }
-
-  void addPKL(
-    RxInt sizeJurusan,
-  ) {
-    onLoading.value = true;
-    listPKL = [...listPKL, Jurusan(''.obs, ''.obs)];
-    listMitra = [...listMitra, TextEditingController()];
-    listLokasi = [...listLokasi, TextEditingController()];
-    sizeJurusan.value = listPKL.length;
     onLoading.value = false;
   }
 
@@ -288,40 +267,12 @@ class HomeController extends GetxController {
     onLoading.value = false;
   }
 
-  void lessPKL(
-    Jurusan namaLengkap,
-    RxInt sizeJurusan,
-    TextEditingController jurusanC,
-    TextEditingController jsingkatanC,
-  ) {
-    onLoading.value = true;
-    listPKL.removeWhere(
-      (item) => item == namaLengkap,
-    );
-    listLokasi.removeWhere((item) => item == jurusanC);
-    listMitra.removeWhere((item) => item == jsingkatanC);
-    sizeJurusan.value = listPKL.length;
-    onLoading.value = false;
-  }
-
   void buildJurusan(int data) {
     listJurusan = List.generate(
       data,
       (i) => TextEditingController(),
     );
     listSingkatanJurusan = List.generate(
-      data,
-      (i) => TextEditingController(),
-    );
-    print(listJurusan.length);
-  }
-
-  void buildPKL(int data) {
-    listLokasi = List.generate(
-      data,
-      (i) => TextEditingController(),
-    );
-    listMitra = List.generate(
       data,
       (i) => TextEditingController(),
     );
@@ -386,7 +337,7 @@ class HomeController extends GetxController {
     }
   }
 
-  Future inputPKL() async {
+  Future inputEXR() async {
     var data = [];
     for (var i = 0; i < listEXR.length; i++) {
       data.add(listEXR[i].value);
@@ -908,18 +859,18 @@ class HomeController extends GetxController {
     }
   }
 
-  Future getJurursanKhusus() async {
-    var data = await users
-        .collection('Data Sekolah')
-        .doc('Data Pelajaran')
-        .collection('Pelajaran Khusus')
-        .get();
-    data.docs.forEach((element) {
-      element.data().forEach((key, value) {
-        listNamaJurusan.add(Jurusan(element.id.obs, key.obs));
-      });
-    });
-  }
+  // Future getJurursanKhusus() async {
+  //   var data = await users
+  //       .collection('Data Sekolah')
+  //       .doc('Data Pelajaran')
+  //       .collection('Pelajaran Khusus')
+  //       .get();
+  //   data.docs.forEach((element) {
+  //     element.data().forEach((key, value) {
+  //       listNamaJurusan.add(Jurusan(element.id.obs, key.obs));
+  //     });
+  //   });
+  // }
 
   void removeListKhusus() {
     panjangListKhususC1 = <int>[].obs;
@@ -993,12 +944,13 @@ class HomeController extends GetxController {
 
   @override
   void onInit() async {
-    if (Get.arguments == null) {
-      await getPelajaranKhusus();
+    if (Get.arguments != null) {
+      await getPelajaranKhusus()
+          .whenComplete(() => jurusan = listNamaJurusan[0].obs);
       await getJurusan();
       await getPelajaranUmum();
       // await getJurursanKhusus();
-      jurusan = listNamaJurusan[0].obs;
+
       await getDataKelas();
       await getKepalaSekolah();
       extrakurikuler =

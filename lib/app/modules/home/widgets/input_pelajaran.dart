@@ -48,7 +48,8 @@ class InputPelajaran extends StatelessWidget {
               },
               child: SizedBox(
                 child: controller.pelajaran.value == false
-                    ? Expanded(
+                    ? Visibility(
+                        visible: !controller.pelajaran.value,
                         child: Container(
                           height: Get.height,
                           color: Colors.blue[50],
@@ -64,7 +65,8 @@ class InputPelajaran extends StatelessWidget {
                           ),
                         ),
                       )
-                    : Expanded(
+                    : Visibility(
+                        visible: controller.pelajaran.value,
                         child: Container(
                           height: Get.height,
                           color: Colors.red[50],

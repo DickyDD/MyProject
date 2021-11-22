@@ -123,7 +123,7 @@ class InputExtrakurikuler extends StatelessWidget {
                           nama: 'Save',
                           onTap: () async {
                             controller
-                                .inputPKL()
+                                .inputEXR()
                                 .whenComplete(() => controller.saveData());
                           },
                         ),

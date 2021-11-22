@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:easy_mask/easy_mask.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -87,7 +88,7 @@ class InputSiswa extends StatelessWidget {
                               image: NetworkImage(
                                 controller.imageGuru.value.path != ''
                                     ? controller.imageGuru.value.path
-                                    : controller.data[15],
+                                    : controller.data[14],
                               ),
                             ),
                           ),
@@ -133,6 +134,18 @@ class InputSiswa extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: EditingInputSiswa(
+                controller: controller.namaOrtu,
+                hintText: 'Nama Orang tua',
+                // max: 13,
+                keyboardtype: TextInputType.name,
+                // listFormat: [FilteringTextInputFormatter.digitsOnly],
+              ),
+            ),
+          ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: EditingInputSiswa(
                 controller: controller.noOrtu,
                 hintText: 'No.Orang tua',
                 max: 13,
@@ -156,6 +169,39 @@ class InputSiswa extends StatelessWidget {
             inputNilai: inputNilai,
             controller: controller,
           ),
+          SizedBox(
+            height: 20,
+          ),
+          controller.semester.toLowerCase() == "semester 2"
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: Obx(() => CheckboxListTile(
+                            title: Text("${controller.lulus}"),
+                            value: controller.checkedValue.value,
+                            onChanged: (newValue) {
+                              controller.checkedValue.value =
+                                  !controller.checkedValue.value;
+                            },
+                            controlAffinity: ListTileControlAffinity
+                                .leading, //  <-- leading Checkbox
+                          )),
+                    ),
+                    Expanded(
+                      child: Obx(() => CheckboxListTile(
+                            title: Text("${controller.tidakLulus}"),
+                            value: !controller.checkedValue.value,
+                            onChanged: (newValue) {
+                              controller.checkedValue.value =
+                                  !controller.checkedValue.value;
+                            },
+                            controlAffinity: ListTileControlAffinity
+                                .leading, //  <-- leading Checkbox
+                          )),
+                    ),
+                  ],
+                )
+              : SizedBox(),
           SizedBox(
             height: 20,
           ),
@@ -264,11 +310,15 @@ class NilaiWidget extends StatelessWidget {
                           IconButton(
                             onPressed: () {
                               if (panjangList.value < panjang.value) {
-                                panjangList.value++;
-                                controller.dropdownValueKhusus = [
-                                  ...controller.dropdownValueKhusus,
-                                  list[0].obs
+                                controller.dataListKhusus = [
+                                  ...controller.dataListKhusus,
+                                  0,
                                 ];
+                                controller.nilaiKhusus
+                                    .add(TextEditingController());
+                                controller.keterampilanKhusus
+                                    .add(TextEditingController());
+                                panjangList.value++;
                               } else {
                                 print(panjangList.value);
                                 Get.defaultDialog(
@@ -308,7 +358,7 @@ class NilaiWidget extends StatelessWidget {
                               ),
                             ),
                             Expanded(
-                              flex: 3,
+                              flex: 2,
                               child: Card(
                                 // color: ,
                                 child: Padding(
@@ -323,7 +373,30 @@ class NilaiWidget extends StatelessWidget {
                                     listFormat: [
                                       FilteringTextInputFormatter.digitsOnly
                                     ],
-                                    hintText: 'Nilai',
+                                    hintText: 'Pengetahuan',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Card(
+                                // color: ,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: EditingInputSiswaNilai(
+                                    key: Key(
+                                      controller.keterampilanKhusus[index].text,
+                                    ),
+                                    controller:
+                                        controller.keterampilanKhusus[index],
+                                    max: 3,
+                                    validator: (val) => validateNilai(val!),
+                                    keyboardtype: TextInputType.number,
+                                    listFormat: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    hintText: 'Keterampilan',
                                   ),
                                 ),
                               ),
@@ -333,10 +406,17 @@ class NilaiWidget extends StatelessWidget {
                               child: IconButton(
                                   onPressed: () {
                                     if (panjangList.value > 1) {
-                                      panjangList.value--;
                                       controller.dropdownValueKhusus.removeAt(
                                         index,
                                       );
+                                      controller.dataListKhusus.removeAt(index);
+                                      controller.keterampilanKhusus.removeAt(
+                                        index,
+                                      );
+                                      controller.nilaiKhusus.removeAt(
+                                        index,
+                                      );
+                                      panjangList.value--;
                                     } else {
                                       print(panjangList.value);
                                       Get.defaultDialog(
@@ -382,11 +462,18 @@ class NilaiWidget extends StatelessWidget {
                       IconButton(
                         onPressed: () {
                           if (panjangList.value < panjang.value) {
-                            panjangList.value++;
+                            controller.dataListUmum = [
+                              ...controller.dataListUmum,
+                              0,
+                            ];
                             controller.dropdownValueUmum = [
                               ...controller.dropdownValueUmum,
-                              list[0].obs
+                              list[0].obs,
                             ];
+                            controller.nilaiUmum.add(TextEditingController());
+                            controller.keterampilanUmum
+                                .add(TextEditingController());
+                            panjangList.value++;
                           } else {
                             print(panjangList.value);
                             Get.defaultDialog(
@@ -426,7 +513,7 @@ class NilaiWidget extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          flex: 3,
+                          flex: 2,
                           child: Card(
                             // color: ,
                             child: Padding(
@@ -440,7 +527,29 @@ class NilaiWidget extends StatelessWidget {
                                 listFormat: [
                                   FilteringTextInputFormatter.digitsOnly
                                 ],
-                                hintText: 'Nilai',
+                                hintText: 'Pengetahuan',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Card(
+                            // color: ,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: EditingInputSiswaNilai(
+                                key: Key(
+                                  controller.keterampilanUmum[index].text,
+                                ),
+                                controller: controller.keterampilanUmum[index],
+                                max: 3,
+                                validator: (val) => validateNilai(val!),
+                                keyboardtype: TextInputType.number,
+                                listFormat: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                hintText: 'Keterampilan',
                               ),
                             ),
                           ),
@@ -450,10 +559,17 @@ class NilaiWidget extends StatelessWidget {
                           child: IconButton(
                               onPressed: () {
                                 if (panjangList.value > 1) {
-                                  panjangList.value--;
                                   controller.dropdownValueUmum.removeAt(
                                     index,
                                   );
+                                  controller.dataListKhusus.removeAt(index);
+                                  controller.keterampilanUmum.removeAt(
+                                    index,
+                                  );
+                                  controller.nilaiUmum.removeAt(
+                                    index,
+                                  );
+                                  panjangList.value--;
                                 } else {
                                   print(panjangList.value);
                                   Get.defaultDialog(
@@ -473,15 +589,12 @@ class NilaiWidget extends StatelessWidget {
             );
           }),
 
-          inputNilai != '9'
+          inputNilai != 'X'
               ? Obx(() {
-                  var list = controller.listDataPKL;
-                  var panjang = list.length.obs;
-                  var panjangList = controller.dataListPKL.length.obs;
-                  controller.dropdownValuePKL = List.generate(
-                    panjangList.value,
-                    (idx) => list[controller.dataListPKL[idx]].obs,
-                  );
+                  // var list = controller.listDataPKL;
+                  var panjang = 5.obs;
+                  var panjangList = controller.lamaPKL.length.obs;
+
                   return Column(
                     children: [
                       Padding(
@@ -500,10 +613,14 @@ class NilaiWidget extends StatelessWidget {
                               onPressed: () {
                                 if (panjangList.value < panjang.value) {
                                   panjangList.value++;
-                                  controller.dropdownValuePKL = [
-                                    ...controller.dropdownValuePKL,
-                                    list[0].obs
-                                  ];
+                                  controller.nialiPKL
+                                      .add(TextEditingController());
+                                  controller.mitraPKL
+                                      .add(TextEditingController());
+                                  controller.lamaPKL
+                                      .add(TextEditingController());
+                                  controller.lokasiPKL
+                                      .add(TextEditingController());
                                 } else {
                                   print(panjangList.value);
                                   Get.defaultDialog(
@@ -531,15 +648,45 @@ class NilaiWidget extends StatelessWidget {
                               Row(
                                 children: [
                                   Expanded(
-                                    flex: 8,
+                                    flex: 4,
                                     child: Card(
                                       child: Padding(
                                         padding: EdgeInsets.only(
                                             top: 22, bottom: 22, left: 8),
-                                        child: Dropdown(
-                                          dropdownValue: controller
-                                              .dropdownValuePKL[index],
-                                          list: list,
+                                        child: EditingInputSiswaNilai(
+                                          // key:Key(controller.nialiKehadiran[index].text),
+                                          controller:
+                                              controller.mitraPKL[index],
+
+                                          // listFormat: [
+                                          //   FilteringTextInputFormatter
+                                          //       .digitsOnly
+                                          // ],
+                                          hintText: 'Mitra PKL',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 4,
+                                    child: Card(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 22, bottom: 22, left: 8),
+                                        child: EditingInputSiswaNilai(
+                                          // key:Key(controller.nialiKehadiran[index].text),
+                                          controller:
+                                              controller.lokasiPKL[index],
+
+                                          keyboardtype: TextInputType.multiline,
+                                          validator: (val) => val!.isEmpty
+                                              ? "Tidak Boleh kosong"
+                                              : null,
+                                          // listFormat: [
+                                          //   FilteringTextInputFormatter
+                                          //       .digitsOnly
+                                          // ],
+                                          hintText: 'Lokasi PKL',
                                         ),
                                       ),
                                     ),
@@ -553,10 +700,13 @@ class NilaiWidget extends StatelessWidget {
                                         child: EditingInputSiswaNilai(
                                           // key:Key(controller.nialiKehadiran[index].text),
                                           controller: controller.lamaPKL[index],
-                                          max: 3,
+                                          max: 2,
                                           keyboardtype: TextInputType.number,
                                           // validator: (val) =>
                                           //     validateNilai(val!),
+                                          validator: (val) => val!.isEmpty
+                                              ? "Tidak Boleh kosong"
+                                              : null,
                                           listFormat: [
                                             FilteringTextInputFormatter
                                                 .digitsOnly
@@ -572,10 +722,12 @@ class NilaiWidget extends StatelessWidget {
                                         onPressed: () {
                                           if (panjangList.value > 1) {
                                             panjangList.value--;
-                                            controller.dropdownValuePKL
-                                                .removeAt(
-                                              index,
-                                            );
+
+                                            controller.nialiPKL.removeAt(index);
+                                            controller.mitraPKL.removeAt(index);
+                                            controller.lamaPKL.removeAt(index);
+                                            controller.lokasiPKL
+                                                .removeAt(index);
                                           } else {
                                             print(panjangList.value);
                                             Get.defaultDialog(
@@ -641,6 +793,9 @@ class NilaiWidget extends StatelessWidget {
                               ...controller.dropdownValueEXR,
                               list[0].obs
                             ];
+                            controller.nilaiEXR.add(TextEditingController());
+                            controller.keteranganEXR
+                                .add(TextEditingController());
                           } else {
                             print(panjangList.value);
                             Get.defaultDialog(
@@ -687,6 +842,25 @@ class NilaiWidget extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: EditingInputSiswaNilai(
                                 controller: controller.nilaiEXR[index],
+                                maxLines: 1,
+                                max: 2,
+                                keyboardtype: TextInputType.name,
+                                listFormat: [TextInputMask(mask: 'AA')],
+                                validator: (val) =>
+                                    val!.isEmpty ? "Tidak Boleh kosong" : null,
+                                hintText: 'Nilai',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Card(
+                            // color: ,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: EditingInputSiswa(
+                                controller: controller.keteranganEXR[index],
                                 maxLines: 3,
                                 validator: (val) =>
                                     val!.isEmpty ? "Tidak Boleh kosong" : null,
@@ -702,6 +876,12 @@ class NilaiWidget extends StatelessWidget {
                                 if (panjangList.value > 1) {
                                   panjangList.value--;
                                   controller.dropdownValueEXR.removeAt(
+                                    index,
+                                  );
+                                  controller.nilaiEXR.removeAt(
+                                    index,
+                                  );
+                                  controller.keteranganEXR.removeAt(
                                     index,
                                   );
                                 } else {
@@ -725,72 +905,71 @@ class NilaiWidget extends StatelessWidget {
 
           // kehadirannnn
           Divider(),
-         
-Column(
-              children: [
-                Padding(
+
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      'Kehadiran',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Spacer(),
+                  ],
+                ),
+              ),
+              Divider(),
+              ...List.generate(
+                3,
+                (index) => Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      Text(
-                        'Kehadiran',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
+                      Expanded(
+                        flex: 8,
+                        child: Card(
+                          child: Padding(
+                              padding:
+                                  EdgeInsets.only(top: 22, bottom: 22, left: 8),
+                              child: Text(
+                                controller.listKehadiran[index],
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )),
                         ),
                       ),
-                      Spacer(),
-                    ],
-                  ),
-                ),
-                Divider(),
-                ...List.generate(
-                  3,
-                  (index) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 8,
-                          child: Card(
-                            child: Padding(
-                                padding: EdgeInsets.only(
-                                    top: 22, bottom: 22, left: 8),
-                                child: Text(
-                                  controller.listKehadiran[index],
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                )),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Card(
-                            // color: ,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: EditingInputSiswaKehadiran(
-                                key: Key(controller.nialiKehadiran[index].text),
-                                controller: controller.nialiKehadiran[index],
-                                max: 1,
-                                validator: (val) => validateNilai(val!),
-                                keyboardtype: TextInputType.number,
-                                listFormat: [
-                                  FilteringTextInputFormatter.digitsOnly
-                                ],
-                                hintText: 'Nilai',
-                              ),
+                      Expanded(
+                        flex: 3,
+                        child: Card(
+                          // color: ,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: EditingInputSiswaKehadiran(
+                              key: Key(controller.nialiKehadiran[index].text),
+                              controller: controller.nialiKehadiran[index],
+                              max: 1,
+                              validator: (val) => validateNilai(val!),
+                              keyboardtype: TextInputType.number,
+                              listFormat: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              hintText: 'Nilai',
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            
+              ),
+            ],
           ),
           // kehadirannnn
           Divider(),
@@ -845,7 +1024,7 @@ Column(
                               ),
                               controller: controller.nilaiDPK[index],
                               max: 1,
-                              validator: (val) => validateNilai(val!),
+                              validator: (val) => validateDPK(val!),
                               keyboardtype: TextInputType.number,
                               listFormat: [
                                 FilteringTextInputFormatter.digitsOnly

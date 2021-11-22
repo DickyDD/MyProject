@@ -3,11 +3,11 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_mask/easy_mask.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import '../widgets/landing.dart';
 import 'package:get/get.dart';
-import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:progressive_image/progressive_image.dart';
 import 'package:tes_database/app/data/api/pdf_api.dart';
@@ -44,7 +44,7 @@ class InputSiswa extends StatelessWidget {
     final controller = Get.find<GuruController>();
     var inputNilai = controller.kelas.split(' ')[1];
     print(inputNilai);
-
+    
     return Container(
       child: ListView(
         children: [
@@ -115,6 +115,18 @@ class InputSiswa extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: EditingInputSiswa(
+                controller: controller.namaOrtu,
+                hintText: 'Nama Orang tua',
+                // max: 13,
+                keyboardtype: TextInputType.name,
+                // listFormat: [FilteringTextInputFormatter.digitsOnly],
+              ),
+            ),
+          ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: EditingInputSiswa(
                 controller: controller.noOrtu,
                 hintText: 'No.Orang tua',
                 max: 13,
@@ -138,6 +150,39 @@ class InputSiswa extends StatelessWidget {
             inputNilai: inputNilai,
             controller: controller,
           ),
+          SizedBox(
+            height: 20,
+          ),
+          controller.semester.toLowerCase() == "semester 2"
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: Obx(() => CheckboxListTile(
+                            title: Text("${controller.lulus}"),
+                            value: controller.checkedValue.value,
+                            onChanged: (newValue) {
+                              controller.checkedValue.value =
+                                  !controller.checkedValue.value;
+                            },
+                            controlAffinity: ListTileControlAffinity
+                                .leading, //  <-- leading Checkbox
+                          )),
+                    ),
+                    Expanded(
+                      child: Obx(() => CheckboxListTile(
+                            title: Text("${controller.tidakLulus}"),
+                            value: !controller.checkedValue.value,
+                            onChanged: (newValue) {
+                              controller.checkedValue.value =
+                                  !controller.checkedValue.value;
+                            },
+                            controlAffinity: ListTileControlAffinity
+                                .leading, //  <-- leading Checkbox
+                          )),
+                    ),
+                  ],
+                )
+              : SizedBox(),
           SizedBox(
             height: 20,
           ),
@@ -220,12 +265,16 @@ class NilaiWidget extends StatelessWidget {
       child: Column(
         children: [
           Divider(),
-          inputNilai != '9'
+          inputNilai != 'X'
               ? Obx(() {
                   var list = controller.listKhususC3;
                   var panjang = list.length.obs;
                   var panjangList = 1.obs;
                   controller.nilaiKhusus = List.generate(
+                    panjang.value,
+                    (index) => TextEditingController(),
+                  );
+                  controller.keterampilanKhusus = List.generate(
                     panjang.value,
                     (index) => TextEditingController(),
                   );
@@ -295,7 +344,7 @@ class NilaiWidget extends StatelessWidget {
                                     ),
                                   ),
                                   Expanded(
-                                    flex: 3,
+                                    flex: 2,
                                     child: Card(
                                       // color: ,
                                       child: Padding(
@@ -313,7 +362,33 @@ class NilaiWidget extends StatelessWidget {
                                             FilteringTextInputFormatter
                                                 .digitsOnly
                                           ],
-                                          hintText: 'Nilai',
+                                          hintText: 'Pengetahuan',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Card(
+                                      // color: ,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: EditingInputSiswaNilai(
+                                          key: Key(
+                                            controller
+                                                .keterampilanKhusus[index].text,
+                                          ),
+                                          controller: controller
+                                              .keterampilanKhusus[index],
+                                          max: 3,
+                                          validator: (val) =>
+                                              validateNilai(val!),
+                                          keyboardtype: TextInputType.number,
+                                          listFormat: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly
+                                          ],
+                                          hintText: 'Keterampilan',
                                         ),
                                       ),
                                     ),
@@ -354,6 +429,11 @@ class NilaiWidget extends StatelessWidget {
                     panjang.value,
                     (index) => TextEditingController(),
                   );
+                  controller.keterampilanKhusus = List.generate(
+                    panjang.value,
+                    (index) => TextEditingController(),
+                  );
+
                   // controller.panjangKhusus.value = panjangList.value;
                   controller.dropdownValueKhusus = [
                     list[0].obs,
@@ -419,7 +499,7 @@ class NilaiWidget extends StatelessWidget {
                                     ),
                                   ),
                                   Expanded(
-                                    flex: 3,
+                                    flex: 2,
                                     child: Card(
                                       // color: ,
                                       child: Padding(
@@ -437,7 +517,33 @@ class NilaiWidget extends StatelessWidget {
                                             FilteringTextInputFormatter
                                                 .digitsOnly
                                           ],
-                                          hintText: 'Nilai',
+                                          hintText: 'Pengetahuan',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Card(
+                                      // color: ,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: EditingInputSiswaNilai(
+                                          key: Key(
+                                            controller
+                                                .keterampilanKhusus[index].text,
+                                          ),
+                                          controller: controller
+                                              .keterampilanKhusus[index],
+                                          max: 3,
+                                          validator: (val) =>
+                                              validateNilai(val!),
+                                          keyboardtype: TextInputType.number,
+                                          listFormat: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly
+                                          ],
+                                          hintText: 'Keterampilan',
                                         ),
                                       ),
                                     ),
@@ -476,6 +582,10 @@ class NilaiWidget extends StatelessWidget {
             var panjang = list.length.obs;
             var panjangList = 1.obs;
             controller.nilaiUmum = List.generate(
+              panjang.value,
+              (index) => TextEditingController(),
+            );
+            controller.keterampilanUmum = List.generate(
               panjang.value,
               (index) => TextEditingController(),
             );
@@ -559,7 +669,30 @@ class NilaiWidget extends StatelessWidget {
                                     listFormat: [
                                       FilteringTextInputFormatter.digitsOnly
                                     ],
-                                    hintText: 'Nilai',
+                                    hintText: 'Pengetahuan',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Card(
+                                // color: ,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: EditingInputSiswaNilai(
+                                    key: Key(
+                                      controller.keterampilanUmum[index].text,
+                                    ),
+                                    controller:
+                                        controller.keterampilanUmum[index],
+                                    max: 3,
+                                    validator: (val) => validateNilai(val!),
+                                    keyboardtype: TextInputType.number,
+                                    listFormat: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    hintText: 'Keterampilan',
                                   ),
                                 ),
                               ),
@@ -592,155 +725,184 @@ class NilaiWidget extends StatelessWidget {
                 ));
           }),
 
-          inputNilai != '9'
+          inputNilai != 'X'
               ? Obx(() {
-                  var list = controller.listDataPKL;
-                  var panjang = list.length.obs;
+                  // var list = controller.listDataPKL;
+                  var panjang = 5.obs;
                   var panjangList = 1.obs;
-                  controller.nialiPKL = List.generate(
-                    panjang.value,
-                    (index) => TextEditingController(),
-                  );
-                  controller.lamaPKL = List.generate(
-                    panjang.value,
-                    (index) => TextEditingController(),
-                  );
-                  // controller.panjangKhusus.value = panjangList.value;
-                  controller.dropdownValuePKL = [
-                    list[0].obs,
-                  ];
-                  return Obx(() => Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Pelatihan Kerja Lapangan",
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Spacer(),
-                                IconButton(
-                                  onPressed: () {
-                                    if (panjangList.value < panjang.value) {
-                                      panjangList.value++;
-                                      controller.dropdownValuePKL = [
-                                        ...controller.dropdownValuePKL,
-                                        list[0].obs
-                                      ];
-                                    } else {
-                                      print(panjangList.value);
-                                      Get.defaultDialog(
-                                        title: 'Peringatan',
-                                        middleText:
-                                            'Jumlah pelajaran telah mencapai batas',
-                                      );
-                                    }
-                                  },
-                                  icon: Icon(LineIcons.plusCircle),
-                                ),
-                                SizedBox(
-                                  width: 40,
-                                )
-                              ],
+
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Pelatihan Kerja Lapangan",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          Divider(),
-                          ...List.generate(
-                            panjangList.value,
-                            (index) => Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                            Spacer(),
+                            IconButton(
+                              onPressed: () {
+                                if (panjangList.value < panjang.value) {
+                                  panjangList.value++;
+                                  controller.nialiPKL
+                                      .add(TextEditingController());
+                                  controller.mitraPKL
+                                      .add(TextEditingController());
+                                  controller.lamaPKL
+                                      .add(TextEditingController());
+                                  controller.lokasiPKL
+                                      .add(TextEditingController());
+                                } else {
+                                  print(panjangList.value);
+                                  Get.defaultDialog(
+                                    title: 'Peringatan',
+                                    middleText:
+                                        'Jumlah pelajaran telah mencapai batas',
+                                  );
+                                }
+                              },
+                              icon: Icon(LineIcons.plusCircle),
+                            ),
+                            SizedBox(
+                              width: 40,
+                            )
+                          ],
+                        ),
+                      ),
+                      Divider(),
+                      ...List.generate(
+                        panjangList.value,
+                        (index) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Row(
                                 children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 8,
-                                        child: Card(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 22, bottom: 22, left: 8),
-                                            child: Dropdown(
-                                              dropdownValue: controller
-                                                  .dropdownValuePKL[index],
-                                              list: list,
-                                            ),
-                                          ),
+                                  Expanded(
+                                    flex: 4,
+                                    child: Card(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 22, bottom: 22, left: 8),
+                                        child: EditingInputSiswaNilai(
+                                          // key:Key(controller.nialiKehadiran[index].text),
+                                          controller:
+                                              controller.mitraPKL[index],
+
+                                          keyboardtype: TextInputType.multiline,
+                                          validator: (val) => val!.isEmpty
+                                              ? "Tidak Boleh kosong"
+                                              : null,
+                                          // listFormat: [
+                                          //   FilteringTextInputFormatter
+                                          //       .digitsOnly
+                                          // ],
+                                          hintText: 'Mitra PKL',
                                         ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Card(
-                                          // color: ,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: EditingInputSiswaNilai(
-                                              // key:Key(controller.nialiKehadiran[index].text),
-                                              controller:
-                                                  controller.lamaPKL[index],
-                                              max: 3,
-                                              keyboardtype:
-                                                  TextInputType.number,
-                                              // validator: (val) =>
-                                              //     validateNilai(val!),
-                                              listFormat: [
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly
-                                              ],
-                                              hintText: 'Lama PKL',
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: IconButton(
-                                            onPressed: () {
-                                              if (panjangList.value > 1) {
-                                                panjangList.value--;
-                                                controller.dropdownValuePKL
-                                                    .removeAt(
-                                                  index,
-                                                );
-                                              } else {
-                                                print(panjangList.value);
-                                                Get.defaultDialog(
-                                                  title: 'Peringatan',
-                                                  middleText:
-                                                      'Jumlah pelajaran tidak boleh kurang dari 1',
-                                                );
-                                              }
-                                            },
-                                            icon: Icon(LineIcons.minusCircle)),
-                                      ),
-                                    ],
-                                  ),
-                                  Card(
-                                    // color: ,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: EditingInputSiswaNilai(
-                                        key: Key(
-                                            controller.nialiPKL[index].text),
-                                        controller: controller.nialiPKL[index],
-                                        maxLines: 3,
-                                        validator: (val) => val!.isEmpty
-                                            ? "Tidak Boleh kosong"
-                                            : null,
-                                        hintText: 'Keterangan',
-                                        // hintText: 'Nilai',
                                       ),
                                     ),
                                   ),
+                                  Expanded(
+                                    flex: 4,
+                                    child: Card(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 22, bottom: 22, left: 8),
+                                        child: EditingInputSiswaNilai(
+                                          // key:Key(controller.nialiKehadiran[index].text),
+                                          controller:
+                                              controller.lokasiPKL[index],
+
+                                          keyboardtype: TextInputType.multiline,
+                                          validator: (val) => val!.isEmpty
+                                              ? "Tidak Boleh kosong"
+                                              : null,
+                                          // listFormat: [
+                                          //   FilteringTextInputFormatter
+                                          //       .digitsOnly
+                                          // ],
+                                          hintText: 'Lokasi PKL',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Card(
+                                      // color: ,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: EditingInputSiswaNilai(
+                                          // key:Key(controller.nialiKehadiran[index].text),
+                                          controller: controller.lamaPKL[index],
+                                          max: 2,
+                                          keyboardtype: TextInputType.number,
+                                          // validator: (val) =>
+                                          //     validateNilai(val!),
+                                          validator: (val) => val!.isEmpty
+                                              ? "Tidak Boleh kosong"
+                                              : null,
+                                          listFormat: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly
+                                          ],
+                                          hintText: 'Lama PKL',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                        onPressed: () {
+                                          if (panjangList.value > 1) {
+                                            panjangList.value--;
+
+                                            controller.nialiPKL.removeAt(index);
+                                            controller.mitraPKL.removeAt(index);
+                                            controller.lamaPKL.removeAt(index);
+                                            controller.lokasiPKL
+                                                .removeAt(index);
+                                          } else {
+                                            print(panjangList.value);
+                                            Get.defaultDialog(
+                                              title: 'Peringatan',
+                                              middleText:
+                                                  'Jumlah pelajaran tidak boleh kurang dari 1',
+                                            );
+                                          }
+                                        },
+                                        icon: Icon(LineIcons.minusCircle)),
+                                  ),
                                 ],
                               ),
-                            ),
+                              Card(
+                                // color: ,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: EditingInputSiswaNilai(
+                                    key: Key(controller.nialiPKL[index].text),
+                                    controller: controller.nialiPKL[index],
+                                    maxLines: 3,
+                                    validator: (val) => val!.isEmpty
+                                        ? "Tidak Boleh kosong"
+                                        : null,
+                                    hintText: 'Keterangan',
+                                    // hintText: 'Nilai',
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ));
+                        ),
+                      ),
+                    ],
+                  );
                 })
               : SizedBox(),
           //Extra kurikuler
@@ -749,6 +911,10 @@ class NilaiWidget extends StatelessWidget {
             var panjang = list.length.obs;
             var panjangList = 1.obs;
             controller.nilaiEXR = List.generate(
+              panjang.value,
+              (index) => TextEditingController(),
+            );
+            controller.keteranganEXR = List.generate(
               panjang.value,
               (index) => TextEditingController(),
             );
@@ -817,13 +983,33 @@ class NilaiWidget extends StatelessWidget {
                               ),
                             ),
                             Expanded(
-                              flex: 3,
+                              flex: 1,
                               child: Card(
                                 // color: ,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: EditingInputSiswaNilai(
                                     controller: controller.nilaiEXR[index],
+                                    maxLines: 1,
+                                    max: 2,
+                                    keyboardtype: TextInputType.name,
+                                    listFormat: [TextInputMask(mask: 'AA')],
+                                    validator: (val) => val!.isEmpty
+                                        ? "Tidak Boleh kosong"
+                                        : null,
+                                    hintText: 'Nilai',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Card(
+                                // color: ,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: EditingInputSiswa(
+                                    controller: controller.keteranganEXR[index],
                                     maxLines: 3,
                                     validator: (val) => val!.isEmpty
                                         ? "Tidak Boleh kosong"
@@ -1004,7 +1190,7 @@ class NilaiWidget extends StatelessWidget {
                                     ),
                                     controller: controller.nilaiDPK[index],
                                     max: 1,
-                                    validator: (val) => validateNilai(val!),
+                                    validator: (val) => validateDPK(val!),
                                     keyboardtype: TextInputType.number,
                                     listFormat: [
                                       FilteringTextInputFormatter.digitsOnly
@@ -1421,15 +1607,13 @@ class ViewDataSiswa extends StatelessWidget {
                                                       Get.toNamed(
                                                         '/siswa',
                                                         arguments: [
-                                                          inputNilai != '9'
+                                                          inputNilai != 'X'
                                                               ? controller
                                                                   .listKhususC3
                                                               : controller
                                                                   .listGabunganKhusus,
                                                           controller
                                                               .listGabunganUmum,
-                                                          controller
-                                                              .listDataPKL,
                                                           controller
                                                               .listDataEXR,
                                                           value['nama'] ??
@@ -1448,6 +1632,13 @@ class ViewDataSiswa extends StatelessWidget {
                                                           dpk as List,
                                                           value.id,
                                                           value['imageSiswa'],
+                                                          value['namaOrtu'],
+                                                          controller
+                                                              .tahunAjaran,
+                                                          controller.jurusan,
+                                                          controller.kelas,
+                                                          value["lulus"] ??
+                                                              "Naik ke",
                                                         ],
                                                       );
                                                     },
@@ -1474,9 +1665,10 @@ class ViewDataSiswa extends StatelessWidget {
                                                             .collection("Siswa")
                                                             .doc(value.id)
                                                             .delete()
-                                                            .whenComplete(
-                                                              () => Get.back(),
-                                                            );
+                                                            .whenComplete(() {
+                                                          Get.back();
+                                                          Get.back();
+                                                        });
                                                       },
                                                       child: Text('Hapus'))
                                                 ]);
@@ -1502,31 +1694,213 @@ class ViewDataSiswa extends StatelessWidget {
                                 Text(value['catatanAkademik'] ?? dataKososng),
                                 ElevatedButton(
                                     onPressed: () async {
-                                      int no = 1;
-                                      var dataUmum = <ListPelajaran>[];
-                                      var dataKhusus = <ListPelajaran>[];
+                                      int no1 = 1;
+                                      int no2 = 1;
+                                      int no3 = 1;
+                                      int no4 = 1;
+                                      int no5 = 1;
+                                      int no6 = 1;
+                                      var dataUmum1 = <NilaiPDF>[];
+                                      var dataUmum2 = <NilaiPDF>[];
+                                      var dataKhususC1 = <NilaiPDF>[];
+                                      var dataKhususC2 = <NilaiPDF>[];
+                                      var dataKhususC3 = <NilaiPDF>[];
 
                                       nilaiUmum.forEach((element) {
                                         element.forEach((key, value) {
-                                          dataUmum.add(
-                                            ListPelajaran(
-                                              value['nama'],
-                                              value['nilai'],
-                                            ),
-                                          );
+                                          print(key);
+                                          if (key.toString() ==
+                                              "Muatan Kewilayahan") {
+                                            dataUmum2.add(
+                                              NilaiPDF(
+                                                value['nama'],
+                                                value['Pengetahuan'],
+                                                value['Keterampilan'],
+                                              ),
+                                            );
+                                          } else {
+                                            dataUmum1.add(
+                                              NilaiPDF(
+                                                value['nama'],
+                                                value['Pengetahuan'],
+                                                value['Keterampilan'],
+                                              ),
+                                            );
+                                          }
                                         });
                                       });
 
                                       nilaiKhusus.forEach((element) {
                                         element.forEach((key, value) {
-                                          dataKhusus.add(
-                                            ListPelajaran(
-                                              value['nama'],
-                                              value['nilai'],
+                                          if (key == "C1") {
+                                            dataKhususC1.add(
+                                              NilaiPDF(
+                                                value['nama'] ?? "",
+                                                value['Pengetahuan'] ?? "",
+                                                value['Keterampilan'] ?? "",
+                                              ),
+                                            );
+                                          } else if (key == "C2") {
+                                            dataKhususC2.add(
+                                              NilaiPDF(
+                                                value['nama'] ?? "",
+                                                value['Pengetahuan'] ?? "",
+                                                value['Keterampilan'] ?? "",
+                                              ),
+                                            );
+                                          } else if (inputNilai != 'X') {
+                                            dataKhususC3.add(
+                                              NilaiPDF(
+                                                value['nama'],
+                                                value['Pengetahuan'],
+                                                value['Keterampilan'],
+                                              ),
+                                            );
+                                          }
+                                        });
+                                      });
+                                      var dataPKL = <InvoiceItemPKL>[];
+                                      if (inputNilai != 'X') {
+                                        pkl.forEach((element) {
+                                          element.forEach((key, value) {
+                                            dataPKL.add(
+                                              InvoiceItemPKL(
+                                                keterangan: value['nilai'],
+                                                lama: value['lama'],
+                                                lokasi: value['lokasi'],
+                                                mitra: key,
+                                                no: "${no5++}",
+                                              ),
+                                            );
+                                          });
+                                        });
+                                      } else {
+                                        dataPKL.add(
+                                          InvoiceItemPKL(
+                                            keterangan: "",
+                                            lama: "",
+                                            lokasi: "",
+                                            mitra: "",
+                                            no: "1",
+                                          ),
+                                        );
+                                      }
+                                      var dataExtr = <InvoiceItemExtra>[];
+
+                                      extr.forEach((element) {
+                                        element.forEach((key, value) {
+                                          dataExtr.add(
+                                            InvoiceItemExtra(
+                                              keterangan: value['keterangan'],
+                                              nama: key.toString(),
+                                              nilai: value['nilai'].toString(),
+                                              no: no6++,
                                             ),
                                           );
                                         });
                                       });
+
+                                      var dataKehadiran =
+                                          <InvoiceItemKehadiran>[];
+
+                                      kehadiran.forEach((element) {
+                                        element.forEach((key, value) {
+                                          dataKehadiran.add(
+                                            InvoiceItemKehadiran(
+                                              nama: key.toString(),
+                                              nilai: value['nilai'].toString(),
+                                            ),
+                                          );
+                                        });
+                                      });
+                                      var dataDPK = <InvoiceItemKehadiran>[];
+                                      final dataNilaiDPK = [
+                                        "Kurang".toUpperCase(),
+                                        "Cukup".toUpperCase(),
+                                        "Baik".toUpperCase(),
+                                        "Sangat Baik".toUpperCase(),
+                                      ];
+
+                                      var dataI = 0;
+                                      var dataR = 0;
+                                      var dataN = 0;
+                                      var dataM = 0;
+                                      var dataG = 0;
+                                      final InR = [
+                                        "Meningkatkan",
+                                        "Meningkatkan",
+                                        "Mempertahankan",
+                                        "Mempertahankan",
+                                      ];
+                                      final dpkLain = [
+                                        "Lebih",
+                                        "Lebih",
+                                        "Telah",
+                                        "Telah",
+                                      ];
+
+                                      dpk.forEach((element) {
+                                        element.forEach((key, value) {
+                                          if (key.toString() == "Integritas") {
+                                            dataDPK.add(
+                                              InvoiceItemKehadiran(
+                                                nama: key.toString(),
+                                                nilai:
+                                                    "Anda memiliki pola kehidupan kemasyarakatan yang ${dataNilaiDPK[(int.tryParse(value['nilai']) ?? 1) - 1]} di Lingkungan sekolah",
+                                              ),
+                                            );
+                                            dataI =
+                                                int.tryParse(value['nilai'])!;
+                                          } else if (key.toString() ==
+                                              "Religius") {
+                                            dataDPK.add(
+                                              InvoiceItemKehadiran(
+                                                nama: key.toString(),
+                                                nilai:
+                                                    "Anda menunjukkan ketakwaan pada agama yang dianut dan toleran pada penganut yang berbeda ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} di Lingkungan sekolah",
+                                              ),
+                                            );
+                                            dataR =
+                                                int.tryParse(value['nilai'])!;
+                                          } else if (key.toString() ==
+                                              "Nasionalis") {
+                                            dataDPK.add(
+                                              InvoiceItemKehadiran(
+                                                nama: key.toString(),
+                                                nilai:
+                                                    "Anda ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} dalam kegiatan yang bernuansa nasionalis di Lingkungan sekolah",
+                                              ),
+                                            );
+                                            dataN =
+                                                int.tryParse(value['nilai'])!;
+                                          } else if (key.toString() ==
+                                              "Mandiri") {
+                                            dataDPK.add(
+                                              InvoiceItemKehadiran(
+                                                nama: key.toString(),
+                                                nilai:
+                                                    "Anda menunjukkan sikap kemandirian yang ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} di lingkungan sekolah",
+                                              ),
+                                            );
+                                            dataM =
+                                                int.tryParse(value['nilai'])!;
+                                          } else {
+                                            dataDPK.add(
+                                              InvoiceItemKehadiran(
+                                                nama: key.toString(),
+                                                nilai:
+                                                    "Anda menunjukkan kegotong-royongan yang ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} dalam lingkungan sekolah",
+                                              ),
+                                            );
+                                            dataG =
+                                                int.tryParse(value['nilai'])!;
+                                          }
+                                        });
+                                      });
+
+                                      final dpkG =
+                                          "Anda harus ${InR[dataI - 1]} INTEGRITAS di Lingkungan sekolah, ${InR[dataR - 1]} sifat RELIGIUS, ${dpkLain[dataN - 1]} menunjukkan sifat NASIONALISME. ${dpkLain[dataM - 1]} menunjukkan sifat KEMANDIRIAN  dan ${dpkLain[dataG - 1]} menunjukkan sifat KEGOTONGROYONGAN  di lingkungan sekolah.";
+
                                       final invoice = Invoice(
                                         info: Info(
                                           nama: value['nama'] ?? dataKososng,
@@ -1537,7 +1911,9 @@ class ViewDataSiswa extends StatelessWidget {
                                           kelas: controller.kelas
                                               .split('kelas')
                                               .join()
-                                              .trim(),
+                                              .trim()
+                                              .split(' ')
+                                              .join(' '),
                                           semester: controller.semester ==
                                                   'semester 1'
                                               ? "1 (Satu)"
@@ -1546,86 +1922,109 @@ class ViewDataSiswa extends StatelessWidget {
                                               controller.tahunAjaran,
                                         ),
                                         itemsA: List.generate(
-                                          dataUmum.length,
+                                          dataUmum1.length,
                                           (index) => InvoiceItem(
-                                            no: no++,
-                                            mP: dataUmum[index].type,
-                                            pengetahuan:
-                                                int.parse(dataUmum[index].name),
-                                            keterampilan:
-                                                int.parse(dataUmum[index].name),
-                                            predikat: "A",
+                                            no: no1++,
+                                            mP: dataUmum1[index].nama,
+                                            pengetahuan: int.parse(
+                                              dataUmum1[index].pengetahuan,
+                                            ),
+                                            keterampilan: int.parse(
+                                              dataUmum1[index].keterampilan,
+                                            ),
                                           ),
                                         ),
-                                        itemsB: [
-                                          InvoiceItem(
-                                              no: no++,
-                                              mP: "DateTime.now()",
-                                              pengetahuan: 71,
-                                              keterampilan: 79,
-                                              predikat: 'A'),
-                                          InvoiceItem(
-                                              no: no++,
-                                              mP: "DateTime.now()",
-                                              pengetahuan: 75,
-                                              keterampilan: 79,
-                                              predikat: 'A'),
-                                          InvoiceItem(
-                                            no: no++,
-                                            mP: "DateTime.now()",
-                                            pengetahuan: 74,
-                                            keterampilan: 79,
-                                            predikat: 'A',
+                                        itemsB: List.generate(
+                                          dataUmum2.length,
+                                          (index) => InvoiceItem(
+                                            no: no2++,
+                                            mP: dataUmum2[index].nama,
+                                            pengetahuan: int.parse(
+                                              dataUmum2[index].pengetahuan,
+                                            ),
+                                            keterampilan: int.parse(
+                                              dataUmum2[index].keterampilan,
+                                            ),
                                           ),
-                                        ],
-                                        itemsC: [
-                                          InvoiceItem(
-                                              no: no++,
-                                              mP: "DateTime.now()",
-                                              pengetahuan: 71,
-                                              keterampilan: 79,
-                                              predikat: 'A'),
-                                          InvoiceItem(
-                                              no: no++,
-                                              mP: "DateTime.now()",
-                                              pengetahuan: 75,
-                                              keterampilan: 79,
-                                              predikat: 'A'),
-                                          InvoiceItem(
-                                            no: no++,
-                                            mP: "DateTime.now()",
-                                            pengetahuan: 74,
-                                            keterampilan: 79,
-                                            predikat: 'A',
+                                        ),
+                                        itemsC: List.generate(
+                                          dataKhususC1.length,
+                                          (index) => InvoiceItem(
+                                            no: no3++,
+                                            mP: dataKhususC1[index].nama,
+                                            pengetahuan: int.parse(
+                                              dataKhususC1[index].pengetahuan,
+                                            ),
+                                            keterampilan: int.parse(
+                                              dataKhususC1[index].keterampilan,
+                                            ),
                                           ),
-                                        ],
-                                        itemsD: [
-                                          InvoiceItem(
-                                              no: no++,
-                                              mP: "DateTime.now()",
-                                              pengetahuan: 71,
-                                              keterampilan: 79,
-                                              predikat: 'A'),
-                                          InvoiceItem(
-                                              no: no++,
-                                              mP: "DateTime.now()",
-                                              pengetahuan: 75,
-                                              keterampilan: 79,
-                                              predikat: 'A'),
-                                          InvoiceItem(
-                                            no: no++,
-                                            mP: "DateTime.now()",
-                                            pengetahuan: 74,
-                                            keterampilan: 79,
-                                            predikat: 'A',
+                                        ),
+                                        itemsD: List.generate(
+                                          dataKhususC2.length,
+                                          (index) => InvoiceItem(
+                                            no: no4++,
+                                            mP: dataKhususC2[index].nama,
+                                            pengetahuan: int.parse(
+                                              dataKhususC2[index].pengetahuan,
+                                            ),
+                                            keterampilan: int.parse(
+                                              dataKhususC2[index].keterampilan,
+                                            ),
                                           ),
-                                        ],
-                                        catatanAkademik: 'dsasdasdasd',
-                                        namaKepalaSekolah: 'fdsfds',
-                                        namaOrangTua: 'sdfdsf',
-                                        namaWalikelas: 'dfssdf',
-                                        nipKepalaSekolah: '123323',
-                                        nipWalikelas: '4234234',
+                                        ),
+                                        catatanAkademik:
+                                            value['catatanAkademik'] ??
+                                                dataKososng,
+                                        namaKepalaSekolah:
+                                            controller.kepalaSekolahNama,
+                                        namaOrangTua: value["namaOrtu"],
+                                        namaWalikelas: controller.guru,
+                                        nipKepalaSekolah:
+                                            controller.kepalaSekolahNIP,
+                                        nipWalikelas: controller.gmail,
+                                        itemsExtra: List.generate(
+                                          dataExtr.length,
+                                          (index) => InvoiceItemExtra(
+                                            no: dataExtr[index].no,
+                                            nilai: dataExtr[index].nilai,
+                                            nama: dataExtr[index].nama,
+                                            keterangan:
+                                                dataExtr[index].keterangan,
+                                          ),
+                                        ),
+                                        itemsKehadiran: List.generate(
+                                          dataKehadiran.length,
+                                          (index) => InvoiceItemKehadiran(
+                                            nilai: dataKehadiran[index].nilai ==
+                                                    ""
+                                                ? "-"
+                                                : dataKehadiran[index].nilai,
+                                            nama: dataKehadiran[index].nama,
+                                          ),
+                                        ),
+                                        itemsPkl: List.generate(
+                                          dataPKL.length,
+                                          (index) => InvoiceItemPKL(
+                                            keterangan:
+                                                dataPKL[index].keterangan,
+                                            lama: dataPKL[index].lama,
+                                            lokasi: dataPKL[index].lokasi,
+                                            mitra: dataPKL[index].mitra,
+                                            no: dataPKL[index].no,
+                                          ),
+                                        ),
+                                        kenaikanKelas: value["lulus"],
+                                        itemsDPK: List.generate(
+                                          dataDPK.length,
+                                          (index) => InvoiceItemKehadiran(
+                                            nilai: dataDPK[index].nilai == ""
+                                                ? "-"
+                                                : dataDPK[index].nilai,
+                                            nama: dataDPK[index].nama,
+                                          ),
+                                        ),
+                                        dpk: dpkG,
                                       );
 
                                       final pdfFile =
@@ -1675,7 +2074,6 @@ class Landing extends StatelessWidget {
     ];
 
     List<IconData> iconIndex = [
-      // Icons.dashboard_outlined,
       LineIcons.userCircle,
       LineIcons.userPlus,
       LineIcons.userFriends,
@@ -1792,4 +2190,11 @@ class Landing extends StatelessWidget {
       ],
     );
   }
+}
+
+class NilaiPDF {
+  final String nama;
+  final String pengetahuan;
+  final String keterampilan;
+  NilaiPDF(this.nama, this.pengetahuan, this.keterampilan);
 }

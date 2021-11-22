@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tes_database/app/modules/home/controllers/home_controller.dart';
 
 class GuruController extends GetxController {
-  // final Map data = Get.arguments;
+  final Map data = Get.arguments;
 
   late int jumlah = 1;
   List<String> namaIndex = [
@@ -21,10 +21,13 @@ class GuruController extends GetxController {
 
   var listDataEXR = <String>[];
   var nilaiEXR = <TextEditingController>[];
-  var listDataPKL = <ListPelajaran>[];
+  var keteranganEXR = <TextEditingController>[];
   var nialiPKL = <TextEditingController>[];
   var lamaPKL = <TextEditingController>[];
-
+  var lokasiPKL = <TextEditingController>[];
+  var mitraPKL = <TextEditingController>[];
+  // var panjangPKL = 1.obs;
+  var checkedValue = true.obs;
   final formKey = GlobalKey<FormState>();
 
   late String tahunAjaran = '2021-2022',
@@ -33,6 +36,7 @@ class GuruController extends GetxController {
       kelas = 'kelas X BKP 1',
       gmail = '23423 452643 5 646',
       guru = 'Dicky1',
+      // /2021-2022//semester 1/
       image =
           'https://cdn.dribbble.com/users/1450874/screenshots/15555516/media/e70b73671f40c3102ab98f4c251c198e.jpg?compress=1&resize=1200x900';
 
@@ -65,6 +69,9 @@ class GuruController extends GetxController {
     'Gotong-royong'
   ];
 
+  var lulus = "";
+  var tidakLulus = "";
+
   var nialiKehadiran = <TextEditingController>[];
   var nilaiDPK = <TextEditingController>[];
   var pelajranKhususC1;
@@ -75,7 +82,7 @@ class GuruController extends GetxController {
   var dropdownValueUmum = <Rx<ListPelajaran>>[];
 
   var dropdownValueEXR = <Rx<String>>[];
-  var dropdownValuePKL = <Rx<ListPelajaran>>[];
+  // var dropdownValuePKL = <Rx<ListPelajaran>>[];
 
   // siswa
   final Rx<XFile> imageSiswa = Rx(XFile(''));
@@ -83,12 +90,15 @@ class GuruController extends GetxController {
   var urlsSiswa = '';
   var panjangNilai = 0.obs;
   var nilaiKhusus = <TextEditingController>[];
+  var keterampilanKhusus = <TextEditingController>[];
+  var keterampilanUmum = <TextEditingController>[];
   var nilaiUmum = <TextEditingController>[];
 
   // var pelajaran = <Rx<String>>[];
   late TextEditingController nama = TextEditingController();
   late TextEditingController nis = TextEditingController();
   late TextEditingController noOrtu = TextEditingController();
+  late TextEditingController namaOrtu = TextEditingController();
   late TextEditingController catatanAkademik = TextEditingController();
 
   //Guru
@@ -98,6 +108,23 @@ class GuruController extends GetxController {
   final cangePassword = false.obs;
   late TextEditingController password =
       TextEditingController(text: guru + ' ' + kelas);
+  var kepalaSekolahNama = "";
+  var kepalaSekolahNIP = "";
+
+  Future getKepalaSekolah() async {
+    await users
+        .collection('Data Sekolah')
+        .doc('Data Kepala Sekolah')
+        .get()
+        .then((value) {
+      kepalaSekolahNama = value.data()!['Nama'];
+      kepalaSekolahNIP = value.data()!['NIP'];
+    });
+    // .set({
+    //   'Nama': kepalaSekolahNama.text,
+    //   'NIP': kepalaSekolahNIP.text,
+    // });
+  }
 
   Future<Uint8List> getImages(Rx<XFile> imagevalue) async {
     // onLoadingImage.value = true;
@@ -149,6 +176,7 @@ class GuruController extends GetxController {
         {
           type: {
             'nilai': nilaiEXR[i].text,
+            'keterangan': keteranganEXR[i].text,
           }
         },
       );
@@ -189,11 +217,13 @@ class GuruController extends GetxController {
         {
           type: {
             'nama': name,
-            'nilai': nilaiKhusus[i].text,
+            'Pengetahuan': nilaiKhusus[i].text,
+            'Keterampilan': keterampilanKhusus[i].text,
           }
         },
       );
       nilaiKhusus[i].clear();
+      keterampilanKhusus[i].clear();
     }
     for (var i = 0; i < dropdownValueUmum.length; i++) {
       var name = dropdownValueUmum[i].value.name;
@@ -203,27 +233,34 @@ class GuruController extends GetxController {
         {
           type: {
             'nama': name,
-            'nilai': nilaiUmum[i].text,
+            'Pengetahuan': nilaiUmum[i].text,
+            'Keterampilan': keterampilanUmum[i].text,
           }
         },
       );
       nilaiUmum[i].clear();
+      keterampilanUmum[i].clear();
     }
     print(listNilaiUmum);
-    for (var i = 0; i < dropdownValuePKL.length; i++) {
-      var name = dropdownValuePKL[i].value.name;
-      var type = dropdownValuePKL[i].value.type;
-      print(nialiPKL[i].text);
-      listPl.add(
-        {
-          type: {
-            'lokasi': name,
-            'lama': lamaPKL[i].text,
-            'nilai': nialiPKL[i].text,
-          }
-        },
-      );
-      nialiPKL[i].clear();
+    if (kelas.split(' ')[1] != 'X') {
+      for (var i = 0; i < nialiPKL.length; i++) {
+        var lokasi = lokasiPKL[i].text;
+        var mitra = mitraPKL[i].text;
+        print(nialiPKL[i].text);
+        listPl.add(
+          {
+            mitra: {
+              'lokasi': lokasi,
+              'lama': lamaPKL[i].text,
+              'nilai': nialiPKL[i].text,
+            }
+          },
+        );
+        lokasiPKL[i].clear();
+        mitraPKL[i].clear();
+        lamaPKL[i].clear();
+        nialiPKL[i].clear();
+      }
     }
 
     await users
@@ -244,9 +281,16 @@ class GuruController extends GetxController {
         "extr": x,
         "kehadiran": k,
         "dpk": d,
+        "lulus": checkedValue.value == true ? lulus : tidakLulus,
+        "namaOrtu": namaOrtu.text,
         "catatanAkademik": catatanAkademik.text,
       },
-    );
+    ).whenComplete(() {
+      nama.clear();
+      nis.clear();
+      noOrtu.clear();
+      catatanAkademik.clear();
+    });
   }
 
   Stream<DocumentSnapshot<Map<String, dynamic>>>? streamData;
@@ -309,13 +353,13 @@ class GuruController extends GetxController {
     });
   }
 
-  Future getPKL() async {
-    var data = await users.collection('Data Sekolah').doc('Data PKL').get();
-    data.data()!['data'].forEach((key, value) {
-      listDataPKL.add(ListPelajaran(key.toString(), value.toString()));
-      print(value);
-    });
-  }
+  // Future getPKL() async {
+  //   var data = await users.collection('Data Sekolah').doc('Data PKL').get();
+  //   data.data()!['data'].forEach((key, value) {
+  //     listDataPKL.add(ListPelajaran(key.toString(), value.toString()));
+  //     print(value);
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -325,21 +369,52 @@ class GuruController extends GetxController {
 
   @override
   void onInit() async {
-    if (Get.arguments == null) {
+    if (Get.arguments != null) {
       onLoading.value = true;
-      // jumlah = int.parse(data['jumlah']);
-      // tahunAjaran = data['tahun'];
-      // jurusan = data['jurusan'];
-      // semester = data['semester'];
-      // kelas = data['kelas'];
-      // guru = data['guru'];
+      jumlah = int.parse(data['jumlah']);
+      tahunAjaran = data['tahun'];
+      jurusan = data['jurusan'];
+      semester = data['semester'];
+      kelas = data['kelas'];
+      guru = data['guru'];
       await getDataPelajaranKhusus();
       await getPelajaranUmum();
       await getEXR();
-      await getPKL();
+      nialiPKL = List.generate(
+        1,
+        (index) => TextEditingController(),
+      );
+      lamaPKL = List.generate(
+        1,
+        (index) => TextEditingController(),
+      );
+      mitraPKL = List.generate(
+        1,
+        (index) => TextEditingController(),
+      );
+      lokasiPKL = List.generate(
+        1,
+        (index) => TextEditingController(),
+      );
+      // await getPKL();
       // ...pelajranKhususC1, ...pelajranKhususC2
+      if (semester.toLowerCase() == "semester 2") {
+        lulus = kelas.split(' ')[1] == 'X'
+            ? 'Naik ke Kelas XI'
+            : kelas.split(' ')[1] == 'XI'
+                ? 'Naik ke Kelas XII'
+                : 'Lulus';
+        tidakLulus = kelas.split(' ')[1] == 'X'
+            ? 'Tinggal di Kelas X'
+            : kelas.split(' ')[1] == 'XI'
+                ? 'Tinggal di Kelas XI'
+                : 'Tidak Lulus';
+      } else {
+        lulus = "";
+        tidakLulus = "";
+      }
 
-      if (kelas.split(' ')[1] != '9') {
+      if (kelas.split(' ')[1] != 'X') {
         var listC3 = <ListPelajaran>[];
         var list3 = pelajranKhususC3 as List;
         list3.forEach((element) {
@@ -393,6 +468,7 @@ class GuruController extends GetxController {
       listGabunganUmum
           .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
       onLoading.value = false;
+      await getKepalaSekolah();
     } else {
       Get.offAllNamed('/login');
     }

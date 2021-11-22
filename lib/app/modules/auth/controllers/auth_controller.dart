@@ -24,7 +24,7 @@ class AuthController extends GetxController {
 
   var validator = [];
   void loginFake(String gmail, String password) {
-    if (gmail == 'Admin@gmail.com' && password == '12345Aa') {
+    if (gmail == 'AdminKid@gmail.com' && password == '12345Aa') {
       Get.offNamed('/admin', arguments: [
         gmail,
         password,
