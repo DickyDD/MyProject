@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tes_database/app/modules/home/controllers/home_controller.dart';
 
 class GuruController extends GetxController {
-  final Map data = Get.arguments;
+  // final Map data = Get.arguments;
 
   late int jumlah = 1;
   List<String> namaIndex = [
@@ -30,9 +30,9 @@ class GuruController extends GetxController {
   late String tahunAjaran = '2021-2022',
       jurusan = 'Bisnis Konstruksi dan Property',
       semester = 'semester 1',
-      kelas = 'kelas 11 BKP 1',
-      gmail = 'Maul9@gmail.com',
-      guru = 'Dicky Darmawan',
+      kelas = 'kelas X BKP 1',
+      gmail = '23423 452643 5 646',
+      guru = 'Dicky1',
       image =
           'https://cdn.dribbble.com/users/1450874/screenshots/15555516/media/e70b73671f40c3102ab98f4c251c198e.jpg?compress=1&resize=1200x900';
 
@@ -325,14 +325,14 @@ class GuruController extends GetxController {
 
   @override
   void onInit() async {
-    if (Get.arguments != null) {
+    if (Get.arguments == null) {
       onLoading.value = true;
-      jumlah = int.parse(data['jumlah']);
-      tahunAjaran = data['tahun'];
-      jurusan = data['jurusan'];
-      semester = data['semester'];
-      kelas = data['kelas'];
-      guru = data['guru'];
+      // jumlah = int.parse(data['jumlah']);
+      // tahunAjaran = data['tahun'];
+      // jurusan = data['jurusan'];
+      // semester = data['semester'];
+      // kelas = data['kelas'];
+      // guru = data['guru'];
       await getDataPelajaranKhusus();
       await getPelajaranUmum();
       await getEXR();

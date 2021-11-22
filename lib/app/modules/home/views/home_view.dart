@@ -23,7 +23,7 @@ class HomeView extends GetView<HomeController> {
       InputJurusan(),
       InputPelajaran(),
       InputKelas(),
-      InputPKL(),
+      // InputPKL(),
       InputExtrakurikuler()
     ];
 
@@ -34,7 +34,7 @@ class HomeView extends GetView<HomeController> {
       'kompetensi keahlian'.capitalize!,
       'Mata Pelajaran',
       'Kelas',
-      'PKL',
+      // 'PKL',
       'Extrakurikuler',
       // 'Nilai',
       'Exit',
@@ -47,7 +47,7 @@ class HomeView extends GetView<HomeController> {
       LineIcons.book,
       LineIcons.edit,
       LineIcons.userFriends,
-      LineIcons.clipboard,
+      // LineIcons.clipboard,
       LineIcons.award,
       LineIcons.arrowCircleLeft,
     ];
