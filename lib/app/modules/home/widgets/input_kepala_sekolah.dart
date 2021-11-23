@@ -57,9 +57,11 @@ class InputKepalaSekolah extends StatelessWidget {
                         backgroundColor: MaterialStateProperty.all(Colors.red),
                       ),
                       onPressed: () async {
-                        await controller.inputkepalaSekolah().whenComplete(
-                            () => controller.saveData(nama: "Telah Diubah"));
                         Get.back();
+                        await controller.inputkepalaSekolah().whenComplete(() {
+                          controller.saveData(nama: "Telah Diubah");
+                          Get.back();
+                        });
                       },
                       child: Text('Yakin'),
                     ),

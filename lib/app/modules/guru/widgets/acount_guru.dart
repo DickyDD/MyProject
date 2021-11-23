@@ -16,41 +16,9 @@ class Acount extends StatelessWidget {
         SizedBox(
           height: 30,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(
-              () => controller.onLoadingImage.value == false
-                  ? Card(
-                      child: Container(
-                        height: 230,
-                        width: 230,
-                        // margin: EdgeInsets.symmetric(vertical: 30),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              controller.imageGuru.value.path != ''
-                                  ? controller.imageGuru.value.path
-                                  : controller.image,
-                            ),
-                          ),
-                        ),
-
-                        child: InkWell(
-                          onTap: () {
-                            controller.getImages(controller.imageGuru);
-                          },
-                        ),
-                      ),
-                    )
-                  : Container(
-                      height: 230,
-                      width: 230,
-                      child: CircularProgressIndicator()),
-            )
-          ],
-        ),
+       
+        
+        
         SizedBox(
           height: 30,
         ),

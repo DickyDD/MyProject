@@ -8,6 +8,19 @@ class HomeController extends GetxController {
     Get.defaultDialog(middleText: "Data $nama", title: "Berhasil");
   }
 
+  void infowalikelas() {
+    Get.defaultDialog(
+      middleText: """Akun wali kelas yaitu :
+NIP : Berdasarkan nip masing-masing walikelas
+Password : Berdasarkan "kelas+romawi kelas+jurusan+urutan kelas+tahun ajaran+semester 
+
+contoh pengisian :
+ NIP : 23423 452643 5 646
+ Password : kelas X BKP 1 2021-2022 semester 1""",
+      title: "Info",
+    );
+  }
+
   final formKey = GlobalKey<FormState>();
   final users = FirebaseFirestore.instance;
 
@@ -179,7 +192,7 @@ class HomeController extends GetxController {
             ..namaLengkap
             ..namaSingkat);
           buildJurusan(listNamaJurusan.length);
-     
+
           panjangList.value = tahun[0];
         }
 
@@ -655,7 +668,8 @@ class HomeController extends GetxController {
           .delete();
       await users
           .collection('auth users')
-          .doc("${itemKelas.text} $namaKelas")
+          .doc(
+              "$namaKelas ${panjangList.value} ${semester.value.toLowerCase()}")
           .delete();
     } else if (i == 1) {
       listWaliKelasGmail10.remove(itemKelasGmail);
@@ -670,7 +684,8 @@ class HomeController extends GetxController {
           .delete();
       await users
           .collection('auth users')
-          .doc("${itemKelas.text} $namaKelas")
+          .doc(
+              "$namaKelas ${panjangList.value} ${semester.value.toLowerCase()}")
           .delete();
     } else {
       listWaliKelasGmail11.remove(itemKelasGmail);
@@ -683,9 +698,10 @@ class HomeController extends GetxController {
           .collection(semester.value.toLowerCase())
           .doc(namaKelas)
           .delete();
-      await users
+     await users
           .collection('auth users')
-          .doc("${itemKelas.text} $namaKelas")
+          .doc(
+              "$namaKelas ${panjangList.value} ${semester.value.toLowerCase()}")
           .delete();
     }
     print(listWaliKelas9.length);
@@ -877,6 +893,7 @@ class HomeController extends GetxController {
     panjangListKhususC2 = <int>[].obs;
     panjangListKhususC3 = <int>[].obs;
     listPelajaranKhusus = <PelajaranKhusus>[];
+    listNamaJurusan = [];
   }
 
   void addPelajranKhususC1(int i) {

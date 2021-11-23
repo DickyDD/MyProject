@@ -133,7 +133,7 @@ class PelajaranWidget extends StatelessWidget {
                       icon: const Icon(LineIcons.arrowCircleDown),
                       iconSize: 24,
                       elevation: 16,
-                      style: const TextStyle(color: Colors.deepPurple),
+                      style: const TextStyle(color: Colors.black),
                       underline: SizedBox(),
                       onChanged: (newValue) async {
                         controller.pelajaran.value =
@@ -383,7 +383,7 @@ class PelajaranWidgetKhusus extends StatelessWidget {
                       icon: const Icon(LineIcons.arrowCircleDown),
                       iconSize: 24,
                       elevation: 16,
-                      style: const TextStyle(color: Colors.deepPurple),
+                      style: const TextStyle(color: Colors.black),
                       underline: SizedBox(),
                       onChanged: (newValue) async {
                         controller.pelajaran.value =

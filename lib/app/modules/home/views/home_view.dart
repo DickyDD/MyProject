@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:tes_database/app/modules/home/widgets/input_PKL.dart';
 import 'package:tes_database/app/modules/home/widgets/input_extrakurikuler.dart';
 import 'package:tes_database/app/modules/home/widgets/input_kepala_sekolah.dart';
 import 'package:tes_database/app/modules/home/widgets/input_pelajaran.dart';
@@ -59,6 +58,15 @@ class HomeView extends GetView<HomeController> {
       appBar: AppBar(
         title: Text('Admin'),
         centerTitle: true,
+        actions: [
+          Obx(() => controller.indexList.value == 5
+              ? IconButton(
+                  onPressed: () {
+                    controller.infowalikelas();
+                  },
+                  icon: Icon(LineIcons.infoCircle))
+              : SizedBox())
+        ],
       ),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

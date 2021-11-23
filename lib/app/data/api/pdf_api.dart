@@ -35,14 +35,21 @@ class PdfApi {
 
   static void _saveDocumentWeb(Uint8List data, String filename) {
     String url =
-        html.Url.createObjectUrlFromBlob(html.Blob([data], 'application/pdf'));
+        html.Url.createObjectUrlFromBlob(html.Blob(
+      [data],
+      'application/pdf',
+    ));
 
     html.AnchorElement element =
-        html.document.createElement('a') as html.AnchorElement
+        html.document.createElement(
+      'a',
+    ) as html.AnchorElement
           ..href = url
           ..style.display = 'none'
           ..download = filename;
 
+    print(url);
+    print(filename);
     html.document.body!.children
       ..add(element..click())
       ..remove(element);

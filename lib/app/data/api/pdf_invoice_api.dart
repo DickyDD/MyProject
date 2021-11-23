@@ -249,7 +249,7 @@ class PdfInvoiceApi {
                         style: pw.TextStyle(
                           font: myFontB,
                         )),
-                    pw.Text(invoice.nipWalikelas),
+                    pw.Text("NIP. " + invoice.nipWalikelas),
                   ]),
             ]),
         pw.Center(
@@ -263,7 +263,7 @@ class PdfInvoiceApi {
                     style: pw.TextStyle(
                       font: myFontB,
                     )),
-                pw.Text(invoice.nipKepalaSekolah),
+                pw.Text("NIP. " + invoice.nipKepalaSekolah),
               ]),
         )
       ],
@@ -428,7 +428,7 @@ class PdfInvoiceApi {
                               style: pw.TextStyle(
                                 font: myFontB,
                               )),
-                          pw.Text(invoice.nipWalikelas),
+                          pw.Text("NIP. " + invoice.nipWalikelas),
                         ]),
                   ]),
               pw.Center(
@@ -442,7 +442,7 @@ class PdfInvoiceApi {
                           style: pw.TextStyle(
                             font: myFontB,
                           )),
-                      pw.Text(invoice.nipKepalaSekolah),
+                      pw.Text("NIP. " + invoice.nipKepalaSekolah),
                     ]),
               )
             ],
@@ -586,7 +586,7 @@ class PdfInvoiceApi {
                               style: pw.TextStyle(
                                 font: myFontB,
                               )),
-                          pw.Text(invoice.nipWalikelas),
+                          pw.Text("NIP. " + invoice.nipWalikelas),
                         ]),
                   ]),
               pw.Center(
@@ -600,7 +600,7 @@ class PdfInvoiceApi {
                           style: pw.TextStyle(
                             font: myFontB,
                           )),
-                      pw.Text(invoice.nipKepalaSekolah),
+                      pw.Text("NIP. " + invoice.nipKepalaSekolah),
                     ]),
               )
             ],

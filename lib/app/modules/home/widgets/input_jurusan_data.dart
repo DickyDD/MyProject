@@ -56,6 +56,7 @@ class InputJurusan extends StatelessWidget {
                                             onPressed: () {
                                               controller
                                                   .addJurusan(sizeJurusan);
+                                              Get.back();
                                             },
                                             child: Text("Yakin")),
                                         ElevatedButton(
@@ -180,6 +181,8 @@ class InputJurusan extends StatelessWidget {
                               controller.getPelajaranKhusus().whenComplete(
                                 () {
                                   controller.onLoading.value = false;
+                                  controller.jurusan =
+                                      controller.listNamaJurusan[0].obs;
                                   controller.saveData();
                                 },
                               );
