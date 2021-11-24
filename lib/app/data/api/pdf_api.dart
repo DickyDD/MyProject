@@ -3,15 +3,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart';
 import 'package:path/path.dart' as path;
-import 'dart:html' as html;
+// import 'dart:html' as html;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:tes_database/app/modules/guru/controllers/guru_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PdfApi {

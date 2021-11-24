@@ -20,8 +20,8 @@ class PdfInvoiceApi {
     final pdf = Document();
     var datFont = await rootBundle.load("assets/trm.ttf");
     var datFontB = await rootBundle.load("assets/trmB.ttf");
-    var dataimage = await rootBundle.load("assets/watermark1.png");
-    var myImage = dataimage.buffer.asUint8List();
+    // var dataimage = await rootBundle.load("assets/watermark1.png");
+    // var myImage = dataimage.buffer.asUint8List();
     final myFont = pw.Font.ttf(datFont);
     final myFontB = pw.Font.ttf(datFontB);
     // final robotoLight = await PdfGoogleFonts.robotoLight();
@@ -86,10 +86,10 @@ class PdfInvoiceApi {
             // height: Get.height * 0.5,
             margin: pw.EdgeInsets.only(top: 20 * PdfPageFormat.mm),
             width: Get.width,
-            child: pw.Image(
-              pw.MemoryImage(myImage),
-              alignment: pw.Alignment.bottomCenter,
-            ),
+            // child: pw.Image(
+            //   // pw.MemoryImage(myImage),
+            //   alignment: pw.Alignment.bottomCenter,
+            // ),
           ),
           pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start,
               // mainAxisAlignment: pw.MainAxisAlignment.start,
@@ -287,10 +287,10 @@ class PdfInvoiceApi {
               // height: Get.height * 0.5,
               margin: pw.EdgeInsets.only(top: 20 * PdfPageFormat.mm),
               width: Get.width,
-              child: pw.Image(
-                pw.MemoryImage(myImage),
-                alignment: pw.Alignment.bottomCenter,
-              ),
+              // child: pw.Image(
+              //   pw.MemoryImage(myImage),
+              //   alignment: pw.Alignment.bottomCenter,
+              // ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
