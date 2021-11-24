@@ -20,8 +20,8 @@ class PdfInvoiceApi {
     final pdf = Document();
     var datFont = await rootBundle.load("assets/trm.ttf");
     var datFontB = await rootBundle.load("assets/trmB.ttf");
-    // var dataimage = await rootBundle.load("assets/logo.png");
-    // var myImage = dataimage.buffer.asUint8List();
+    var dataimage = await rootBundle.load("assets/watermark1.png");
+    var myImage = dataimage.buffer.asUint8List();
     final myFont = pw.Font.ttf(datFont);
     final myFontB = pw.Font.ttf(datFontB);
     // final robotoLight = await PdfGoogleFonts.robotoLight();
@@ -76,377 +76,396 @@ class PdfInvoiceApi {
       ": ${invoice.info.namaSekolah}",
       ": ${invoice.info.alamat}",
     ];
-    
 
-    pdf.addPage(MultiPage(
-      header: (ctx) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          pw.Center(
-            child: pw.Text(
-              "RAPOR PESERTA DIDIK",
-              style: styleFontB,
+    pdf.addPage(
+      pw.Page(
+        theme: pw.ThemeData(defaultTextStyle: styleFont),
+        pageFormat: PdfPageFormat.a4,
+        build: (context) => pw.Stack(children: [
+          pw.Container(
+            // height: Get.height * 0.5,
+            margin: pw.EdgeInsets.only(top: 20 * PdfPageFormat.mm),
+            width: Get.width,
+            child: pw.Image(
+              pw.MemoryImage(myImage),
+              alignment: pw.Alignment.bottomCenter,
             ),
           ),
-          SizedBox(height: 5 * PdfPageFormat.mm),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Row(children: [
-                pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: List.generate(
-                    titles.length,
-                    (index) => pw.Text(
-                      titles[index],
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8 * PdfPageFormat.mm),
-                pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: List.generate(
-                    data.length,
-                    (index) => pw.Text(
-                      data[index],
-                    ),
-                  ),
-                ),
-              ]),
-              pw.Row(children: [
-                pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: List.generate(
-                    titles2.length,
-                    (index) => pw.Text(
-                      titles2[index],
-                    ),
-                  ),
-                ),
-                SizedBox(width: 4 * PdfPageFormat.mm),
-                pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: List.generate(
-                    data2.length,
-                    (index) => pw.Text(
-                      data2[index],
-                    ),
-                  ),
-                ),
-              ]),
-            ],
-          ),
-          // SizedBox(height: 1 * PdfPageFormat.cm),
-        ],
-      ),
-      theme: pw.ThemeData(defaultTextStyle: styleFont),
-      pageFormat: PdfPageFormat.a4,
-      build: (context) => [
-        SizedBox(height: 2.5 * PdfPageFormat.mm),
-        Text(
-          'A. Nilai Akademik',
-          style: styleFontB,
-        ),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        pw.Table.fromTextArray(
-          columnWidths: cellAligens,
-          cellPadding: pw.EdgeInsets.symmetric(vertical: 2),
-          border: pw.TableBorder.all(width: 1),
-          data: [
-            [
-              'No.',
-              'Mata Pelajaran',
-              'Pengetahuan',
-              'Keterampilan',
-              'Nilai\nAkhir',
-              'Predikat',
-            ],
-          ],
-        ),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        Text(
-          "A. Muatan Nasional",
-          style: styleFontB,
-        ),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        buildHal1(invoice.itemsA, styleFont, styleFontB),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        Text(
-          "B. Muatan Kewilayahan",
-          style: styleFontB,
-        ),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        buildHal1(invoice.itemsB, styleFont, styleFontB),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        Text(
-          "C. Muatan Peminatan Kejuruan",
-          style: styleFontB,
-        ),
-        SizedBox(height: 0.4 * PdfPageFormat.mm),
-        pw.Divider(height: 0.5),
-        SizedBox(height: 0.4 * PdfPageFormat.mm),
-        Text(
-          "C1. Dasar Bidang Keahlian",
-          style: styleFontB,
-        ),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        buildHal1(invoice.itemsC, styleFont, styleFontB),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        Text(
-          "C2. Dasar Program Keahlian",
-          style: styleFontB,
-        ),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        buildHal1(invoice.itemsD, styleFont, styleFontB),
-        SizedBox(height: 4 * PdfPageFormat.mm),
-        Text(
-          "B. CATATAN AKADEMIK",
-          style: styleFontB,
-        ),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        pw.Container(
-          height: 18 * PdfPageFormat.mm,
-          width: double.infinity,
-          // alignment: pw.Alignment.to,
-          padding: pw.EdgeInsets.all(3),
-          child: pw.Text(
-            invoice.catatanAkademik,
-            textAlign: pw.TextAlign.left,
-          ),
-          decoration: pw.BoxDecoration(
-            border: Border.all(
-              color: PdfColors.black,
-              width: 1,
-            ),
-          ),
-        ),
-        SizedBox(height: 4 * PdfPageFormat.mm),
-        pw.Row(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-            children: [
-              pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text('Mengetahui;'),
-                    pw.Text('Orang Tua/Wali,'),
-                    SizedBox(height: 10 * PdfPageFormat.mm),
-                    pw.Text(invoice.namaOrangTua,
-                        style: pw.TextStyle(
-                          font: myFontB,
-                          decoration: TextDecoration.underline,
-                        )),
-                  ]),
-              pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    //Tanggal Makkasar
-                    pw.Text('Makassar, $day $mounth $year'),
-                    pw.Text('Wali Kelas'),
-                    SizedBox(height: 10 * PdfPageFormat.mm),
-                    pw.Text(invoice.namaWalikelas,
-                        style: pw.TextStyle(
-                          font: myFontB,
-                        )),
-                    pw.Text("NIP. " + invoice.nipWalikelas),
-                  ]),
-            ]),
-        pw.Center(
-          child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
+          pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start,
+              // mainAxisAlignment: pw.MainAxisAlignment.start,
               children: [
-                pw.Text('Mengetahui'),
-                pw.Text('Kepala Sekolah'),
-                SizedBox(height: 18 * PdfPageFormat.mm),
-                pw.Text(invoice.namaKepalaSekolah,
-                    style: pw.TextStyle(
-                      font: myFontB,
-                    )),
-                pw.Text("NIP. " + invoice.nipKepalaSekolah),
-              ]),
-        )
-      ],
-    ));
+                pw.Center(
+                  child: pw.Text(
+                    "RAPOR PESERTA DIDIK",
+                    style: styleFontB,
+                  ),
+                ),
+                SizedBox(height: 5 * PdfPageFormat.mm),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Row(children: [
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: List.generate(
+                          titles.length,
+                          (index) => pw.Text(
+                            titles[index],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8 * PdfPageFormat.mm),
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: List.generate(
+                          data.length,
+                          (index) => pw.Text(
+                            data[index],
+                          ),
+                        ),
+                      ),
+                    ]),
+                    pw.Row(children: [
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: List.generate(
+                          titles2.length,
+                          (index) => pw.Text(
+                            titles2[index],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 4 * PdfPageFormat.mm),
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: List.generate(
+                          data2.length,
+                          (index) => pw.Text(
+                            data2[index],
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ],
+                ),
+                SizedBox(height: 3 * PdfPageFormat.mm),
+                Text(
+                  'A. Nilai Akademik',
+                  style: styleFontB,
+                ),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                pw.Table.fromTextArray(
+                  columnWidths: cellAligens,
+                  cellPadding: pw.EdgeInsets.symmetric(vertical: 2),
+                  border: pw.TableBorder.all(width: 1),
+                  data: [
+                    [
+                      'No.',
+                      'Mata Pelajaran',
+                      'Pengetahuan',
+                      'Keterampilan',
+                      'Nilai\nAkhir',
+                      'Predikat',
+                    ],
+                  ],
+                ),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                Text(
+                  "A. Muatan Nasional",
+                  style: styleFontB,
+                ),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                buildHal1(invoice.itemsA, styleFont, styleFontB),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                Text(
+                  "B. Muatan Kewilayahan",
+                  style: styleFontB,
+                ),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                buildHal1(invoice.itemsB, styleFont, styleFontB),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                Text(
+                  "C. Muatan Peminatan Kejuruan",
+                  style: styleFontB,
+                ),
+                SizedBox(height: 0.4 * PdfPageFormat.mm),
+                pw.Divider(height: 0.5),
+                SizedBox(height: 0.4 * PdfPageFormat.mm),
+                Text(
+                  "C1. Dasar Bidang Keahlian",
+                  style: styleFontB,
+                ),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                buildHal1(invoice.itemsC, styleFont, styleFontB),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                Text(
+                  "C2. Dasar Program Keahlian",
+                  style: styleFontB,
+                ),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                buildHal1(invoice.itemsD, styleFont, styleFontB),
+                SizedBox(height: 4 * PdfPageFormat.mm),
+                Text(
+                  "B. CATATAN AKADEMIK",
+                  style: styleFontB,
+                ),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                pw.Container(
+                  height: 18 * PdfPageFormat.mm,
+                  width: double.infinity,
+                  // alignment: pw.Alignment.to,
+                  padding: pw.EdgeInsets.all(3),
+                  child: pw.Text(
+                    invoice.catatanAkademik,
+                    textAlign: pw.TextAlign.left,
+                  ),
+                  decoration: pw.BoxDecoration(
+                    border: Border.all(
+                      color: PdfColors.black,
+                      width: 1,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 4 * PdfPageFormat.mm),
+                pw.Row(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text('Mengetahui;'),
+                            pw.Text('Orang Tua/Wali,'),
+                            SizedBox(height: 10 * PdfPageFormat.mm),
+                            pw.Text(invoice.namaOrangTua,
+                                style: pw.TextStyle(
+                                  font: myFontB,
+                                  decoration: TextDecoration.underline,
+                                )),
+                          ]),
+                      pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            //Tanggal Makkasar
+                            pw.Text('Makassar, $day $mounth $year'),
+                            pw.Text('Wali Kelas'),
+                            SizedBox(height: 10 * PdfPageFormat.mm),
+                            pw.Text(invoice.namaWalikelas,
+                                style: pw.TextStyle(
+                                  font: myFontB,
+                                )),
+                            pw.Text("NIP. " + invoice.nipWalikelas),
+                          ]),
+                    ]),
+                pw.Center(
+                  child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text('Mengetahui'),
+                        pw.Text('Kepala Sekolah'),
+                        SizedBox(height: 18 * PdfPageFormat.mm),
+                        pw.Text(invoice.namaKepalaSekolah,
+                            style: pw.TextStyle(
+                              font: myFontB,
+                            )),
+                        pw.Text("NIP. " + invoice.nipKepalaSekolah),
+                      ]),
+                )
+              ])
+        ]),
+      ),
+    );
 
     pdf.addPage(
       pw.Page(
         theme: pw.ThemeData(defaultTextStyle: styleFont),
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              pw.Center(
-                child: pw.Text(
-                  "RAPOR PESERTA DIDIK",
+          return pw.Stack(children: [
+            pw.Container(
+              // height: Get.height * 0.5,
+              margin: pw.EdgeInsets.only(top: 20 * PdfPageFormat.mm),
+              width: Get.width,
+              child: pw.Image(
+                pw.MemoryImage(myImage),
+                alignment: pw.Alignment.bottomCenter,
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                pw.Center(
+                  child: pw.Text(
+                    "RAPOR PESERTA DIDIK",
+                    style: styleFontB,
+                  ),
+                ),
+                SizedBox(height: 5 * PdfPageFormat.mm),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Row(children: [
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: List.generate(
+                          titles.length,
+                          (index) => pw.Text(
+                            titles[index],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8 * PdfPageFormat.mm),
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: List.generate(
+                          data.length,
+                          (index) => pw.Text(
+                            data[index],
+                          ),
+                        ),
+                      ),
+                    ]),
+                    pw.Row(children: [
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: List.generate(
+                          titles2.length,
+                          (index) => pw.Text(
+                            titles2[index],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 4 * PdfPageFormat.mm),
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: List.generate(
+                          data2.length,
+                          (index) => pw.Text(
+                            data2[index],
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ],
+                ),
+                // SizedBox(height: 1 * PdfPageFormat.cm),
+                SizedBox(height: 3 * PdfPageFormat.mm),
+                // SizedBox(height: 1 * PdfPageFormat.mm),
+                Text(
+                  "C. Praktik Kerja Lapangan",
                   style: styleFontB,
                 ),
-              ),
-              SizedBox(height: 5 * PdfPageFormat.mm),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Row(children: [
-                    pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: List.generate(
-                        titles.length,
-                        (index) => pw.Text(
-                          titles[index],
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8 * PdfPageFormat.mm),
-                    pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: List.generate(
-                        data.length,
-                        (index) => pw.Text(
-                          data[index],
-                        ),
-                      ),
-                    ),
-                  ]),
-                  pw.Row(children: [
-                    pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: List.generate(
-                        titles2.length,
-                        (index) => pw.Text(
-                          titles2[index],
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 4 * PdfPageFormat.mm),
-                    pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: List.generate(
-                        data2.length,
-                        (index) => pw.Text(
-                          data2[index],
-                        ),
-                      ),
-                    ),
-                  ]),
-                ],
-              ),
-              // SizedBox(height: 1 * PdfPageFormat.cm),
-              SizedBox(height: 3 * PdfPageFormat.mm),
-              // SizedBox(height: 1 * PdfPageFormat.mm),
-              Text(
-                "C. Praktik Kerja Lapangan",
-                style: styleFontB,
-              ),
-              SizedBox(height: 1 * PdfPageFormat.mm),
-              buildHalPKl(
-                invoice.itemsPkl,
-                styleFont,
-                styleFontB,
-              ),
-              SizedBox(height: 10 * PdfPageFormat.mm),
-              // SizedBox(height: 1 * PdfPageFormat.mm),
-              Text(
-                "D. EKSTRAKURIKULER",
-                style: styleFontB,
-              ),
-              SizedBox(height: 1 * PdfPageFormat.mm),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                buildHalPKl(
+                  invoice.itemsPkl,
+                  styleFont,
+                  styleFontB,
+                ),
+                SizedBox(height: 10 * PdfPageFormat.mm),
+                // SizedBox(height: 1 * PdfPageFormat.mm),
+                Text(
+                  "D. EKSTRAKURIKULER",
+                  style: styleFontB,
+                ),
+                SizedBox(height: 1 * PdfPageFormat.mm),
 
-              buildHalExtra(
-                invoice.itemsExtra,
-                styleFont,
-                styleFontB,
-              ),
-              SizedBox(height: 10 * PdfPageFormat.mm),
-              // SizedBox(height: 1 * PdfPageFormat.mm),
-              Text(
-                "E. KETIDAKHADIRAN",
-                style: styleFontB,
-              ),
-              SizedBox(height: 1 * PdfPageFormat.mm),
-              pw.Row(children: [
-                pw.Expanded(
-                  flex: 7,
-                  child: buildHalKehadiran(
-                    invoice.itemsKehadiran,
-                    styleFont,
-                    styleFontB,
+                buildHalExtra(
+                  invoice.itemsExtra,
+                  styleFont,
+                  styleFontB,
+                ),
+                SizedBox(height: 10 * PdfPageFormat.mm),
+                // SizedBox(height: 1 * PdfPageFormat.mm),
+                Text(
+                  "E. KETIDAKHADIRAN",
+                  style: styleFontB,
+                ),
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                pw.Row(children: [
+                  pw.Expanded(
+                    flex: 7,
+                    child: buildHalKehadiran(
+                      invoice.itemsKehadiran,
+                      styleFont,
+                      styleFontB,
+                    ),
+                  ),
+                  pw.Expanded(flex: 4, child: pw.SizedBox()),
+                ]),
+                SizedBox(height: 10 * PdfPageFormat.mm),
+                // SizedBox(height: 1 * PdfPageFormat.mm),
+                Text(
+                  "F. KENAIKAN KELAS",
+                  style: styleFontB,
+                ),
+
+                SizedBox(height: 1 * PdfPageFormat.mm),
+                pw.Container(
+                  height: 18 * PdfPageFormat.mm,
+                  width: double.infinity,
+                  // alignment: pw.Alignment.to,
+                  padding: pw.EdgeInsets.all(3),
+                  child: pw.Text(
+                    invoice.kenaikanKelas,
+                    textAlign: pw.TextAlign.left,
+                  ),
+                  decoration: pw.BoxDecoration(
+                    border: Border.all(
+                      color: PdfColors.black,
+                      width: 1,
+                    ),
                   ),
                 ),
-                pw.Expanded(flex: 4, child: pw.SizedBox()),
-              ]),
-              SizedBox(height: 10 * PdfPageFormat.mm),
-              // SizedBox(height: 1 * PdfPageFormat.mm),
-              Text(
-                "F. KENAIKAN KELAS",
-                style: styleFontB,
-              ),
-
-              SizedBox(height: 1 * PdfPageFormat.mm),
-              pw.Container(
-                height: 18 * PdfPageFormat.mm,
-                width: double.infinity,
-                // alignment: pw.Alignment.to,
-                padding: pw.EdgeInsets.all(3),
-                child: pw.Text(
-                  invoice.kenaikanKelas,
-                  textAlign: pw.TextAlign.left,
-                ),
-                decoration: pw.BoxDecoration(
-                  border: Border.all(
-                    color: PdfColors.black,
-                    width: 1,
-                  ),
-                ),
-              ),
-              SizedBox(height: 4 * PdfPageFormat.mm),
-              pw.Row(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Column(
-                        crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        children: [
-                          pw.Text('Mengetahui;'),
-                          pw.Text('Orang Tua/Wali,'),
-                          SizedBox(height: 10 * PdfPageFormat.mm),
-                          pw.Text(invoice.namaOrangTua,
-                              style: pw.TextStyle(
-                                font: myFontB,
-                                decoration: TextDecoration.underline,
-                              )),
-                        ]),
-                    pw.Column(
-                        crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        children: [
-                          //Tanggal Makkasar
-                          pw.Text('Makassar, $day $mounth $year'),
-                          pw.Text('Wali Kelas'),
-                          SizedBox(height: 10 * PdfPageFormat.mm),
-                          pw.Text(invoice.namaWalikelas,
-                              style: pw.TextStyle(
-                                font: myFontB,
-                              )),
-                          pw.Text("NIP. " + invoice.nipWalikelas),
-                        ]),
-                  ]),
-              pw.Center(
-                child: pw.Column(
+                SizedBox(height: 4 * PdfPageFormat.mm),
+                pw.Row(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
-                      pw.Text('Mengetahui'),
-                      pw.Text('Kepala Sekolah'),
-                      SizedBox(height: 18 * PdfPageFormat.mm),
-                      pw.Text(invoice.namaKepalaSekolah,
-                          style: pw.TextStyle(
-                            font: myFontB,
-                          )),
-                      pw.Text("NIP. " + invoice.nipKepalaSekolah),
+                      pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text('Mengetahui;'),
+                            pw.Text('Orang Tua/Wali,'),
+                            SizedBox(height: 10 * PdfPageFormat.mm),
+                            pw.Text(invoice.namaOrangTua,
+                                style: pw.TextStyle(
+                                  font: myFontB,
+                                  decoration: TextDecoration.underline,
+                                )),
+                          ]),
+                      pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            //Tanggal Makkasar
+                            pw.Text('Makassar, $day $mounth $year'),
+                            pw.Text('Wali Kelas'),
+                            SizedBox(height: 10 * PdfPageFormat.mm),
+                            pw.Text(invoice.namaWalikelas,
+                                style: pw.TextStyle(
+                                  font: myFontB,
+                                )),
+                            pw.Text("NIP. " + invoice.nipWalikelas),
+                          ]),
                     ]),
-              )
-            ],
-          );
+                pw.Center(
+                  child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text('Mengetahui'),
+                        pw.Text('Kepala Sekolah'),
+                        SizedBox(height: 18 * PdfPageFormat.mm),
+                        pw.Text(invoice.namaKepalaSekolah,
+                            style: pw.TextStyle(
+                              font: myFontB,
+                            )),
+                        pw.Text("NIP. " + invoice.nipKepalaSekolah),
+                      ]),
+                )
+              ],
+            ),
+          ]);
         },
       ),
     );

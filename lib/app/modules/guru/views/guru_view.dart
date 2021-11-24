@@ -1,9 +1,11 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_mask/easy_mask.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import '../widgets/landing.dart';
@@ -15,6 +17,7 @@ import 'package:tes_database/app/data/api/pdf_invoice_api.dart';
 import 'package:tes_database/app/data/model/invoice.dart';
 import 'package:tes_database/app/data/validator/nilai.dart';
 import 'package:tes_database/app/data/widgets/button.dart';
+import 'package:url_launcher/url_launcher.dart';
 // import 'package:tes_database/app/modules/guru/widgets/nilai_umum.dart';
 import '../controllers/firebase_upload.dart';
 import '../widgets/acount_guru.dart';
@@ -44,7 +47,7 @@ class InputSiswa extends StatelessWidget {
     final controller = Get.find<GuruController>();
     var inputNilai = controller.kelas.split(' ')[1];
     print(inputNilai);
-    
+
     return Container(
       child: ListView(
         children: [
@@ -1694,6 +1697,7 @@ class ViewDataSiswa extends StatelessWidget {
                                 Text(value['catatanAkademik'] ?? dataKososng),
                                 ElevatedButton(
                                     onPressed: () async {
+                                      controller.onLoading.value = true;
                                       int no1 = 1;
                                       int no2 = 1;
                                       int no3 = 1;
@@ -2026,11 +2030,13 @@ class ViewDataSiswa extends StatelessWidget {
                                         ),
                                         dpk: dpkG,
                                       );
-
+                                      // compute<int, >();
                                       final pdfFile =
                                           await PdfInvoiceApi.generate(invoice);
-
+                                      // controller
                                       PdfApi.openFile(pdfFile);
+
+                                      controller.onLoading.value = false;
                                     },
                                     child: Text("PDF"))
                               ],

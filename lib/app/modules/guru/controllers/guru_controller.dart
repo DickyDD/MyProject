@@ -9,9 +9,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tes_database/app/modules/home/controllers/home_controller.dart';
 
 class GuruController extends GetxController {
-  final Map data = Get.arguments;
+  // final Map data = Get.arguments;
 
   late int jumlah = 1;
+  var urlPdf = "";
   List<String> namaIndex = [
     'Akun',
     'Input',
@@ -369,14 +370,14 @@ class GuruController extends GetxController {
 
   @override
   void onInit() async {
-    if (Get.arguments != null) {
+    if (Get.arguments == null) {
       onLoading.value = true;
-      jumlah = int.parse(data['jumlah']);
-      tahunAjaran = data['tahun'];
-      jurusan = data['jurusan'];
-      semester = data['semester'];
-      kelas = data['kelas'];
-      guru = data['guru'];
+      // jumlah = int.parse(data['jumlah']);
+      // tahunAjaran = data['tahun'];
+      // jurusan = data['jurusan'];
+      // semester = data['semester'];
+      // kelas = data['kelas'];
+      // guru = data['guru'];
       await getDataPelajaranKhusus();
       await getPelajaranUmum();
       await getEXR();
