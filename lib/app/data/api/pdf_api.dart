@@ -1,89 +1,109 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
+import 'dart:async';
 
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pdf/widgets.dart';
-import 'package:path/path.dart' as path;
-// import 'dart:html' as html;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:tes_database/app/data/model/invoice.dart';
+import 'examples.dart';
 
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:url_launcher/url_launcher.dart';
+class MyPDF extends StatefulWidget {
+  final Invoice raport;
+  const MyPDF({Key? key, required this.raport}) : super(key: key);
 
-class PdfApi {
-  static Future<File> saveDocument({
-    required String name,
-    required Document pdf,
-  }) async {
-    final bytes = await pdf.save();
-    final dir =
-        kIsWeb ? path.current : await getApplicationDocumentsDirectory();
-    final file = File(path.join(dir.toString(), name));
-    var url =
-        "https://firebasestorage.googleapis.com/v0/b/sistem-informasi-raport.appspot.com/o/pdf%2Fmy_invoice.pdf?alt=media&amp;token=b9ac3d2e-7bfe-4dec-a362-b5b04712eca7";
-    if (kIsWeb)
-      _saveDocumentWeb(bytes, name, url);
-    else
-      await file.writeAsBytes(bytes);
+  @override
+  MyPDFState createState() {
+    return MyPDFState();
+  }
+}
 
-    return file;
+class MyPDFState extends State<MyPDF> with SingleTickerProviderStateMixin {
+  int _tab = 0;
+  TabController? _tabController;
+
+  PrintingInfo? printingInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
   }
 
-  static Future openFile(File file) async {
-    final url = file.path;
-
-    await OpenFile.open(url);
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
-  static Future<void> _launchInBrowser(String url) async {
-    if (!await launch(
-      url,
-      forceSafariVC: false,
-      forceWebView: false,
-      headers: <String, String>{'my_header_key': 'my_header_value'},
-    )) {
-      throw 'Could not launch $url';
+  Future<void> _init() async {
+    final info = await Printing.info();
+
+    _tabController = TabController(
+      vsync: this,
+      length: examples.length,
+      initialIndex: _tab,
+    );
+    _tabController!.addListener(() {
+      if (_tab != _tabController!.index) {
+        setState(() {
+          _tab = _tabController!.index;
+        });
+      }
+    });
+
+    setState(() {
+      printingInfo = info;
+    });
+  }
+
+  void _showPrintedToast(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Document printed successfully'),
+      ),
+    );
+  }
+
+  void _showSharedToast(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Document shared successfully'),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    pw.RichText.debug = true;
+
+    if (_tabController == null) {
+      return const Center(child: CircularProgressIndicator());
     }
-  }
 
-  static _saveDocumentWeb(Uint8List data, String filename, String url) {
-    try {
-      final ref = FirebaseStorage.instance.ref("pdf/$filename");
+    const defaultPageFormats = <String, PdfPageFormat>{
+      'A3': PdfPageFormat.a3,
+      'A4': PdfPageFormat.a4,
+      'A5': PdfPageFormat.a5,
+      'A6': PdfPageFormat.a6,
+      'Legal': PdfPageFormat.legal,
+      'Letter': PdfPageFormat.letter,
+    };
 
-      ref
-          .putData(
-            data,
-            SettableMetadata(contentType: 'file/pdf'),
-          )
-          .whenComplete(
-            () => _launchInBrowser(url),
-          );
-    } on FirebaseException catch (e) {
-      print(e);
-      return null;
-    }
-    // String url =
-    //     html.Url.createObjectUrlFromBlob(html.Blob(
-    //   [data],
-    //   'application/pdf',
-    // ));
-
-    // html.AnchorElement element =
-    //     html.document.createElement(
-    //   'a',
-    // ) as html.AnchorElement
-    //       ..href = url
-    //       ..style.display = 'none'
-    //       ..download = filename;
-
-    // print(url);
-    // print(filename);
-    // html.document.body!.children
-    //   ..add(element..click())
-    //   ..remove(element);
-
-    // html.Url.revokeObjectUrl(url);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Flutter PDF Demo'),
+      ),
+      body: PdfPreview(
+        maxPageWidth: 700,
+        build: (format) => examples[_tab].builder(format, widget.raport),
+        // actions: actions,
+        canDebug: false,
+        initialPageFormat: PdfPageFormat.a4,
+        pageFormats: defaultPageFormats,
+        onPrinted: _showPrintedToast,
+        onShared: _showSharedToast,
+        pdfFileName: 'Dicky.pdf',
+      ),
+    );
   }
 }

@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tes_database/app/modules/home/controllers/home_controller.dart';
 
 class GuruController extends GetxController {
-  final Map data = Get.arguments;
+  // final Map data = Get.arguments;
 
   late int jumlah = 1;
   var urlPdf = "";
@@ -70,6 +70,25 @@ class GuruController extends GetxController {
     'Gotong-royong'
   ];
 
+  var bulan = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
+  ];
+
+  var hari = DateTime.now().day;
+  var month = DateTime.now().month;
+  var tahun = DateTime.now().year;
+
   var lulus = "";
   var tidakLulus = "";
 
@@ -78,6 +97,9 @@ class GuruController extends GetxController {
   var pelajranKhususC1;
   var pelajranKhususC2;
   var pelajranKhususC3;
+  var nilaiKknKhususC1;
+  var nilaiKknKhususC2;
+  var nilaiKknKhususC3;
   var dropdownValueKhusus = <Rx<ListPelajaran>>[];
 
   var dropdownValueUmum = <Rx<ListPelajaran>>[];
@@ -107,8 +129,7 @@ class GuruController extends GetxController {
   var fileGuru;
   var urlsGuru = '';
   final cangePassword = false.obs;
-  late TextEditingController password =
-      TextEditingController(text: guru + ' ' + kelas);
+  var password = "";
   var kepalaSekolahNama = "";
   var kepalaSekolahNIP = "";
 
@@ -121,10 +142,6 @@ class GuruController extends GetxController {
       kepalaSekolahNama = value.data()!['Nama'];
       kepalaSekolahNIP = value.data()!['NIP'];
     });
-    // .set({
-    //   'Nama': kepalaSekolahNama.text,
-    //   'NIP': kepalaSekolahNIP.text,
-    // });
   }
 
   Future<Uint8List> getImages(Rx<XFile> imagevalue) async {
@@ -307,8 +324,11 @@ class GuruController extends GetxController {
       pelajranKhususC1 = value['C1'];
       pelajranKhususC2 = value['C2'];
       pelajranKhususC3 = value['C3'];
-      // print(panjangNilai.value++);
+      nilaiKknKhususC1 = value['kknC1'];
+      nilaiKknKhususC2 = value['kknC2'];
+      nilaiKknKhususC3 = value['kknC3'];
     });
+    print(data.data()!);
     print(pelajranKhususC1);
     print(pelajranKhususC2);
     print(pelajranKhususC3);
@@ -361,6 +381,7 @@ class GuruController extends GetxController {
   //     print(value);
   //   });
   // }
+  var tanggal;
 
   @override
   void dispose() {
@@ -370,14 +391,17 @@ class GuruController extends GetxController {
 
   @override
   void onInit() async {
-    if (Get.arguments != null) {
+    if (Get.arguments == null) {
       onLoading.value = true;
-      jumlah = int.parse(data['jumlah']);
-      tahunAjaran = data['tahun'];
-      jurusan = data['jurusan'];
-      semester = data['semester'];
-      kelas = data['kelas'];
-      guru = data['guru'];
+      // jumlah = int.parse(data['jumlah']);
+      // password = data['password'];
+      // tahunAjaran = data['tahun'];
+      // jurusan = data['jurusan'];
+      // semester = data['semester'];
+      // kelas = data['kelas'];
+      // guru = data['guru'];
+      
+
       await getDataPelajaranKhusus();
       await getPelajaranUmum();
       await getEXR();
@@ -418,56 +442,87 @@ class GuruController extends GetxController {
       if (kelas.split(' ')[1] != 'X') {
         var listC3 = <ListPelajaran>[];
         var list3 = pelajranKhususC3 as List;
-        list3.forEach((element) {
+        var listNilai3 = nilaiKknKhususC3 as List;
+        for (var i = 0; i < list3.length; i++) {
           listC3.add(
             ListPelajaran(
               'C3',
-              element,
+              list3[i],
+              int.parse(listNilai3[i]),
             ),
           );
-        });
+        }
         listKhususC3 = [...listC3];
       } else {
         var list1 = pelajranKhususC1 as List;
         var list2 = pelajranKhususC2 as List;
+        var listNilai1 = nilaiKknKhususC1 as List;
+        var listNilai2 = nilaiKknKhususC2 as List;
         var listC1 = <ListPelajaran>[];
         var listC2 = <ListPelajaran>[];
-        list1.forEach((element) {
+
+        for (var i = 0; i < list1.length; i++) {
           listC1.add(
             ListPelajaran(
               'C1',
-              element,
+              list1[i],
+              int.parse(listNilai1[i]),
             ),
           );
-        });
-        list2.forEach((element) {
+        }
+        for (var i = 0; i < list2.length; i++) {
           listC2.add(
             ListPelajaran(
               'C2',
-              element,
+              list2[i],
+              int.parse(listNilai2[i]),
             ),
           );
-        });
+        }
         listGabunganKhusus = [...listC1, ...listC2];
+        listGabunganKhusus.forEach((element) {
+          print(element.name);
+          print(element.kkn);
+        });
       }
       listPelajaranUmum.forEach((element) {
-        element.pelajaran.forEach((e) {
-          listGabunganUmum.add(ListPelajaran(element.id, e));
+        for (var i = 0; i < element.pelajaran.length; i++) {
+          listGabunganUmum.add(
+            ListPelajaran(
+              element.id,
+              element.pelajaran[i],
+              int.parse(element.KKN[i]),
+            ),
+          );
+        }
+        listGabunganUmum.forEach((element) {
+          print(element.name);
+          print(element.kkn);
         });
       });
-      print(listGabunganUmum);
+
       streamData = users
           .collection(tahunAjaran)
           .doc(jurusan)
           .collection(semester)
           .doc(kelas)
           .snapshots();
-      listKhususC3
-          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-      listGabunganKhusus
-          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-      listGabunganUmum
-          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      listKhususC3.sort(
+        (a, b) => a.name.toLowerCase().compareTo(
+              b.name.toLowerCase(),
+            ),
+      );
+      listGabunganKhusus.sort(
+        (a, b) => a.name.toLowerCase().compareTo(
+              b.name.toLowerCase(),
+            ),
+      );
+      listGabunganUmum.sort(
+        (a, b) => a.name.toLowerCase().compareTo(
+              b.name.toLowerCase(),
+            ),
+      );
+      tanggal = 'Makassar, $hari ${bulan[month - 1]} $tahun';
       onLoading.value = false;
       await getKepalaSekolah();
     } else {
@@ -481,8 +536,9 @@ class ListPelajaran {
   //Hello
   final String type;
   final String name;
+  final int kkn;
 
-  ListPelajaran(this.type, this.name);
+  ListPelajaran(this.type, this.name, this.kkn);
 }
 
 class DataSiswa {

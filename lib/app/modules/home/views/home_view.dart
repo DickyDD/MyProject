@@ -56,6 +56,7 @@ class HomeView extends GetView<HomeController> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.yellow[600],
         title: Text('Admin'),
         centerTitle: true,
         actions: [
@@ -73,7 +74,7 @@ class HomeView extends GetView<HomeController> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.grey[50],
               boxShadow: [
                 BoxShadow(
                   blurRadius: 2,
@@ -93,12 +94,12 @@ class HomeView extends GetView<HomeController> {
                       duration: Duration(milliseconds: 600),
                       child: Material(
                         color: index == controller.indexList.value
-                            ? Colors.blue
+                            ? Colors.yellow
                             : Colors.transparent,
                         child: InkWell(
-                          hoverColor: Colors.blue[200],
-                          splashColor: Colors.blue[50],
-                          highlightColor: Colors.blue[100],
+                          hoverColor: Colors.yellow[200],
+                          splashColor: Colors.yellow[50],
+                          highlightColor: Colors.yellow[100],
                           onTap: () {
                             if (index != inputIndex.length) {
                               controller.indexList.value = index;
@@ -118,7 +119,7 @@ class HomeView extends GetView<HomeController> {
                                       iconIndex[index],
                                       color: index == controller.indexList.value
                                           ? Colors.white.withOpacity(0.95)
-                                          : Colors.blue,
+                                          : Colors.yellow,
                                     )),
                                     SizedBox(
                                       width: 10,
@@ -134,7 +135,7 @@ class HomeView extends GetView<HomeController> {
                                           color: index ==
                                                   controller.indexList.value
                                               ? Colors.white.withOpacity(0.95)
-                                              : Colors.blue,
+                                              : Colors.yellow[700],
                                           fontWeight: FontWeight.bold,
                                         ),
                                         overflow: TextOverflow.ellipsis,
@@ -147,7 +148,7 @@ class HomeView extends GetView<HomeController> {
                                     iconIndex[index],
                                     color: index == controller.indexList.value
                                         ? Colors.white.withOpacity(0.95)
-                                        : Colors.blue,
+                                        : Colors.yellow,
                                   ),
                                 ),
                         ),

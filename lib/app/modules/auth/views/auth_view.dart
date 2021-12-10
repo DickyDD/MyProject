@@ -36,13 +36,13 @@ class AuthView extends GetView<AuthController> {
             child: Center(
               child: Container(
                 width: double.infinity,
-                color: Colors.blue[50],
+                color: Colors.yellow[50],
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
                         'assets/logo.png',
-                        height: height * 0.2,
+                        height: height * 0.4,
                       ),
                       SizedBox(
                         height: height * 0.05,

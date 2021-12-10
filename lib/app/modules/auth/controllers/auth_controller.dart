@@ -9,17 +9,14 @@ class AuthController extends GetxController {
   final List<TextEditingController> listC = [
     TextEditingController(),
     TextEditingController(),
-    // TextEditingController(),
   ];
   final hintText = [
-    'NIP',
+    'NIP/NIK',
     'Password'.toUpperCase(),
-    // 'Token',
   ];
   final inconPrefix = [
     LineIcons.addressBookAlt,
     LineIcons.lock,
-    // LineIcons.exclamationCircle,
   ];
 
   var validator = [];
@@ -33,46 +30,53 @@ class AuthController extends GetxController {
       users
           .collection('auth users')
           .where('nip', isEqualTo: gmail)
-          .where('password', isEqualTo: password)
           .get()
           .then(
-            (value) => value.docs.forEach(
-              (element) {
-                bool aktif = element.data()['aktif'];
-                if (aktif == true) {
-                  Get.offNamed(
-                    '/guru',
-                    arguments: {
-                      'jumlah': 2.toString(),
-                      'tahun': element.data()['tahun'].toString(),
-                      'jurusan': element.data()['jurusan'],
-                      'semester': element.data()['semester'].toString(),
-                      'kelas': element.data()['kelas'].toString(),
-                      'guru': element.data()['walikelas'].toString(),
+            (value) => value.size != 0
+                ? value.docs.forEach(
+                    (element) {
+                      if (element.data()['password'].toString() == password) {
+                        bool aktif = element.data()['aktif'];
+                        if (aktif == true) {
+                          Get.offNamed(
+                            '/guru',
+                            arguments: {
+                              'password': password.toString(),
+                              'tahun': element.data()['tahun'].toString(),
+                              'jurusan': element.data()['jurusan'],
+                              'semester': element.data()['semester'].toString(),
+                              'kelas': element.data()['kelas'].toString(),
+                              'guru': element.data()['walikelas'].toString(),
+                            },
+                          );
+                        } else {
+                          Get.defaultDialog(
+                            title: 'Warning',
+                            middleText: 'Akun ini sudah di non aktifkan',
+                          );
+                        }
+                      } else {
+                        Get.defaultDialog(
+                          title: 'Warning',
+                          middleText: 'Password anda salah',
+                        );
+                      }
                     },
-                  );
-                  
-                } else {
-                  Get.defaultDialog(
+                  )
+                : Get.defaultDialog(
                     title: 'Warning',
-                    middleText: 'Akun ini sudah di non aktifkan',
-                  );
-                }
-              },
-            ),
+                    middleText: 'NIP anda salah',
+                  ),
           );
     }
   }
 
   Future<UserCredential?> login() async {
     try {
-      // UserCredential userCredential =
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: "tess@gmail.com",
         password: "444456Dd@",
       );
-
-      // return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');

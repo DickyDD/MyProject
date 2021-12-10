@@ -277,7 +277,7 @@ class SiswaController extends GetxController {
     var nilai_umum = data[7] as List;
     nilai_umum.forEach((element) {
       element.forEach((key, value) {
-        dataDropUmum.add(ListPelajaran(key, value["nama"]));
+        dataDropUmum.add(ListPelajaran(key, value["nama"], 0));
         nilaiUmum.add(TextEditingController(text: value["Pengetahuan"]));
         keterampilanUmum
             .add(TextEditingController(text: value["Keterampilan"]));
@@ -291,7 +291,7 @@ class SiswaController extends GetxController {
       }).map((val) => val.key);
       var i = 0;
       if (dataUmum.length == 0) {
-        listGabunganUmum.add(ListPelajaran(element.type, element.name));
+        listGabunganUmum.add(ListPelajaran(element.type, element.name, 0));
         i = listGabunganUmum.length;
         dataListUmum.add(i - 1);
       } else {
@@ -303,7 +303,7 @@ class SiswaController extends GetxController {
     var nilai_khusus = data[8] as List;
     nilai_khusus.forEach((element) {
       element.forEach((key, value) {
-        dataDropKhusus.add(ListPelajaran(key, value["nama"]));
+        dataDropKhusus.add(ListPelajaran(key, value["nama"], 0));
         nilaiKhusus.add(TextEditingController(text: value["Pengetahuan"]));
         keterampilanKhusus
             .add(TextEditingController(text: value["Keterampilan"]));
@@ -317,7 +317,7 @@ class SiswaController extends GetxController {
       }).map((val) => val.key);
       var i = 0;
       if (datakhusus.length == 0) {
-        listGabunganKhusus.add(ListPelajaran(element.type, element.name));
+        listGabunganKhusus.add(ListPelajaran(element.type, element.name, 0));
         i = listGabunganKhusus.length;
         dataListKhusus.add(i - 1);
       } else {

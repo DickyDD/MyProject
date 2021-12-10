@@ -1,3 +1,5 @@
+// ignore_for_file: sort_constructors_first
+
 class Invoice {
   final Info info;
   final String catatanAkademik;
@@ -8,7 +10,8 @@ class Invoice {
   final String nipWalikelas;
   final String nipKepalaSekolah;
   final String dpk;
-  // final String lulus;
+  final String lulus;
+  final String tanggal;
   final List<InvoiceItem> itemsA;
   final List<InvoiceItem> itemsB;
   final List<InvoiceItem> itemsC;
@@ -32,7 +35,8 @@ class Invoice {
     required this.namaWalikelas,
     required this.namaKepalaSekolah,
     required this.dpk,
-    // required this.lulus,
+    required this.lulus,
+    required this.tanggal,
     required this.nipWalikelas,
     required this.nipKepalaSekolah,
     required this.itemsPkl,

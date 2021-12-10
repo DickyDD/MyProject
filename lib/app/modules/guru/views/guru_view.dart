@@ -172,16 +172,18 @@ class InputSiswa extends StatelessWidget {
                           )),
                     ),
                     Expanded(
-                      child: Obx(() => CheckboxListTile(
-                            title: Text("${controller.tidakLulus}"),
-                            value: !controller.checkedValue.value,
-                            onChanged: (newValue) {
-                              controller.checkedValue.value =
-                                  !controller.checkedValue.value;
-                            },
-                            controlAffinity: ListTileControlAffinity
-                                .leading, //  <-- leading Checkbox
-                          )),
+                      child: Obx(
+                        () => CheckboxListTile(
+                          title: Text("${controller.tidakLulus}"),
+                          value: !controller.checkedValue.value,
+                          onChanged: (newValue) {
+                            controller.checkedValue.value =
+                                !controller.checkedValue.value;
+                          },
+                          controlAffinity: ListTileControlAffinity
+                              .leading, //  <-- leading Checkbox
+                        ),
+                      ),
                     ),
                   ],
                 )
@@ -203,29 +205,25 @@ class InputSiswa extends StatelessWidget {
                     );
                     return null;
                   }
-                  if (controller.formKey.currentState!.validate()) {
-                    if (fileSiswa != null) {
-                      controller.onLoading.value = true;
-                      final destination =
-                          'foto_kelas/${controller.kelas}/${controller.nama.text}';
-                      var ref =
-                          await FirebaseApi.uploadFile(destination, fileSiswa!);
-                      controller.urlsSiswa = await ref!.ref.getDownloadURL();
-                    } else {
-                      controller.urlsSiswa = controller.image;
-                    }
-                    controller.inputDataSiswa().whenComplete(() =>
-                        Get.defaultDialog(
+                  // if (){
+
+                  // }
+                  if (fileSiswa != null) {
+                    controller.onLoading.value = true;
+                    final destination =
+                        'foto_kelas/${controller.kelas}/${controller.nama.text}';
+                    var ref =
+                        await FirebaseApi.uploadFile(destination, fileSiswa!);
+                    controller.urlsSiswa = await ref!.ref.getDownloadURL();
+                  } else {
+                    controller.urlsSiswa = controller.image;
+                  }
+                  controller.inputDataSiswa().whenComplete(
+                        () => Get.defaultDialog(
                             title: 'Berhasil',
                             middleText:
-                                '${controller.nama.text} Data Sudah Berahasil Terinput'));
-                  } else {
-                    Get.defaultDialog(
-                      title: 'Gagal',
-                      middleText: 'Nilai Tidak Boleh Lebih Dari 100',
-                    );
-                    return null;
-                  }
+                                '${controller.nama.text} Data Sudah Berahasil Terinput'),
+                      );
 
                   controller.onLoading.value = false;
                 } catch (e) {
@@ -1825,6 +1823,9 @@ class ViewDataSiswa extends StatelessWidget {
                                         "Sangat Baik".toUpperCase(),
                                       ];
 
+                                      // final String tanggal =
+                                      //     'Makassar, ${controller.hari} ${controller.bulan[controller.month]} ${controller.tahun}';
+
                                       var dataI = 0;
                                       var dataR = 0;
                                       var dataN = 0;
@@ -1906,10 +1907,12 @@ class ViewDataSiswa extends StatelessWidget {
                                           "Anda harus ${InR[dataI - 1]} INTEGRITAS di Lingkungan sekolah, ${InR[dataR - 1]} sifat RELIGIUS, ${dpkLain[dataN - 1]} menunjukkan sifat NASIONALISME. ${dpkLain[dataM - 1]} menunjukkan sifat KEMANDIRIAN  dan ${dpkLain[dataG - 1]} menunjukkan sifat KEGOTONGROYONGAN  di lingkungan sekolah.";
 
                                       final invoice = Invoice(
-                                        info: Info(
+                                         lulus: 'das',
+                                        tanggal: controller.tanggal,
+                                          info: Info(
                                           nama: value['nama'] ?? dataKososng,
                                           nik: value['nis'] ?? dataKososng,
-                                          namaSekolah: 'SMK Negeri 10 Makassar',
+                                            namaSekolah: 'SMK Negeri 10 Makassar',
                                           alamat:
                                               'Jl. Bontomanai No. 14 Gunungsari Baru Makassar',
                                           kelas: controller.kelas
@@ -1960,7 +1963,7 @@ class ViewDataSiswa extends StatelessWidget {
                                               dataKhususC1[index].pengetahuan,
                                             ),
                                             keterampilan: int.parse(
-                                              dataKhususC1[index].keterampilan,
+                                                dataKhususC1[index].keterampilan,
                                             ),
                                           ),
                                         ),
@@ -1973,7 +1976,7 @@ class ViewDataSiswa extends StatelessWidget {
                                               dataKhususC2[index].pengetahuan,
                                             ),
                                             keterampilan: int.parse(
-                                              dataKhususC2[index].keterampilan,
+                                                dataKhususC2[index].keterampilan,
                                             ),
                                           ),
                                         ),
@@ -2000,7 +2003,7 @@ class ViewDataSiswa extends StatelessWidget {
                                         itemsKehadiran: List.generate(
                                           dataKehadiran.length,
                                           (index) => InvoiceItemKehadiran(
-                                            nilai: dataKehadiran[index].nilai ==
+                                              nilai: dataKehadiran[index].nilai ==
                                                     ""
                                                 ? "-"
                                                 : dataKehadiran[index].nilai,
@@ -2029,12 +2032,11 @@ class ViewDataSiswa extends StatelessWidget {
                                           ),
                                         ),
                                         dpk: dpkG,
-                                      );
+                                         
+                                        // 'Makassar, ${controller.hari} ${controller.bulan[controller.month]} ${controller.tahun}',
+                                          );
                                       // compute<int, >();
-                                      final pdfFile =
-                                          await PdfInvoiceApi.generate(invoice);
-                                      // controller
-                                      PdfApi.openFile(pdfFile);
+                                      Get.to(MyPDF(raport: invoice));
 
                                       controller.onLoading.value = false;
                                     },
