@@ -10,7 +10,7 @@ class Invoice {
   final String nipWalikelas;
   final String nipKepalaSekolah;
   final String dpk;
-  final String lulus;
+  // final String lulus;
   final String tanggal;
   final List<InvoiceItem> itemsA;
   final List<InvoiceItem> itemsB;
@@ -35,7 +35,7 @@ class Invoice {
     required this.namaWalikelas,
     required this.namaKepalaSekolah,
     required this.dpk,
-    required this.lulus,
+    // required this.lulus,
     required this.tanggal,
     required this.nipWalikelas,
     required this.nipKepalaSekolah,

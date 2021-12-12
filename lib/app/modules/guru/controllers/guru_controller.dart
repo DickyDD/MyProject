@@ -180,6 +180,7 @@ class GuruController extends GetxController {
 
   Future<void> inputDataSiswa() async {
     // urlsSiswa
+    int nilaiBlmTuntas = 0;
     var listNilaiKhusus = [];
     var listNilaiUmum = [];
     var listPl = [];
@@ -230,6 +231,9 @@ class GuruController extends GetxController {
     for (var i = 0; i < dropdownValueKhusus.length; i++) {
       var name = dropdownValueKhusus[i].value.name;
       var type = dropdownValueKhusus[i].value.type;
+      if (dropdownValueKhusus[i].value.kkn > int.parse(nilaiKhusus[i].text)) {
+        nilaiBlmTuntas++;
+      }
       print("nialai Khusus" + nilaiKhusus[i].text);
       listNilaiKhusus.add(
         {
@@ -247,6 +251,9 @@ class GuruController extends GetxController {
       var name = dropdownValueUmum[i].value.name;
       var type = dropdownValueUmum[i].value.type;
       print("nialai umum" + nilaiUmum[i].text);
+      if (dropdownValueUmum[i].value.kkn > int.parse(nilaiUmum[i].text)) {
+        nilaiBlmTuntas++;
+      }
       listNilaiUmum.add(
         {
           type: {
@@ -281,6 +288,10 @@ class GuruController extends GetxController {
       }
     }
 
+    // if (nilaiBlmTuntas != 0) {
+    //     Get.defaultDialog(title: tidakLulus);
+    //   }
+
     await users
         .collection(tahunAjaran)
         .doc(jurusan)
@@ -299,7 +310,7 @@ class GuruController extends GetxController {
         "extr": x,
         "kehadiran": k,
         "dpk": d,
-        "lulus": checkedValue.value == true ? lulus : tidakLulus,
+        "lulus": nilaiBlmTuntas != 0 ? lulus : tidakLulus,
         "namaOrtu": namaOrtu.text,
         "catatanAkademik": catatanAkademik.text,
       },
@@ -308,6 +319,7 @@ class GuruController extends GetxController {
       nis.clear();
       noOrtu.clear();
       catatanAkademik.clear();
+      
     });
   }
 
@@ -400,7 +412,6 @@ class GuruController extends GetxController {
       // semester = data['semester'];
       // kelas = data['kelas'];
       // guru = data['guru'];
-      
 
       await getDataPelajaranKhusus();
       await getPelajaranUmum();

@@ -1907,7 +1907,7 @@ class ViewDataSiswa extends StatelessWidget {
                                           "Anda harus ${InR[dataI - 1]} INTEGRITAS di Lingkungan sekolah, ${InR[dataR - 1]} sifat RELIGIUS, ${dpkLain[dataN - 1]} menunjukkan sifat NASIONALISME. ${dpkLain[dataM - 1]} menunjukkan sifat KEMANDIRIAN  dan ${dpkLain[dataG - 1]} menunjukkan sifat KEGOTONGROYONGAN  di lingkungan sekolah.";
 
                                       final invoice = Invoice(
-                                         lulus: 'das',
+                                        //  lulus: 'das',
                                         tanggal: controller.tanggal,
                                           info: Info(
                                           nama: value['nama'] ?? dataKososng,
@@ -2021,7 +2021,7 @@ class ViewDataSiswa extends StatelessWidget {
                                             no: dataPKL[index].no,
                                           ),
                                         ),
-                                        kenaikanKelas: value["lulus"],
+                                        
                                         itemsDPK: List.generate(
                                           dataDPK.length,
                                           (index) => InvoiceItemKehadiran(
@@ -2032,7 +2032,7 @@ class ViewDataSiswa extends StatelessWidget {
                                           ),
                                         ),
                                         dpk: dpkG,
-                                         
+                                        kenaikanKelas: value["lulus"], 
                                         // 'Makassar, ${controller.hari} ${controller.bulan[controller.month]} ${controller.tahun}',
                                           );
                                       // compute<int, >();
