@@ -22,7 +22,7 @@ Future<void> main() async {
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Raport Digital",
-      initialRoute: '/guru',
+      initialRoute: '/login',
       getPages: [
         GetPage(
           name: '/admin',
