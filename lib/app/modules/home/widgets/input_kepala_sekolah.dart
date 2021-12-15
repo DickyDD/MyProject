@@ -37,7 +37,7 @@ class InputKepalaSekolah extends StatelessWidget {
               TextInputType.number,
               // TextInputType.number,
               [
-                TextInputMask(mask: '99999 999999 9 999'),
+                TextInputMask(mask: '99999999 999999 9 999'),
               ],
             ),
           ),

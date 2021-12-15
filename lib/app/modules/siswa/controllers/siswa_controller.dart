@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
@@ -124,8 +122,8 @@ class SiswaController extends GetxController {
   }
 
   Future<void> inputDataSiswa() async {
-    // urlsSiswa
-   // urlsSiswa
+    
+    int nilaiBlmTuntas = 0;
     var listNilaiKhusus = [];
     var listNilaiUmum = [];
     var listPl = [];
@@ -148,6 +146,11 @@ class SiswaController extends GetxController {
 
     for (var i = 0; i < listKehadiran.length; i++) {
       var type = listKehadiran[i];
+      int? kehadiran = int.tryParse(nialiKehadiran[i].text) ?? 0;
+      if (type == "Tanpa Keterangan" && kehadiran >= 15) {
+        nilaiBlmTuntas++;
+        print("nilaiBlmTuntas" + nilaiBlmTuntas.toString());
+      }
       print(nialiKehadiran[i].text);
       k.add(
         {
@@ -173,11 +176,19 @@ class SiswaController extends GetxController {
     for (var i = 0; i < dropdownValueKhusus.length; i++) {
       var name = dropdownValueKhusus[i].value.name;
       var type = dropdownValueKhusus[i].value.type;
-      print("nialai Khusus" + nilaiKhusus[i].text);
+      var kkn = dropdownValueKhusus[i].value.kkn;
+      var totalNilai = (int.parse(nilaiKhusus[i].text) +
+              int.parse(keterampilanKhusus[i].text)) /
+          2;
+      if (dropdownValueKhusus[i].value.kkn > totalNilai) {
+        nilaiBlmTuntas++;
+        print("nilaiBlmTuntas" + nilaiBlmTuntas.toString());
+      }
       listNilaiKhusus.add(
         {
           type: {
             'nama': name,
+            'kkn': kkn,
             'Pengetahuan': nilaiKhusus[i].text,
             'Keterampilan': keterampilanKhusus[i].text,
           }
@@ -187,11 +198,19 @@ class SiswaController extends GetxController {
     for (var i = 0; i < dropdownValueUmum.length; i++) {
       var name = dropdownValueUmum[i].value.name;
       var type = dropdownValueUmum[i].value.type;
-      print("nialai umum" + nilaiUmum[i].text);
+      var kkn = dropdownValueUmum[i].value.kkn;
+      var totalNilai =
+          (int.parse(nilaiUmum[i].text) + int.parse(keterampilanUmum[i].text)) /
+              2;
+      if (dropdownValueUmum[i].value.kkn > totalNilai) {
+        nilaiBlmTuntas++;
+        print("nilaiBlmTuntas" + nilaiBlmTuntas.toString());
+      }
       listNilaiUmum.add(
         {
           type: {
             'nama': name,
+            'kkn': kkn,
             'Pengetahuan': nilaiUmum[i].text,
             'Keterampilan': keterampilanUmum[i].text,
           }
@@ -236,7 +255,7 @@ class SiswaController extends GetxController {
         "extr": x,
         "kehadiran": k,
         "dpk": d,
-        "lulus": checkedValue.value == true ? lulus : tidakLulus,
+        "lulus": nilaiBlmTuntas != 0 ? tidakLulus : lulus,
         "catatanAkademik": catatanAkademik.text,
       },
     );
@@ -277,7 +296,7 @@ class SiswaController extends GetxController {
     var nilai_umum = data[7] as List;
     nilai_umum.forEach((element) {
       element.forEach((key, value) {
-        dataDropUmum.add(ListPelajaran(key, value["nama"], 0));
+        dataDropUmum.add(ListPelajaran(key, value["nama"], value["kkn"]));
         nilaiUmum.add(TextEditingController(text: value["Pengetahuan"]));
         keterampilanUmum
             .add(TextEditingController(text: value["Keterampilan"]));
@@ -291,7 +310,8 @@ class SiswaController extends GetxController {
       }).map((val) => val.key);
       var i = 0;
       if (dataUmum.length == 0) {
-        listGabunganUmum.add(ListPelajaran(element.type, element.name, 0));
+        listGabunganUmum
+            .add(ListPelajaran(element.type, element.name, element.kkn));
         i = listGabunganUmum.length;
         dataListUmum.add(i - 1);
       } else {
@@ -303,7 +323,7 @@ class SiswaController extends GetxController {
     var nilai_khusus = data[8] as List;
     nilai_khusus.forEach((element) {
       element.forEach((key, value) {
-        dataDropKhusus.add(ListPelajaran(key, value["nama"], 0));
+        dataDropKhusus.add(ListPelajaran(key, value["nama"], value["kkn"]));
         nilaiKhusus.add(TextEditingController(text: value["Pengetahuan"]));
         keterampilanKhusus
             .add(TextEditingController(text: value["Keterampilan"]));
@@ -317,7 +337,8 @@ class SiswaController extends GetxController {
       }).map((val) => val.key);
       var i = 0;
       if (datakhusus.length == 0) {
-        listGabunganKhusus.add(ListPelajaran(element.type, element.name, 0));
+        listGabunganKhusus
+            .add(ListPelajaran(element.type, element.name, element.kkn));
         i = listGabunganKhusus.length;
         dataListKhusus.add(i - 1);
       } else {
@@ -382,17 +403,17 @@ class SiswaController extends GetxController {
         nilaiDPK.add(TextEditingController(text: value["nilai"]));
       });
     });
-
+    semester = data[20];
     image = data[14];
     namaOrtu.text = data[15];
     tahunAjaran = data[16];
     jurusan = data[17];
     kelas = data[18];
-    if (data[19].toString().split(" ")[0] == "Naik") {
-      checkedValue.value = true;
-    } else {
-      checkedValue.value = false;
-    }
+    // if (data[19].toString().split(" ")[0] == "Naik") {
+    //   checkedValue.value = true;
+    // } else {
+    //   checkedValue.value = false;
+    // }
 
     if (semester.toLowerCase() == "semester 2") {
       lulus = kelas.split(' ')[1] == 'X'
@@ -409,7 +430,7 @@ class SiswaController extends GetxController {
       lulus = "";
       tidakLulus = "";
     }
-    
+    print(data[13].toString());
     super.onInit();
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:easy_mask/easy_mask.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,8 +7,6 @@ import 'package:line_icons/line_icons.dart';
 import 'package:tes_database/app/data/validator/nilai.dart';
 import 'package:tes_database/app/data/widgets/button.dart';
 import 'package:tes_database/app/modules/guru/controllers/guru_controller.dart';
-// import 'package:tes_database/app/modules/guru/controllers/guru_controller.dart';
-// import 'package:tes_database/app/modules/guru/views/guru_view.dart';
 import 'package:tes_database/app/modules/siswa/controllers/firebase_upload.dart';
 import '../controllers/siswa_controller.dart';
 
@@ -18,6 +15,14 @@ class SiswaView extends GetView<SiswaController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.yellow[600],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Get.back();
+            Get.back();
+          },
+        ),
         title: Text("Edit ${controller.nama.text}"),
         centerTitle: true,
         actions: [
@@ -30,6 +35,7 @@ class SiswaView extends GetView<SiswaController> {
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                     onPressed: () {
                       controller.onEdit.value = !controller.onEdit.value;
+                      Get.back();
                     },
                     child: Text('Yakin'),
                   ),
@@ -172,36 +178,36 @@ class InputSiswa extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          controller.semester.toLowerCase() == "semester 2"
-              ? Row(
-                  children: [
-                    Expanded(
-                      child: Obx(() => CheckboxListTile(
-                            title: Text("${controller.lulus}"),
-                            value: controller.checkedValue.value,
-                            onChanged: (newValue) {
-                              controller.checkedValue.value =
-                                  !controller.checkedValue.value;
-                            },
-                            controlAffinity: ListTileControlAffinity
-                                .leading, //  <-- leading Checkbox
-                          )),
-                    ),
-                    Expanded(
-                      child: Obx(() => CheckboxListTile(
-                            title: Text("${controller.tidakLulus}"),
-                            value: !controller.checkedValue.value,
-                            onChanged: (newValue) {
-                              controller.checkedValue.value =
-                                  !controller.checkedValue.value;
-                            },
-                            controlAffinity: ListTileControlAffinity
-                                .leading, //  <-- leading Checkbox
-                          )),
-                    ),
-                  ],
-                )
-              : SizedBox(),
+          // controller.semester.toLowerCase() == "semester 2"
+          //     ? Row(
+          //         children: [
+          //           Expanded(
+          //             child: Obx(() => CheckboxListTile(
+          //                   title: Text("${controller.lulus}"),
+          //                   value: controller.checkedValue.value,
+          //                   onChanged: (newValue) {
+          //                     controller.checkedValue.value =
+          //                         !controller.checkedValue.value;
+          //                   },
+          //                   controlAffinity: ListTileControlAffinity
+          //                       .leading, //  <-- leading Checkbox
+          //                 )),
+          //           ),
+          //           Expanded(
+          //             child: Obx(() => CheckboxListTile(
+          //                   title: Text("${controller.tidakLulus}"),
+          //                   value: !controller.checkedValue.value,
+          //                   onChanged: (newValue) {
+          //                     controller.checkedValue.value =
+          //                         !controller.checkedValue.value;
+          //                   },
+          //                   controlAffinity: ListTileControlAffinity
+          //                       .leading, //  <-- leading Checkbox
+          //                 )),
+          //           ),
+          //         ],
+          //       )
+          //     : SizedBox(),
           SizedBox(
             height: 20,
           ),
@@ -230,11 +236,13 @@ class InputSiswa extends StatelessWidget {
                     } else {
                       controller.urlsSiswa = controller.image;
                     }
-                    controller.inputDataSiswa().whenComplete(() =>
-                        Get.defaultDialog(
+                    controller.inputDataSiswa().whenComplete(
+                          () => Get.defaultDialog(
                             title: 'Berhasil',
                             middleText:
-                                '${controller.nama.text} Data Sudah Berahasil Terinput'));
+                                '${controller.nama.text} Data Sudah Berahasil Terinput',
+                          ),
+                        );
                   } else {
                     Get.defaultDialog(
                       title: 'Gagal',
@@ -954,8 +962,8 @@ class NilaiWidget extends StatelessWidget {
                             child: EditingInputSiswaKehadiran(
                               key: Key(controller.nialiKehadiran[index].text),
                               controller: controller.nialiKehadiran[index],
-                              max: 1,
-                              validator: (val) => validateNilai(val!),
+                              max: 2,
+                              
                               keyboardtype: TextInputType.number,
                               listFormat: [
                                 FilteringTextInputFormatter.digitsOnly
@@ -1227,18 +1235,7 @@ class EditingInputSiswaKehadiran extends StatelessWidget {
           maxLines: maxLines,
           keyboardType: keyboardtype,
           validator: validator,
-          onChanged: (val) {
-            var nilai = int.parse(val);
-            if (nilai > 3) {
-              labelText.value = "Sangat Baik";
-            } else if (nilai > 2) {
-              labelText.value = "Baik";
-            } else if (nilai > 1) {
-              labelText.value = "Cukup";
-            } else {
-              labelText.value = "Kurang";
-            }
-          },
+
           inputFormatters: listFormat,
           decoration: InputDecoration(
             hintText: hintText,

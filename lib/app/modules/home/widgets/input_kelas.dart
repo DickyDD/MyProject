@@ -1,6 +1,7 @@
-import 'package:easy_mask/easy_mask.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:tes_database/app/data/widgets/card_shadow.dart';
@@ -253,8 +254,8 @@ class InputKelas extends StatelessWidget {
                                               TextInputType.number,
                                               // TextInputType.number,
                                               [
-                                                TextInputMask(
-                                                    mask: '99999 999999 9 999'),
+                                                FilteringTextInputFormatter
+                                                    .digitsOnly
                                               ],
                                             ),
                                             Row(

@@ -1,9 +1,7 @@
-
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_mask/easy_mask.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import '../widgets/landing.dart';
@@ -14,6 +12,7 @@ import 'package:tes_database/app/data/api/pdf_api.dart';
 import 'package:tes_database/app/data/model/invoice.dart';
 import 'package:tes_database/app/data/validator/nilai.dart';
 import 'package:tes_database/app/data/widgets/button.dart';
+import 'package:tes_database/app/data/widgets/card_shadow.dart';
 // import 'package:tes_database/app/modules/guru/widgets/nilai_umum.dart';
 import '../controllers/firebase_upload.dart';
 import '../widgets/acount_guru.dart';
@@ -24,11 +23,33 @@ class GuruView extends GetView<GuruController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.yellow[600],
         title:
             Obx(() => Text(controller.namaIndex[controller.indexList.value])),
         centerTitle: true,
       ),
       body: Landing(),
+    );
+  }
+}
+
+class TanggalRaport extends GetView<GuruController> {
+  const TanggalRaport({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        CardShadow(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: EditingInputSiswa(
+              controller: controller.tanggalPdf,
+              hintText: "Tanggal Raport",
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -152,38 +173,39 @@ class InputSiswa extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          controller.semester.toLowerCase() == "semester 2"
-              ? Row(
-                  children: [
-                    Expanded(
-                      child: Obx(() => CheckboxListTile(
-                            title: Text("${controller.lulus}"),
-                            value: controller.checkedValue.value,
-                            onChanged: (newValue) {
-                              controller.checkedValue.value =
-                                  !controller.checkedValue.value;
-                            },
-                            controlAffinity: ListTileControlAffinity
-                                .leading, //  <-- leading Checkbox
-                          )),
-                    ),
-                    Expanded(
-                      child: Obx(
-                        () => CheckboxListTile(
-                          title: Text("${controller.tidakLulus}"),
-                          value: !controller.checkedValue.value,
-                          onChanged: (newValue) {
-                            controller.checkedValue.value =
-                                !controller.checkedValue.value;
-                          },
-                          controlAffinity: ListTileControlAffinity
-                              .leading, //  <-- leading Checkbox
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : SizedBox(),
+
+          // controller.semester.toLowerCase() == "semester 2"
+          //     ? Row(
+          //         children: [
+          //           Expanded(
+          //             child: Obx(() => CheckboxListTile(
+          //                   title: Text("${controller.lulus}"),
+          //                   value: controller.checkedValue.value,
+          //                   onChanged: (newValue) {
+          //                     controller.checkedValue.value =
+          //                         !controller.checkedValue.value;
+          //                   },
+          //                   controlAffinity: ListTileControlAffinity
+          //                       .leading, //  <-- leading Checkbox
+          //                 )),
+          //           ),
+          //           Expanded(
+          //             child: Obx(
+          //               () => CheckboxListTile(
+          //                 title: Text("${controller.tidakLulus}"),
+          //                 value: !controller.checkedValue.value,
+          //                 onChanged: (newValue) {
+          //                   controller.checkedValue.value =
+          //                       !controller.checkedValue.value;
+          //                 },
+          //                 controlAffinity: ListTileControlAffinity
+          //                     .leading, //  <-- leading Checkbox
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       )
+          //     : SizedBox(),
           SizedBox(
             height: 20,
           ),
@@ -201,25 +223,30 @@ class InputSiswa extends StatelessWidget {
                     );
                     return null;
                   }
-                  // if (){
-
-                  // }
-                  if (fileSiswa != null) {
-                    controller.onLoading.value = true;
-                    final destination =
-                        'foto_kelas/${controller.kelas}/${controller.nama.text}';
-                    var ref =
-                        await FirebaseApi.uploadFile(destination, fileSiswa!);
-                    controller.urlsSiswa = await ref!.ref.getDownloadURL();
+                  if (controller.formKey.currentState!.validate()) {
+                    if (fileSiswa != null) {
+                      controller.onLoading.value = true;
+                      final destination =
+                          'foto_kelas/${controller.kelas}/${controller.nama.text}';
+                      var ref =
+                          await FirebaseApi.uploadFile(destination, fileSiswa!);
+                      controller.urlsSiswa = await ref!.ref.getDownloadURL();
+                    } else {
+                      controller.urlsSiswa = controller.image;
+                    }
+                    controller.inputDataSiswa().whenComplete(
+                          () => Get.defaultDialog(
+                              title: 'Berhasil',
+                              middleText:
+                                  '${controller.nama.text} Data Sudah Berahasil Terinput'),
+                        );
                   } else {
-                    controller.urlsSiswa = controller.image;
+                    Get.defaultDialog(
+                      title: 'Gagal',
+                      middleText: 'Nilai Tidak Boleh Lebih Dari 100',
+                    );
+                    return null;
                   }
-                  controller.inputDataSiswa().whenComplete(
-                        () => Get.defaultDialog(
-                            title: 'Berhasil',
-                            middleText:
-                                '${controller.nama.text} Data Sudah Berahasil Terinput'),
-                      );
 
                   controller.onLoading.value = false;
                 } catch (e) {
@@ -1106,13 +1133,13 @@ class NilaiWidget extends StatelessWidget {
                                         controller.nialiKehadiran[index].text),
                                     controller:
                                         controller.nialiKehadiran[index],
-                                    max: 1,
-                                    validator: (val) => validateNilai(val!),
+                                    max: 2,
+                                    // validator: (val) => validateNilai(val!),
                                     keyboardtype: TextInputType.number,
                                     listFormat: [
                                       FilteringTextInputFormatter.digitsOnly
                                     ],
-                                    hintText: 'Nilai',
+                                    hintText: 'Kehadiran',
                                   ),
                                 ),
                               ),
@@ -1298,18 +1325,6 @@ class EditingInputSiswaKehadiran extends StatelessWidget {
           maxLines: maxLines,
           keyboardType: keyboardtype,
           validator: validator,
-          onChanged: (val) {
-            var nilai = int.parse(val);
-            if (nilai > 3) {
-              labelText.value = "Sangat Baik";
-            } else if (nilai > 2) {
-              labelText.value = "Baik";
-            } else if (nilai > 1) {
-              labelText.value = "Cukup";
-            } else {
-              labelText.value = "Kurang";
-            }
-          },
           inputFormatters: listFormat,
           decoration: InputDecoration(
             hintText: hintText,
@@ -1636,6 +1651,7 @@ class ViewDataSiswa extends StatelessWidget {
                                                           controller.kelas,
                                                           value["lulus"] ??
                                                               "Naik ke",
+                                                          controller.semester
                                                         ],
                                                       );
                                                     },
@@ -1662,10 +1678,9 @@ class ViewDataSiswa extends StatelessWidget {
                                                             .collection("Siswa")
                                                             .doc(value.id)
                                                             .delete()
-                                                            .whenComplete(() {
-                                                          Get.back();
-                                                          Get.back();
-                                                        });
+                                                            .then(
+                                                              (_) => Get.back(),
+                                                            );
                                                       },
                                                       child: Text('Hapus'))
                                                 ]);
@@ -1688,7 +1703,10 @@ class ViewDataSiswa extends StatelessWidget {
                                   value['nis'] ?? dataKososng,
                                   style: TextStyle(fontSize: 20),
                                 ),
-                                Text(value['catatanAkademik'] ?? dataKososng),
+                                Text(value["lulus"] ?? dataKososng),
+                                SizedBox(
+                                  height: 10,
+                                ),
                                 ElevatedButton(
                                     onPressed: () async {
                                       controller.onLoading.value = true;
@@ -1904,11 +1922,11 @@ class ViewDataSiswa extends StatelessWidget {
 
                                       final invoice = Invoice(
                                         //  lulus: 'das',
-                                        tanggal: controller.tanggal,
-                                          info: Info(
+                                        tanggal: controller.tanggalPdf.text,
+                                        info: Info(
                                           nama: value['nama'] ?? dataKososng,
                                           nik: value['nis'] ?? dataKososng,
-                                            namaSekolah: 'SMK Negeri 10 Makassar',
+                                          namaSekolah: 'SMK Negeri 10 Makassar',
                                           alamat:
                                               'Jl. Bontomanai No. 14 Gunungsari Baru Makassar',
                                           kelas: controller.kelas
@@ -1959,7 +1977,7 @@ class ViewDataSiswa extends StatelessWidget {
                                               dataKhususC1[index].pengetahuan,
                                             ),
                                             keterampilan: int.parse(
-                                                dataKhususC1[index].keterampilan,
+                                              dataKhususC1[index].keterampilan,
                                             ),
                                           ),
                                         ),
@@ -1972,7 +1990,7 @@ class ViewDataSiswa extends StatelessWidget {
                                               dataKhususC2[index].pengetahuan,
                                             ),
                                             keterampilan: int.parse(
-                                                dataKhususC2[index].keterampilan,
+                                              dataKhususC2[index].keterampilan,
                                             ),
                                           ),
                                         ),
@@ -1999,7 +2017,7 @@ class ViewDataSiswa extends StatelessWidget {
                                         itemsKehadiran: List.generate(
                                           dataKehadiran.length,
                                           (index) => InvoiceItemKehadiran(
-                                              nilai: dataKehadiran[index].nilai ==
+                                            nilai: dataKehadiran[index].nilai ==
                                                     ""
                                                 ? "-"
                                                 : dataKehadiran[index].nilai,
@@ -2017,7 +2035,7 @@ class ViewDataSiswa extends StatelessWidget {
                                             no: dataPKL[index].no,
                                           ),
                                         ),
-                                        
+
                                         itemsDPK: List.generate(
                                           dataDPK.length,
                                           (index) => InvoiceItemKehadiran(
@@ -2028,15 +2046,18 @@ class ViewDataSiswa extends StatelessWidget {
                                           ),
                                         ),
                                         dpk: dpkG,
-                                        kenaikanKelas: value["lulus"], 
+                                        kenaikanKelas: value["lulus"],
                                         // 'Makassar, ${controller.hari} ${controller.bulan[controller.month]} ${controller.tahun}',
-                                          );
+                                      );
                                       // compute<int, >();
                                       Get.to(MyPDF(raport: invoice));
 
                                       controller.onLoading.value = false;
                                     },
-                                    child: Text("PDF"))
+                                    child: Text("PDF")),
+                                SizedBox(
+                                  height: 10,
+                                ),
                               ],
                             ),
                           ),
@@ -2073,12 +2094,14 @@ class Landing extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> inputIndex = [
       Acount(),
+      TanggalRaport(),
       InputSiswa(),
       ViewDataSiswa(),
     ];
 
     List<IconData> iconIndex = [
       LineIcons.userCircle,
+      LineIcons.calendar,
       LineIcons.userPlus,
       LineIcons.userFriends,
       LineIcons.arrowCircleLeft,
@@ -2092,7 +2115,7 @@ class Landing extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.grey[50],
             boxShadow: [
               BoxShadow(
                 blurRadius: 2,
@@ -2112,12 +2135,12 @@ class Landing extends StatelessWidget {
                     duration: Duration(milliseconds: 600),
                     child: Material(
                       color: index == controller.indexList.value
-                          ? Colors.blue
+                          ? Colors.yellow
                           : Colors.transparent,
                       child: InkWell(
-                        hoverColor: Colors.blue[200],
-                        splashColor: Colors.blue[50],
-                        highlightColor: Colors.blue[100],
+                        hoverColor: Colors.yellow[200],
+                        splashColor: Colors.yellow[50],
+                        highlightColor: Colors.yellow[100],
                         onTap: () {
                           if (index != inputIndex.length) {
                             controller.indexList.value = index;
@@ -2137,7 +2160,7 @@ class Landing extends StatelessWidget {
                                     iconIndex[index],
                                     color: index == controller.indexList.value
                                         ? Colors.white.withOpacity(0.95)
-                                        : Colors.blue,
+                                        : Colors.yellow,
                                   )),
                                   SizedBox(
                                     width: 10,
@@ -2153,7 +2176,7 @@ class Landing extends StatelessWidget {
                                           color: index ==
                                                   controller.indexList.value
                                               ? Colors.white.withOpacity(0.95)
-                                              : Colors.blue,
+                                              : Colors.yellow[700],
                                           fontWeight: FontWeight.bold),
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -2165,7 +2188,7 @@ class Landing extends StatelessWidget {
                                   iconIndex[index],
                                   color: index == controller.indexList.value
                                       ? Colors.white.withOpacity(0.95)
-                                      : Colors.blue,
+                                      : Colors.yellow,
                                 ),
                               ),
                       ),

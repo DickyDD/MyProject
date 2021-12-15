@@ -38,7 +38,7 @@ class AuthController extends GetxController {
                       if (element.data()['password'].toString() == password) {
                         bool aktif = element.data()['aktif'];
                         if (aktif == true) {
-                          Get.offNamed(
+                          Get.offAllNamed(
                             '/guru',
                             arguments: {
                               'password': password.toString(),

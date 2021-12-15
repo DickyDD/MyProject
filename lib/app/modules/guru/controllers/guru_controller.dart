@@ -10,11 +10,12 @@ import 'package:tes_database/app/modules/home/controllers/home_controller.dart';
 
 class GuruController extends GetxController {
   final Map data = Get.arguments;
-
+  final tanggalPdf =  TextEditingController(); 
   late int jumlah = 1;
   var urlPdf = "";
   List<String> namaIndex = [
     'Akun',
+    'Tanggal',
     'Input',
     'Lihat',
     'Exit',
@@ -204,6 +205,11 @@ class GuruController extends GetxController {
 
     for (var i = 0; i < listKehadiran.length; i++) {
       var type = listKehadiran[i];
+      int? kehadiran = int.tryParse(nialiKehadiran[i].text) ?? 0;
+      if (type == "Tanpa Keterangan" && kehadiran >= 15) {
+        nilaiBlmTuntas++;
+        print("nilaiBlmTuntas" + nilaiBlmTuntas.toString());
+      }
       print(nialiKehadiran[i].text);
       k.add(
         {
@@ -231,14 +237,20 @@ class GuruController extends GetxController {
     for (var i = 0; i < dropdownValueKhusus.length; i++) {
       var name = dropdownValueKhusus[i].value.name;
       var type = dropdownValueKhusus[i].value.type;
-      if (dropdownValueKhusus[i].value.kkn > int.parse(nilaiKhusus[i].text)) {
+      var kkn = dropdownValueKhusus[i].value.kkn;
+      var totalNilai = (int.parse(nilaiKhusus[i].text) +
+              int.parse(keterampilanKhusus[i].text)) /
+          2;
+      if (dropdownValueKhusus[i].value.kkn > totalNilai) {
         nilaiBlmTuntas++;
+        print("nilaiBlmTuntas" + nilaiBlmTuntas.toString());
       }
-      print("nialai Khusus" + nilaiKhusus[i].text);
+      
       listNilaiKhusus.add(
         {
           type: {
             'nama': name,
+            'kkn': kkn,
             'Pengetahuan': nilaiKhusus[i].text,
             'Keterampilan': keterampilanKhusus[i].text,
           }
@@ -250,14 +262,19 @@ class GuruController extends GetxController {
     for (var i = 0; i < dropdownValueUmum.length; i++) {
       var name = dropdownValueUmum[i].value.name;
       var type = dropdownValueUmum[i].value.type;
-      print("nialai umum" + nilaiUmum[i].text);
-      if (dropdownValueUmum[i].value.kkn > int.parse(nilaiUmum[i].text)) {
+      var kkn = dropdownValueUmum[i].value.kkn;
+      var totalNilai =
+          (int.parse(nilaiUmum[i].text) + int.parse(keterampilanUmum[i].text)) /
+              2;
+      if (dropdownValueUmum[i].value.kkn > totalNilai) {
         nilaiBlmTuntas++;
+        print("nilaiBlmTuntas" + nilaiBlmTuntas.toString());
       }
       listNilaiUmum.add(
         {
           type: {
             'nama': name,
+            'kkn': kkn,
             'Pengetahuan': nilaiUmum[i].text,
             'Keterampilan': keterampilanUmum[i].text,
           }
@@ -310,7 +327,7 @@ class GuruController extends GetxController {
         "extr": x,
         "kehadiran": k,
         "dpk": d,
-        "lulus": nilaiBlmTuntas != 0 ? lulus : tidakLulus,
+        "lulus": nilaiBlmTuntas != 0 ? tidakLulus : lulus,
         "namaOrtu": namaOrtu.text,
         "catatanAkademik": catatanAkademik.text,
       },
@@ -318,8 +335,8 @@ class GuruController extends GetxController {
       nama.clear();
       nis.clear();
       noOrtu.clear();
+      namaOrtu.clear();
       catatanAkademik.clear();
-      
     });
   }
 
@@ -405,7 +422,7 @@ class GuruController extends GetxController {
   void onInit() async {
     if (Get.arguments != null) {
       onLoading.value = true;
-      jumlah = int.parse(data['jumlah']);
+      // jumlah = int.parse(data['jumlah']);
       password = data['password'];
       tahunAjaran = data['tahun'];
       jurusan = data['jurusan'];
@@ -533,7 +550,7 @@ class GuruController extends GetxController {
               b.name.toLowerCase(),
             ),
       );
-      tanggal = 'Makassar, $hari ${bulan[month - 1]} $tahun';
+      tanggalPdf.text = 'Makassar, $hari ${bulan[month - 1]} $tahun';
       onLoading.value = false;
       await getKepalaSekolah();
     } else {

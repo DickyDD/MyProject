@@ -27,6 +27,7 @@ class MyPDFState extends State<MyPDF> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    
     _init();
   }
 
@@ -90,10 +91,14 @@ class MyPDFState extends State<MyPDF> with SingleTickerProviderStateMixin {
     };
 
     return Scaffold(
+      
       appBar: AppBar(
-        title: const Text('Flutter PDF Demo'),
+        backgroundColor: Colors.yellow[600],
+        centerTitle: true,
+        title: Text('RAPOR ${widget.raport.info.nama}'),
       ),
       body: PdfPreview(
+        
         maxPageWidth: 700,
         build: (format) => examples[_tab].builder(format, widget.raport),
         // actions: actions,
@@ -102,7 +107,8 @@ class MyPDFState extends State<MyPDF> with SingleTickerProviderStateMixin {
         pageFormats: defaultPageFormats,
         onPrinted: _showPrintedToast,
         onShared: _showSharedToast,
-        pdfFileName: 'Dicky.pdf',
+          pdfFileName: '${widget.raport.info.nama}.pdf',
+          pdfPreviewPageDecoration: BoxDecoration(color: Colors.yellow[600])
       ),
     );
   }
