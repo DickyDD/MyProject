@@ -240,7 +240,7 @@ class InputSiswa extends StatelessWidget {
                           () => Get.defaultDialog(
                             title: 'Berhasil',
                             middleText:
-                                '${controller.nama.text} Data Sudah Berahasil Terinput',
+                                '${controller.nama.text} Data Sudah Berhasil Terinput',
                           ),
                         );
                   } else {

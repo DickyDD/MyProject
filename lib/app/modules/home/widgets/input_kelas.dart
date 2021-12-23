@@ -253,10 +253,7 @@ class InputKelas extends StatelessWidget {
                                               'NIP WaliKelas ${controller.valueKelas[i]}',
                                               TextInputType.number,
                                               // TextInputType.number,
-                                              [
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly
-                                              ],
+                                                null
                                             ),
                                             Row(
                                               mainAxisAlignment:

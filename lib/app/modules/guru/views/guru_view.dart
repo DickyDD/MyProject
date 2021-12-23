@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:easy_mask/easy_mask.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -173,39 +174,6 @@ class InputSiswa extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-
-          // controller.semester.toLowerCase() == "semester 2"
-          //     ? Row(
-          //         children: [
-          //           Expanded(
-          //             child: Obx(() => CheckboxListTile(
-          //                   title: Text("${controller.lulus}"),
-          //                   value: controller.checkedValue.value,
-          //                   onChanged: (newValue) {
-          //                     controller.checkedValue.value =
-          //                         !controller.checkedValue.value;
-          //                   },
-          //                   controlAffinity: ListTileControlAffinity
-          //                       .leading, //  <-- leading Checkbox
-          //                 )),
-          //           ),
-          //           Expanded(
-          //             child: Obx(
-          //               () => CheckboxListTile(
-          //                 title: Text("${controller.tidakLulus}"),
-          //                 value: !controller.checkedValue.value,
-          //                 onChanged: (newValue) {
-          //                   controller.checkedValue.value =
-          //                       !controller.checkedValue.value;
-          //                 },
-          //                 controlAffinity: ListTileControlAffinity
-          //                     .leading, //  <-- leading Checkbox
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       )
-          //     : SizedBox(),
           SizedBox(
             height: 20,
           ),
@@ -238,7 +206,7 @@ class InputSiswa extends StatelessWidget {
                           () => Get.defaultDialog(
                               title: 'Berhasil',
                               middleText:
-                                  '${controller.nama.text} Data Sudah Berahasil Terinput'),
+                                  '${controller.nama.text} Data Sudah Berhasil Terinput'),
                         );
                   } else {
                     Get.defaultDialog(
@@ -359,10 +327,50 @@ class NilaiWidget extends StatelessWidget {
                                       child: Padding(
                                         padding: EdgeInsets.only(
                                             top: 22, bottom: 22, left: 8),
-                                        child: Dropdown(
-                                          dropdownValue: controller
-                                              .dropdownValueKhusus[index],
-                                          list: list,
+                                        child:
+                                            // Dropdown(
+                                            //   dropdownValue: controller
+                                            //       .dropdownValueKhusus[index],
+                                            //   list: list,
+                                            // ),
+                                            DropdownSearch<ListPelajaran>(
+                                          items: list,
+                                          maxHeight: 300,
+                                          dropdownSearchDecoration:
+                                              const InputDecoration(
+                                            border: InputBorder.none,
+                                          ),
+                                          showSelectedItems: false,
+                                          dropdownBuilder:
+                                              (context, selectedItem) =>
+                                                  Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
+                                            child: Flex(
+                                              direction: Get.width >= 1140
+                                                  ? Axis.horizontal
+                                                  : Axis.vertical,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "${selectedItem!.type} : ",
+                                                ),
+                                                Text(
+                                                  "${selectedItem.name}",
+                                                  // overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          itemAsString: (item) =>
+                                              '${item!.type} ${item.name}',
+                                          onChanged: print,
+                                          showSearchBox: true,
+                                          selectedItem: controller
+                                              .dropdownValueKhusus[index].value,
                                         ),
                                       ),
                                     ),
@@ -514,10 +522,50 @@ class NilaiWidget extends StatelessWidget {
                                       child: Padding(
                                         padding: EdgeInsets.only(
                                             top: 22, bottom: 22, left: 8),
-                                        child: Dropdown(
-                                          dropdownValue: controller
-                                              .dropdownValueKhusus[index],
-                                          list: list,
+                                        child:
+                                            // Dropdown(
+                                            //   dropdownValue: controller
+                                            //       .dropdownValueKhusus[index],
+                                            //   list: list,
+                                            // ),
+                                            DropdownSearch<ListPelajaran>(
+                                          items: list,
+                                          maxHeight: 300,
+                                          dropdownSearchDecoration:
+                                              const InputDecoration(
+                                            border: InputBorder.none,
+                                          ),
+                                          showSelectedItems: false,
+                                          dropdownBuilder:
+                                              (context, selectedItem) =>
+                                                  Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
+                                            child: Flex(
+                                              direction: Get.width >= 1140
+                                                  ? Axis.horizontal
+                                                  : Axis.vertical,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "${selectedItem!.type} : ",
+                                                ),
+                                                Text(
+                                                  "${selectedItem.name}",
+                                                  // overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          itemAsString: (item) =>
+                                              '${item!.type} ${item.name}',
+                                          onChanged: print,
+                                          showSearchBox: true,
+                                          selectedItem: controller
+                                              .dropdownValueKhusus[index].value,
                                         ),
                                       ),
                                     ),
@@ -670,10 +718,50 @@ class NilaiWidget extends StatelessWidget {
                                 child: Padding(
                                   padding: EdgeInsets.only(
                                       top: 22, bottom: 22, left: 8),
-                                  child: Dropdown(
-                                    dropdownValue:
-                                        controller.dropdownValueUmum[index],
-                                    list: list,
+                                  child:
+                                      // Dropdown(
+                                      //   dropdownValue:
+                                      //       controller.dropdownValueUmum[index],
+                                      //   list: list,
+                                      // ),
+
+                                      DropdownSearch<ListPelajaran>(
+                                    items: list,
+                                    maxHeight: 300,
+                                    dropdownSearchDecoration:
+                                        const InputDecoration(
+                                      border: InputBorder.none,
+                                    ),
+                                    showSelectedItems: false,
+                                    dropdownBuilder: (context, selectedItem) =>
+                                        Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Flex(
+                                        direction: Get.width >= 1140
+                                            ? Axis.horizontal
+                                            : Axis.vertical,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${selectedItem!.type} : ",
+                                          ),
+                                          Text(
+                                            "${selectedItem.name}",
+                                            // overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    itemAsString: (item) =>
+                                        '${item!.type} ${item.name}',
+                                    onChanged: print,
+                                    showSearchBox: true,
+                                    selectedItem: controller
+                                        .dropdownValueUmum[index].value,
                                   ),
                                 ),
                               ),
@@ -1697,7 +1785,10 @@ class ViewDataSiswa extends StatelessWidget {
                                 ),
                                 Text(
                                   value['nama'] ?? dataKososng,
-                                  style: TextStyle(fontSize: 24),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                  ),
                                 ),
                                 Text(
                                   value['nis'] ?? dataKososng,
@@ -2003,7 +2094,11 @@ class ViewDataSiswa extends StatelessWidget {
                                         namaWalikelas: controller.guru,
                                         nipKepalaSekolah:
                                             controller.kepalaSekolahNIP,
-                                        nipWalikelas: controller.gmail,
+                                        nipWalikelas:
+                                            '19701005 199903 1 012'.length ==
+                                                    controller.nip.length
+                                                ? controller.nip
+                                                : '-',
                                         itemsExtra: List.generate(
                                           dataExtr.length,
                                           (index) => InvoiceItemExtra(

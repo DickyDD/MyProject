@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:tes_database/app/modules/guru/controllers/guru_controller.dart';
 
 import 'editing_input_siswa.dart';
@@ -57,6 +56,10 @@ class Acount extends StatelessWidget {
         //     )
         //   ],
         // ),
+        DataWalikelas(
+          nama: 'NIP',
+          value: controller.nip,
+        ),
         DataWalikelas(
           nama: 'Kelas',
           value: controller.kelas.capitalize!,

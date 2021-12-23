@@ -122,7 +122,6 @@ class SiswaController extends GetxController {
   }
 
   Future<void> inputDataSiswa() async {
-    
     int nilaiBlmTuntas = 0;
     var listNilaiKhusus = [];
     var listNilaiUmum = [];
@@ -242,7 +241,7 @@ class SiswaController extends GetxController {
         .doc(kelas)
         .collection("Siswa")
         .doc(data[13].toString())
-        .set(
+        .update(
       {
         'nama': nama.text,
         'nis': nis.text,
@@ -280,10 +279,7 @@ class SiswaController extends GetxController {
   var dataDropDPK = <ListPelajaran>[];
   var dataListDPK = <int>[];
 
-  @override
-  void onInit() async {
-    print(data);
-
+  void initData() {
     listGabunganKhusus = data[0];
     listGabunganUmum = data[1];
     // listDataPKL = data[2];
@@ -358,22 +354,6 @@ class SiswaController extends GetxController {
       });
     });
 
-    // dataDropPKL.forEach((element) {
-    //   var dataPKL = listDataPKL.asMap().entries.where((entry) {
-    //     return entry.value.type == element.type &&
-    //         entry.value.name == element.name;
-    //   }).map((val) => val.key);
-    //   var i = 0;
-    //   if (dataPKL.length == 0) {
-    //     listDataPKL.add(ListPelajaran(element.type, element.name));
-    //     i = listDataPKL.length;
-    //     dataListPKL.add(i - 1);
-    //   } else {
-    //     i = dataPKL.first;
-    //     dataListPKL.add(i);
-    //   }
-    // });
-
     var nilai_EXR = data[10] as List;
     nilai_EXR.forEach((element) {
       element.forEach((key, value) {
@@ -409,11 +389,6 @@ class SiswaController extends GetxController {
     tahunAjaran = data[16];
     jurusan = data[17];
     kelas = data[18];
-    // if (data[19].toString().split(" ")[0] == "Naik") {
-    //   checkedValue.value = true;
-    // } else {
-    //   checkedValue.value = false;
-    // }
 
     if (semester.toLowerCase() == "semester 2") {
       lulus = kelas.split(' ')[1] == 'X'
@@ -430,6 +405,12 @@ class SiswaController extends GetxController {
       lulus = "";
       tidakLulus = "";
     }
+  }
+
+  @override
+  void onInit() async {
+    print(data);
+    initData();
     print(data[13].toString());
     super.onInit();
   }

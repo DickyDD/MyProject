@@ -47,6 +47,7 @@ class AuthController extends GetxController {
                               'semester': element.data()['semester'].toString(),
                               'kelas': element.data()['kelas'].toString(),
                               'guru': element.data()['walikelas'].toString(),
+                              'nip': element.data()['nip'].toString(),
                             },
                           );
                         } else {
