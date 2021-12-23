@@ -10,7 +10,7 @@ import 'package:tes_database/app/modules/home/controllers/home_controller.dart';
 
 class GuruController extends GetxController {
   final Map data = Get.arguments;
-  final tanggalPdf =  TextEditingController(); 
+  final tanggalPdf = TextEditingController();
   late int jumlah = 1;
   var urlPdf = "";
   List<String> namaIndex = [
@@ -36,7 +36,7 @@ class GuruController extends GetxController {
       jurusan = 'Bisnis Konstruksi dan Property',
       semester = 'semester 1',
       kelas = 'kelas X BKP 1',
-      gmail = '23423 452643 5 646',
+      nip = '23423 452643 5 646',
       guru = 'Dicky1',
       // /2021-2022//semester 1/
       image =
@@ -245,7 +245,7 @@ class GuruController extends GetxController {
         nilaiBlmTuntas++;
         print("nilaiBlmTuntas" + nilaiBlmTuntas.toString());
       }
-      
+
       listNilaiKhusus.add(
         {
           type: {
@@ -429,7 +429,7 @@ class GuruController extends GetxController {
       semester = data['semester'];
       kelas = data['kelas'];
       guru = data['guru'];
-
+      nip = data['nip'].toString();
       await getDataPelajaranKhusus();
       await getPelajaranUmum();
       await getEXR();
@@ -535,11 +535,9 @@ class GuruController extends GetxController {
           .collection(semester)
           .doc(kelas)
           .snapshots();
-      listKhususC3.sort(
-        (a, b) => a.name.toLowerCase().compareTo(
-              b.name.toLowerCase(),
-            ),
-      );
+      listKhususC3.sort((a, b) {
+        return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+      });
       listGabunganKhusus.sort(
         (a, b) => a.name.toLowerCase().compareTo(
               b.name.toLowerCase(),
