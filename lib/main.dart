@@ -13,6 +13,8 @@ import 'app/modules/home/bindings/home_binding.dart';
 import 'app/modules/home/views/home_view.dart';
 import 'app/modules/guru/bindings/guru_binding.dart';
 import 'app/modules/guru/views/guru_view.dart';
+import 'app/modules/tes_siswa/bindings/tes_siswa_binding.dart';
+import 'app/modules/tes_siswa/views/tes_siswa_view.dart';
 
 Future<void> main() async {
   setPathUrlStrategy();
@@ -22,7 +24,7 @@ Future<void> main() async {
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Raport Digital",
-      initialRoute: '/login',
+      initialRoute: '/tess',
       getPages: [
         GetPage(
           name: '/admin',
@@ -43,6 +45,11 @@ Future<void> main() async {
           name: '/siswa',
           page: () => SiswaView(),
           binding: SiswaBinding(),
+        ),
+        GetPage(
+          name: '/tess',
+          page: () => TesSiswaView(),
+          binding: TesSiswaBinding(),
         ),
       ],
       theme: ThemeData(

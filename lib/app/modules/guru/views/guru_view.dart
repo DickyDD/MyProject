@@ -2182,6 +2182,17 @@ class ViewDataSiswa extends StatelessWidget {
   }
 }
 
+class InputNilaiSiswa extends StatelessWidget {
+  const InputNilaiSiswa({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
+    );
+  }
+}
+
 class Landing extends StatelessWidget {
   const Landing({Key? key}) : super(key: key);
 

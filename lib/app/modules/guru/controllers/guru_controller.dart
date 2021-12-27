@@ -449,8 +449,7 @@ class GuruController extends GetxController {
         1,
         (index) => TextEditingController(),
       );
-      // await getPKL();
-      // ...pelajranKhususC1, ...pelajranKhususC2
+      
       if (semester.toLowerCase() == "semester 2") {
         lulus = kelas.split(' ')[1] == 'X'
             ? 'Naik ke Kelas XI'
