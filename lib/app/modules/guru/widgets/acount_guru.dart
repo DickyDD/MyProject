@@ -62,7 +62,7 @@ class Acount extends StatelessWidget {
         ),
         DataWalikelas(
           nama: 'Kelas',
-          value: controller.kelas.capitalize!,
+          value: controller.kelas.capitalizeFirst!,
         ),
         DataWalikelas(
           nama: 'Jurusan',

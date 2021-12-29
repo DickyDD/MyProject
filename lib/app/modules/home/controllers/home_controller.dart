@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -98,9 +98,6 @@ contoh pengisian :
   late RxList<int> panjangListKhususKKNC2 = <int>[].obs;
   late RxList<int> panjangListKhususKKNC1 = <int>[].obs;
   late RxList<int> panjangListKhususKKNC3 = <int>[].obs;
-  // late List<int>  = [];
-
-  // final  = <TextEditingController>[];
 
   late List<PelajaranUmum> listPelajaranUmum = <PelajaranUmum>[];
   late List<PelajaranKhusus> listPelajaranKhusus = <PelajaranKhusus>[];

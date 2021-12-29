@@ -25,9 +25,56 @@ class GuruView extends GetView<GuruController> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.yellow[600],
-        title:
-            Obx(() => Text(controller.namaIndex[controller.indexList.value])),
+        title: Obx(
+          () => Text(
+            controller.namaIndex[controller.indexList.value],
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ),
         centerTitle: true,
+        actions: [
+          Obx(
+            () => controller.indexList.value == 3
+                ? IconButton(
+                    tooltip: 'Nilai',
+                    onPressed: () {
+                      Get.toNamed('/nilai', arguments: {
+                        'tahun': controller.tahunAjaran,
+                        'jurusan': controller.jurusan,
+                        'semester': controller.semester,
+                        'kelas': controller.kelas,
+                        'guru': controller.guru,
+                        'nip': controller.nip,
+                      });
+                    },
+                    icon: Icon(LineIcons.fileAlt),
+                  )
+                : SizedBox(),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Obx(
+            () => controller.indexList.value == 3
+                ? IconButton(
+                    tooltip: 'Ranking',
+                    onPressed: () {
+                      Get.toNamed('/ranking', arguments: {
+                        'tahun': controller.tahunAjaran,
+                        'jurusan': controller.jurusan,
+                        'semester': controller.semester,
+                        'kelas': controller.kelas,
+                        'guru': controller.guru,
+                        'nip': controller.nip,
+                      });
+                    },
+                    icon: Icon(LineIcons.list),
+                  )
+                : SizedBox(),
+          ),
+        ],
       ),
       body: Landing(),
     );
@@ -259,7 +306,7 @@ class NilaiWidget extends StatelessWidget {
           Divider(),
           inputNilai != 'X'
               ? Obx(() {
-                  var list = controller.listKhususC3;
+                  var list = controller.listGabunganKhusus;
                   var panjang = list.length.obs;
                   var panjangList = 1.obs;
                   controller.nilaiKhusus = List.generate(
@@ -837,7 +884,7 @@ class NilaiWidget extends StatelessWidget {
                 ));
           }),
 
-          inputNilai != 'X'
+          inputNilai == 'XII'
               ? Obx(() {
                   // var list = controller.listDataPKL;
                   var panjang = 5.obs;
@@ -1629,6 +1676,7 @@ class ViewDataSiswa extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<GuruController>();
     var inputNilai = controller.kelas.split(' ')[1];
+    print(inputNilai);
 
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: controller.users
@@ -1650,7 +1698,10 @@ class ViewDataSiswa extends StatelessWidget {
           case ConnectionState.active:
             var data = asyncSnapshot.data!.docs;
             // var data = dataMap["siswa"] ?? [];
-
+            data.sort((a, b) => a
+                .data()['nama']
+                .toString()
+                .compareTo(b.data()['nama'].toString()));
             // var dataobs = data as List;
             var inNull = asyncSnapshot.data!.size.obs;
             return inNull.value != 0
@@ -1669,6 +1720,41 @@ class ViewDataSiswa extends StatelessWidget {
                         var dpk = value['dpk'] ?? [];
                         var kehadiran = value['kehadiran'] ?? [];
                         var dataKososng = "Belum di Isi";
+                        var dataUmum = <NilaiRank>[];
+                        // var dataUmum2 = <NilaiRank>[];
+                        var dataKhusus = <NilaiRank>[];
+                        // var dataKhususC2 = <NilaiRank>[];
+                        // var dataKhususC3 = <NilaiRank>[];
+
+                        nilaiUmum.forEach((element) {
+                          element.forEach((key, value) {
+                            // print(key);
+                            dataUmum.add(
+                              NilaiRank(
+                                value['nama'] ?? "",
+                                int.tryParse(value['Pengetahuan']) ?? 0,
+                                int.tryParse(value['Keterampilan']) ?? 0,
+                              ),
+                            );
+                          });
+                        });
+
+                        nilaiKhusus.forEach((element) {
+                          element.forEach((key, value) {
+                            dataKhusus.add(
+                              NilaiRank(
+                                value['nama'] ?? "",
+                                int.tryParse(value['Pengetahuan']) ?? 0,
+                                int.tryParse(value['Keterampilan']) ?? 0,
+                              ),
+                            );
+                            // print(dataKhususC3.first.nama);
+                          });
+                        });
+
+                        dataKhusus.forEach((e) => print(e.keterampilan));
+                        dataUmum.forEach((e) => print(e.keterampilan));
+
                         return Card(
                           child: SingleChildScrollView(
                             child: Column(
@@ -1855,14 +1941,15 @@ class ViewDataSiswa extends StatelessWidget {
                                                 value['Keterampilan'] ?? "",
                                               ),
                                             );
-                                          } else if (inputNilai != 'X') {
+                                          } else if (key == "C3") {
                                             dataKhususC3.add(
                                               NilaiPDF(
-                                                value['nama'],
-                                                value['Pengetahuan'],
-                                                value['Keterampilan'],
+                                                value['nama'] ?? "",
+                                                value['Pengetahuan'] ?? "",
+                                                value['Keterampilan'] ?? "",
                                               ),
                                             );
+                                            print(dataKhususC3.first.nama);
                                           }
                                         });
                                       });
@@ -2072,19 +2159,37 @@ class ViewDataSiswa extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        itemsD: List.generate(
-                                          dataKhususC2.length,
-                                          (index) => InvoiceItem(
-                                            no: no4++,
-                                            mP: dataKhususC2[index].nama,
-                                            pengetahuan: int.parse(
-                                              dataKhususC2[index].pengetahuan,
-                                            ),
-                                            keterampilan: int.parse(
-                                              dataKhususC2[index].keterampilan,
-                                            ),
-                                          ),
-                                        ),
+                                        itemsD: inputNilai != 'X'
+                                            ? List.generate(
+                                                dataKhususC3.length,
+                                                (index) => InvoiceItem(
+                                                  no: no4++,
+                                                  mP: dataKhususC3[index].nama,
+                                                  pengetahuan: int.parse(
+                                                    dataKhususC3[index]
+                                                        .pengetahuan,
+                                                  ),
+                                                  keterampilan: int.parse(
+                                                    dataKhususC3[index]
+                                                        .keterampilan,
+                                                  ),
+                                                ),
+                                              )
+                                            : List.generate(
+                                                dataKhususC2.length,
+                                                (index) => InvoiceItem(
+                                                  no: no4++,
+                                                  mP: dataKhususC2[index].nama,
+                                                  pengetahuan: int.parse(
+                                                    dataKhususC2[index]
+                                                        .pengetahuan,
+                                                  ),
+                                                  keterampilan: int.parse(
+                                                    dataKhususC2[index]
+                                                        .keterampilan,
+                                                  ),
+                                                ),
+                                              ),
                                         catatanAkademik:
                                             value['catatanAkademik'] ??
                                                 dataKososng,
@@ -2183,13 +2288,11 @@ class ViewDataSiswa extends StatelessWidget {
 }
 
 class InputNilaiSiswa extends StatelessWidget {
-  const InputNilaiSiswa({ Key? key }) : super(key: key);
+  const InputNilaiSiswa({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-    );
+    return Container();
   }
 }
 
@@ -2265,7 +2368,7 @@ class Landing extends StatelessWidget {
                                       child: Icon(
                                     iconIndex[index],
                                     color: index == controller.indexList.value
-                                        ? Colors.white.withOpacity(0.95)
+                                        ? Colors.black.withOpacity(0.95)
                                         : Colors.yellow,
                                   )),
                                   SizedBox(
@@ -2281,7 +2384,7 @@ class Landing extends StatelessWidget {
                                       style: TextStyle(
                                           color: index ==
                                                   controller.indexList.value
-                                              ? Colors.white.withOpacity(0.95)
+                                              ? Colors.black.withOpacity(0.95)
                                               : Colors.yellow[700],
                                           fontWeight: FontWeight.bold),
                                       overflow: TextOverflow.ellipsis,
@@ -2293,7 +2396,7 @@ class Landing extends StatelessWidget {
                                 child: Icon(
                                   iconIndex[index],
                                   color: index == controller.indexList.value
-                                      ? Colors.white.withOpacity(0.95)
+                                      ? Colors.black.withOpacity(0.95)
                                       : Colors.yellow,
                                 ),
                               ),
@@ -2330,4 +2433,11 @@ class NilaiPDF {
   final String pengetahuan;
   final String keterampilan;
   NilaiPDF(this.nama, this.pengetahuan, this.keterampilan);
+}
+
+class NilaiRank {
+  final String nama;
+  final int pengetahuan;
+  final int keterampilan;
+  NilaiRank(this.nama, this.pengetahuan, this.keterampilan);
 }

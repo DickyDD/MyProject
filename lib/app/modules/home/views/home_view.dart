@@ -57,7 +57,7 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.yellow[600],
-        title: Text('Admin'),
+        title: Text('Admin', style: TextStyle(color: Colors.black)),
         centerTitle: true,
         actions: [
           Obx(() => controller.indexList.value == 5
@@ -118,7 +118,7 @@ class HomeView extends GetView<HomeController> {
                                         child: Icon(
                                       iconIndex[index],
                                       color: index == controller.indexList.value
-                                          ? Colors.white.withOpacity(0.95)
+                                          ? Colors.black.withOpacity(0.95)
                                           : Colors.yellow,
                                     )),
                                     SizedBox(
@@ -134,7 +134,7 @@ class HomeView extends GetView<HomeController> {
                                         style: TextStyle(
                                           color: index ==
                                                   controller.indexList.value
-                                              ? Colors.white.withOpacity(0.95)
+                                              ? Colors.black.withOpacity(0.95)
                                               : Colors.yellow[700],
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -147,7 +147,7 @@ class HomeView extends GetView<HomeController> {
                                   child: Icon(
                                     iconIndex[index],
                                     color: index == controller.indexList.value
-                                        ? Colors.white.withOpacity(0.95)
+                                        ? Colors.black.withOpacity(0.95)
                                         : Colors.yellow,
                                   ),
                                 ),

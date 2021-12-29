@@ -13,6 +13,8 @@ import 'app/modules/home/bindings/home_binding.dart';
 import 'app/modules/home/views/home_view.dart';
 import 'app/modules/guru/bindings/guru_binding.dart';
 import 'app/modules/guru/views/guru_view.dart';
+import 'app/modules/ranking/bindings/ranking_binding.dart';
+import 'app/modules/ranking/views/ranking_view.dart';
 import 'app/modules/tes_siswa/bindings/tes_siswa_binding.dart';
 import 'app/modules/tes_siswa/views/tes_siswa_view.dart';
 
@@ -24,7 +26,7 @@ Future<void> main() async {
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Raport Digital",
-      initialRoute: '/tess',
+      initialRoute: '/',
       getPages: [
         GetPage(
           name: '/admin',
@@ -37,7 +39,7 @@ Future<void> main() async {
           binding: GuruBinding(),
         ),
         GetPage(
-          name: '/login',
+          name: '/',
           page: () => AuthView(),
           binding: AuthBinding(),
         ),
@@ -47,9 +49,14 @@ Future<void> main() async {
           binding: SiswaBinding(),
         ),
         GetPage(
-          name: '/tess',
+          name: '/nilai',
           page: () => TesSiswaView(),
           binding: TesSiswaBinding(),
+        ),
+        GetPage(
+          name: '/ranking',
+          page: () => RankingView(),
+          binding: RankingBinding(),
         ),
       ],
       theme: ThemeData(

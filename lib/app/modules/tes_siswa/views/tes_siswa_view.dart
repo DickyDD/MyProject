@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:tes_database/app/data/validator/nilai.dart';
+import 'package:tes_database/app/data/widgets/card_shadow.dart';
 
 import '../controllers/tes_siswa_controller.dart';
 
@@ -12,7 +13,11 @@ class TesSiswaView extends GetView<TesSiswaController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('TesSiswaView'),
+        backgroundColor: Colors.yellow[600],
+        title: Obx(() => Text(
+              "Nilai " + controller.indexDataSiswa.value.nama!,
+              style: TextStyle(color: Colors.black),
+            )),
         centerTitle: true,
       ),
       body: Obx(
@@ -51,20 +56,41 @@ class TesSiswaView extends GetView<TesSiswaController> {
                           ),
                         ),
                         itemAsString: (item) => '${item!.nama} (${item.nis})',
-                        onChanged: (value) =>
-                            controller.indexDataSiswa.value = value!,
+                        onChanged: (value) {
+                          controller.indexDataSiswa.value = value!;
+                          print(value.no);
+                          // controller.onChangeSiswa();
+                          controller.ganti();
+                          controller.onChangePelajaranKhusus();
+                          controller.onChangePelajaranUmum();
+                        },
                         showSearchBox: true,
                         selectedItem: controller.indexDataSiswa.value,
                       ),
                     ),
                   ),
-                  DataWalikelas(
-                    nama: 'Nama',
-                    value: controller.indexDataSiswa.value.nama!,
-                  ),
-                  DataWalikelas(
-                    nama: 'NIS',
-                    value: controller.indexDataSiswa.value.nis!,
+                  // CardShadow(
+                  //   child: DataWalikelas(
+                  //     nama: 'Nama',
+                  //     value: controller.indexDataSiswa.value.nama!,
+                  //   ),
+                  // ),
+                  // CardShadow(
+                  //   child: DataWalikelas(
+                  //     nama: 'NIS',
+                  //     value: controller.indexDataSiswa.value.nis!,
+                  //   ),
+                  // ),
+                  Divider(),
+                  CardShadow(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Pelajaran Khusus",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   Row(
                     children: [
@@ -77,8 +103,9 @@ class TesSiswaView extends GetView<TesSiswaController> {
                               bottom: 22,
                               left: 8,
                             ),
-                            child: DropdownSearch<ListPelajaran>(
-                              items: controller.listGabunganUmum,
+                            child: DropdownSearch<Pelajaran>(
+                              items: controller
+                                  .indexDataSiswa.value.pelajaranKhusus,
                               maxHeight: 300,
                               dropdownSearchDecoration: const InputDecoration(
                                 border: InputBorder.none,
@@ -106,9 +133,114 @@ class TesSiswaView extends GetView<TesSiswaController> {
                               ),
                               itemAsString: (item) =>
                                   '${item!.type} ${item.name}',
-                              onChanged: print,
+                              onChanged: (val) {
+                                controller.dataPelajaranaKhusus.value = val!;
+
+                                controller.onChangePelajaranKhusus();
+                              },
                               showSearchBox: true,
-                              selectedItem: controller.dataNilaiUmum.value,
+                              selectedItem:
+                                  controller.dataPelajaranaKhusus.value,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: EditingInputSiswaNilai(
+                              controller: controller.nilaiKhusus,
+                              max: 3,
+                              validator: (val) => validateNilai(val!),
+                              keyboardtype: TextInputType.number,
+                              listFormat: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              hintText: 'Pengetahuan',
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: EditingInputSiswaNilai(
+                              controller: controller.keterampilanKhusus,
+                              max: 3,
+                              validator: (val) => validateNilai(val!),
+                              keyboardtype: TextInputType.number,
+                              listFormat: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              hintText: 'Keterampilan',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  CardShadow(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Pelajaran Umum",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 8,
+                        child: Card(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: 22,
+                              bottom: 22,
+                              left: 8,
+                            ),
+                            child: DropdownSearch<Pelajaran>(
+                              items:
+                                  controller.indexDataSiswa.value.pelajaranUmum,
+                              maxHeight: 300,
+                              dropdownSearchDecoration: const InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                              showSelectedItems: false,
+                              dropdownBuilder: (context, selectedItem) =>
+                                  Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Flex(
+                                  direction: Get.width >= 1140
+                                      ? Axis.horizontal
+                                      : Axis.vertical,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${selectedItem!.type} : ",
+                                    ),
+                                    Text(
+                                      "${selectedItem.name}",
+                                      // overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              itemAsString: (item) =>
+                                  '${item!.type} ${item.name}',
+                              onChanged: (val) {
+                                controller.dataPelajaranaUmum.value = val!;
+
+                                controller.onChangePelajaranUmum();
+                              },
+                              showSearchBox: true,
+                              selectedItem: controller.dataPelajaranaUmum.value,
                             ),
                           ),
                         ),
@@ -153,101 +285,18 @@ class TesSiswaView extends GetView<TesSiswaController> {
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 8,
-                        child: Card(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              top: 22,
-                              bottom: 22,
-                              left: 8,
-                            ),
-                            child: DropdownSearch<ListPelajaran>(
-                              items: controller.listGabunganKhusus,
-                              maxHeight: 300,
-                              dropdownSearchDecoration: const InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                              showSelectedItems: false,
-                              dropdownBuilder: (context, selectedItem) =>
-                                  Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: Flex(
-                                  direction: Get.width >= 1140
-                                      ? Axis.horizontal
-                                      : Axis.vertical,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${selectedItem!.type} : ",
-                                    ),
-                                    Text(
-                                      "${selectedItem.name}",
-                                      // overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              itemAsString: (item) =>
-                                  '${item!.type} ${item.name}',
-                              onChanged: print,
-                              showSearchBox: true,
-                              selectedItem: controller.dataNilaiKhusus.value,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: EditingInputSiswaNilai(
-                              controller: controller.nilaiKhusus,
-                              max: 3,
-                              validator: (val) => validateNilai(val!),
-                              keyboardtype: TextInputType.number,
-                              listFormat: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              hintText: 'Pengetahuan',
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: EditingInputSiswaNilai(
-                              controller: controller.keterampilanKhusus,
-                              max: 3,
-                              validator: (val) => validateNilai(val!),
-                              keyboardtype: TextInputType.number,
-                              listFormat: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              hintText: 'Keterampilan',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  
                 ],
               )
             : Center(
                 child: CircularProgressIndicator(),
               ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        
-      },child: Text('Save'),),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          controller.inputDataSiswa();
+        },
+        child: Text('Save'),
+      ),
     );
   }
 }
@@ -319,10 +368,15 @@ class DataWalikelas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        child: Padding(
+    return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text("$nama : $value"),
-    ));
+      child: Text(
+        "$nama : $value",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
   }
 }

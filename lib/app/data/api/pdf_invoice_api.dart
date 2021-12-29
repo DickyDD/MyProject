@@ -26,15 +26,19 @@ Future<Uint8List> generateDocument(
   );
 
   const styleFont = pw.TextStyle(
-    fontSize: 11,
+    fontSize: 10,
     // font: myFont,
   );
   final styleFontB = pw.TextStyle(
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: pw.FontWeight.bold,
   );
   final buildBackground = pw.Container(
-    padding: const pw.EdgeInsets.only(bottom: 70),
+    padding: const pw.EdgeInsets.only(
+      bottom: 230,
+      left: 50,
+      right: 50,
+    ),
     child: pw.Center(
       child: pw.Image(profileImage),
     ),
@@ -79,17 +83,17 @@ Future<Uint8List> generateDocument(
       cellStyle: style,
       headerAlignment: pw.Alignment.center,
       columnWidths: const {
-        0: pw.IntrinsicColumnWidth(flex: 2),
-        1: pw.IntrinsicColumnWidth(flex: 11),
-        2: pw.IntrinsicColumnWidth(flex: 5),
-        3: pw.IntrinsicColumnWidth(flex: 5),
-        4: pw.IntrinsicColumnWidth(flex: 3),
+        0: pw.IntrinsicColumnWidth(flex: 1.6),
+        1: pw.IntrinsicColumnWidth(flex: 13),
+        2: pw.IntrinsicColumnWidth(flex: 4.5),
+        3: pw.IntrinsicColumnWidth(flex: 4.5),
+        4: pw.IntrinsicColumnWidth(flex: 2.5),
         5: pw.IntrinsicColumnWidth(flex: 5),
       },
-      cellPadding: const pw.EdgeInsets.symmetric(vertical: 2),
+      cellPadding: const pw.EdgeInsets.symmetric(vertical: 2, horizontal: 2),
       cellAlignments: {
         0: pw.Alignment.center,
-        1: pw.Alignment.center,
+        1: pw.Alignment.centerLeft,
         2: pw.Alignment.center,
         3: pw.Alignment.center,
         4: pw.Alignment.center,
@@ -127,6 +131,7 @@ Future<Uint8List> generateDocument(
     final data = items.map((item) {
       return [
         item.no,
+        item.mitra,
         item.lokasi,
         item.lama,
         item.keterangan,
@@ -145,7 +150,14 @@ Future<Uint8List> generateDocument(
       data: data,
       cellHeight: 0,
       headers: heading,
-      headerAlignment: pw.Alignment.center,
+      // headerAlignment: pw.Alignment.center,
+      headerAlignments: {
+        0: pw.Alignment.center,
+        1: pw.Alignment.center,
+        2: pw.Alignment.center,
+        3: pw.Alignment.center,
+        4: pw.Alignment.center,
+      },
       headerStyle: style,
       cellStyle: style,
       columnWidths: const {
@@ -155,10 +167,10 @@ Future<Uint8List> generateDocument(
         3: pw.IntrinsicColumnWidth(flex: 5),
         4: pw.IntrinsicColumnWidth(flex: 14),
       },
-      cellPadding: const pw.EdgeInsets.symmetric(vertical: 2),
+      cellPadding: const pw.EdgeInsets.symmetric(vertical: 2, horizontal: 2),
       cellAlignments: {
         0: pw.Alignment.center,
-        1: pw.Alignment.center,
+        1: pw.Alignment.centerLeft,
         2: pw.Alignment.center,
         3: pw.Alignment.center,
         4: pw.Alignment.center,
@@ -190,7 +202,6 @@ Future<Uint8List> generateDocument(
       data: data,
       cellHeight: 0,
       headers: heading,
-      
       headerAlignments: {
         0: pw.Alignment.center,
         1: pw.Alignment.center,
@@ -237,17 +248,23 @@ Future<Uint8List> generateDocument(
       headerStyle: style,
       // headerStyle: style,
       cellStyle: style,
-      headerAlignment: pw.Alignment.center,
+      // headerAlignment: pw.Alignment.center,
+      headerAlignments: {
+        0: pw.Alignment.center,
+        1: pw.Alignment.center,
+        2: pw.Alignment.center,
+        3: pw.Alignment.center,
+      },
       columnWidths: const {
         0: pw.IntrinsicColumnWidth(flex: 2),
         1: pw.IntrinsicColumnWidth(flex: 10),
         2: pw.IntrinsicColumnWidth(flex: 4),
         3: pw.IntrinsicColumnWidth(flex: 18),
       },
-      cellPadding: const pw.EdgeInsets.symmetric(vertical: 2),
+      cellPadding: const pw.EdgeInsets.symmetric(vertical: 2, horizontal: 2),
       cellAlignments: {
         0: pw.Alignment.center,
-        1: pw.Alignment.center,
+        1: pw.Alignment.centerLeft,
         2: pw.Alignment.center,
         3: pw.Alignment.center,
         // 4: Alignment.center,
@@ -315,7 +332,7 @@ Future<Uint8List> generateDocument(
                   titles.length,
                   (index) => pw.Text(
                     titles[index],
-                    style: styleFont
+                    style: styleFont,
                   ),
                 ),
               ),
@@ -326,7 +343,7 @@ Future<Uint8List> generateDocument(
                   data.length,
                   (index) => pw.Text(
                     data[index],
-                    style: styleFont
+                    style: styleFont,
                   ),
                 ),
               ),
@@ -337,7 +354,8 @@ Future<Uint8List> generateDocument(
                 children: List.generate(
                   titles2.length,
                   (index) => pw.Text(
-                    titles2[index],style: styleFont
+                    titles2[index],
+                    style: styleFont,
                   ),
                 ),
               ),
@@ -347,7 +365,8 @@ Future<Uint8List> generateDocument(
                 children: List.generate(
                   data2.length,
                   (index) => pw.Text(
-                    data2[index],style: styleFont
+                    data2[index],
+                    style: styleFont,
                   ),
                 ),
               ),
@@ -370,8 +389,8 @@ Future<Uint8List> generateDocument(
               pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.Text('Mengetahui;',style: style),
-                    pw.Text('Orang Tua/Wali,',style: style),
+                    pw.Text('Mengetahui;', style: style),
+                    pw.Text('Orang Tua/Wali,', style: style),
                     pw.SizedBox(height: 10 * PdfPageFormat.mm),
                     pw.Text(invoice.namaOrangTua,
                         style: pw.TextStyle(
@@ -384,26 +403,85 @@ Future<Uint8List> generateDocument(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     //Tanggal Makkasar
-                    pw.Text(invoice.tanggal,style: style),
-                    pw.Text('Wali Kelas',style: style),
+                    pw.Text(invoice.tanggal, style: style),
+                    pw.Text('Wali Kelas', style: style),
                     pw.SizedBox(height: 10 * PdfPageFormat.mm),
-                    pw.Text(invoice.namaWalikelas,
-                        style: styleFontB,),
-                    pw.Text('NIP. ' + invoice.nipWalikelas,style: style),
+                    pw.Text(
+                      invoice.namaWalikelas,
+                      style: styleFontB,
+                    ),
+                    pw.Text('NIP. ' + invoice.nipWalikelas, style: style),
                   ]),
             ]),
         pw.Center(
           child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Text('Mengetahui',style: style),
-                pw.Text('Kepala Sekolah',style: style),
+                pw.Text('Mengetahui', style: style),
+                pw.Text('Kepala Sekolah', style: style),
                 pw.SizedBox(height: 18 * PdfPageFormat.mm),
-                pw.Text(invoice.namaKepalaSekolah,
-                    style: styleFontB),
-                pw.Text('NIP. ' + invoice.nipKepalaSekolah,style: style),
+                pw.Text(
+                  invoice.namaKepalaSekolah,
+                  style: styleFontB,
+                ),
+                pw.Text(
+                  'NIP. ' + invoice.nipKepalaSekolah,
+                  style: style,
+                ),
               ]),
         ),
+      ],
+    );
+  }
+
+  print(invoice.info.kelas.split(' ').toString());
+
+  pw.Widget kejuruanX(pw.TextStyle style, pw.TextStyle styleB) {
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Text(
+          'C. Muatan Peminatan Kejuruan',
+          style: styleFontB,
+        ),
+        pw.SizedBox(height: 0.4 * PdfPageFormat.mm),
+        pw.Divider(height: 0.5),
+        pw.SizedBox(height: 0.4 * PdfPageFormat.mm),
+        pw.Text(
+          'C1. Dasar Bidang Keahlian',
+          style: styleFontB,
+        ),
+        pw.SizedBox(height: 1 * PdfPageFormat.mm),
+        buildHal1(invoice.itemsC, styleFont, styleFontB),
+        pw.SizedBox(height: 1 * PdfPageFormat.mm),
+        pw.Text(
+          'C2. Dasar Program Keahlian',
+          style: styleFontB,
+        ),
+        pw.SizedBox(height: 1 * PdfPageFormat.mm),
+        buildHal1(invoice.itemsD, styleFont, styleFontB),
+        pw.SizedBox(height: 4 * PdfPageFormat.mm),
+      ],
+    );
+  }
+
+  pw.Widget kejuruan(pw.TextStyle style, pw.TextStyle styleB) {
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Text(
+          'C. Muatan Peminatan Kejuruan',
+          style: styleFontB,
+        ),
+        pw.SizedBox(height: 0.4 * PdfPageFormat.mm),
+        pw.Divider(height: 0.5),
+        pw.SizedBox(height: 0.4 * PdfPageFormat.mm),
+        pw.Text(
+          'C3. Kompetensi Keahlian',
+          style: styleFontB,
+        ),
+        buildHal1(invoice.itemsD, styleFont, styleFontB),
+        pw.SizedBox(height: 4 * PdfPageFormat.mm),
       ],
     );
   }
@@ -416,9 +494,9 @@ Future<Uint8List> generateDocument(
         buildBackground: (context) => buildBackground,
         margin: pw.EdgeInsets.fromLTRB(
             20 * PdfPageFormat.mm,
-            20 * PdfPageFormat.mm,
+            10 * PdfPageFormat.mm,
             15 * PdfPageFormat.mm,
-            15 * PdfPageFormat.mm),
+            10 * PdfPageFormat.mm),
         theme: pw.ThemeData.withFont(
           base: myFont,
           bold: myFontB,
@@ -439,11 +517,11 @@ Future<Uint8List> generateDocument(
           pw.SizedBox(height: 1 * PdfPageFormat.mm),
           pw.Table.fromTextArray(
             columnWidths: const {
-              0: pw.IntrinsicColumnWidth(flex: 2),
-              1: pw.IntrinsicColumnWidth(flex: 11),
-              2: pw.IntrinsicColumnWidth(flex: 5),
-              3: pw.IntrinsicColumnWidth(flex: 5),
-              4: pw.IntrinsicColumnWidth(flex: 3),
+              0: pw.IntrinsicColumnWidth(flex: 1.6),
+              1: pw.IntrinsicColumnWidth(flex: 13),
+              2: pw.IntrinsicColumnWidth(flex: 4.5),
+              3: pw.IntrinsicColumnWidth(flex: 4.5),
+              4: pw.IntrinsicColumnWidth(flex: 2.5),
               5: pw.IntrinsicColumnWidth(flex: 5),
             },
             cellPadding: const pw.EdgeInsets.symmetric(vertical: 2),
@@ -467,27 +545,9 @@ Future<Uint8List> generateDocument(
           pw.SizedBox(height: 1 * PdfPageFormat.mm),
           buildHal1(invoice.itemsB, styleFont, styleFontB),
           pw.SizedBox(height: 1 * PdfPageFormat.mm),
-          pw.Text(
-            'C. Muatan Peminatan Kejuruan',
-            style: styleFontB,
-          ),
-          pw.SizedBox(height: 0.4 * PdfPageFormat.mm),
-          pw.Divider(height: 0.5),
-          pw.SizedBox(height: 0.4 * PdfPageFormat.mm),
-          pw.Text(
-            'C1. Dasar Bidang Keahlian',
-            style: styleFontB,
-          ),
-          pw.SizedBox(height: 1 * PdfPageFormat.mm),
-          buildHal1(invoice.itemsC, styleFont, styleFontB),
-          pw.SizedBox(height: 1 * PdfPageFormat.mm),
-          pw.Text(
-            'C2. Dasar Program Keahlian',
-            style: styleFontB,
-          ),
-          pw.SizedBox(height: 1 * PdfPageFormat.mm),
-          buildHal1(invoice.itemsD, styleFont, styleFontB),
-          pw.SizedBox(height: 4 * PdfPageFormat.mm),
+          invoice.info.kelas.split(' ')[0] != 'X'
+              ? kejuruan(styleFont, styleFontB)
+              : kejuruanX(styleFont, styleFontB),
           pw.Text(
             'B. CATATAN AKADEMIK',
             style: styleFontB,
@@ -501,6 +561,7 @@ Future<Uint8List> generateDocument(
             child: pw.Text(
               invoice.catatanAkademik,
               textAlign: pw.TextAlign.left,
+              style: styleFont,
             ),
             decoration: pw.BoxDecoration(
               border: pw.Border.all(
@@ -521,10 +582,11 @@ Future<Uint8List> generateDocument(
         orientation: pw.PageOrientation.portrait,
         buildBackground: (context) => buildBackground,
         margin: pw.EdgeInsets.fromLTRB(
-            20 * PdfPageFormat.mm,
-            20 * PdfPageFormat.mm,
-            15 * PdfPageFormat.mm,
-            15 * PdfPageFormat.mm,),
+          20 * PdfPageFormat.mm,
+          10 * PdfPageFormat.mm,
+          15 * PdfPageFormat.mm,
+          10 * PdfPageFormat.mm,
+        ),
         theme: pw.ThemeData.withFont(
           base: myFont,
           bold: myFontB,
@@ -590,6 +652,7 @@ Future<Uint8List> generateDocument(
               child: pw.Text(
                 invoice.kenaikanKelas,
                 textAlign: pw.TextAlign.left,
+                style: styleFont,
               ),
               decoration: pw.BoxDecoration(
                 border: pw.Border.all(
@@ -611,10 +674,11 @@ Future<Uint8List> generateDocument(
         orientation: pw.PageOrientation.portrait,
         buildBackground: (context) => buildBackground,
         margin: pw.EdgeInsets.fromLTRB(
-            20 * PdfPageFormat.mm,
-            20 * PdfPageFormat.mm,
-            15 * PdfPageFormat.mm,
-            15 * PdfPageFormat.mm,),
+          20 * PdfPageFormat.mm,
+          10 * PdfPageFormat.mm,
+          15 * PdfPageFormat.mm,
+          10 * PdfPageFormat.mm,
+        ),
         theme: pw.ThemeData.withFont(
           base: myFont,
           bold: myFontB,
@@ -630,10 +694,7 @@ Future<Uint8List> generateDocument(
               style: styleFontB,
             ),
             pw.SizedBox(height: 1 * PdfPageFormat.mm),
-            buildHalDPK(
-              invoice.itemsDPK,
-              styleFont
-            ),
+            buildHalDPK(invoice.itemsDPK, styleFont),
 
             pw.SizedBox(height: 10 * PdfPageFormat.mm),
             // pw.SizedBox(height: 1 * PdfPageFormat.mm),
@@ -648,10 +709,8 @@ Future<Uint8List> generateDocument(
               width: double.infinity,
               // alignment: pw.Alignment.to,
               padding: const pw.EdgeInsets.all(3),
-              child: pw.Text(
-                invoice.dpk,
-                textAlign: pw.TextAlign.left,
-              ),
+              child: pw.Text(invoice.dpk,
+                  textAlign: pw.TextAlign.left, style: styleFont),
               decoration: pw.BoxDecoration(
                 border: pw.Border.all(
                   color: PdfColors.black,

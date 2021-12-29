@@ -109,6 +109,7 @@ class InvoiceItemExtra {
 }
 
 class InvoiceItemKehadiran {
+  
   final String nama;
   final String nilai;
 

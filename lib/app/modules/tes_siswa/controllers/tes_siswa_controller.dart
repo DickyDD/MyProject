@@ -3,6 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class TesSiswaController extends GetxController {
+  final Map arguments = Get.arguments;
+  var no = 0;
+  
+  var noUmum = 0;
   late String tahunAjaran = '2021-2022',
       jurusan = 'Bisnis Konstruksi dan Property',
       semester = 'semester 2',
@@ -10,13 +14,21 @@ class TesSiswaController extends GetxController {
       nip = '23423 452643 5 646',
       guru = 'Dicky1';
   final users = FirebaseFirestore.instance;
-  final indexDataSiswa = SiswaData('213321', 'diki', '12313').obs;
+  final indexDataSiswa = SiswaData(
+    '213321',
+    'diki',
+    '12313',
+    [Pelajaran("type", "name", 0, "0", "0",)],
+    [Pelajaran("type", "name", 0, "0", "0", )],
+    0,
+  ).obs;
   final onloading = false.obs;
   late Rx<List<SiswaData>> dataSiswa = Rx(<SiswaData>[]);
-  late Rx<ListPelajaran> dataNilaiUmum = Rx(ListPelajaran('type', 'name', 0));
-  late Rx<ListPelajaran> dataNilaiKhusus = Rx(ListPelajaran('type', 'name', 0));
-  late List<ListPelajaran> listGabunganKhusus = [];
-  // late List<ListPelajaran> listKhususC3 = [];
+  late Rx<Pelajaran> dataPelajaranaUmum =
+      Rx(Pelajaran("type", "name", 0, "0", "0", ));
+  late Rx<Pelajaran> dataPelajaranaKhusus =
+      Rx(Pelajaran("type", "name", 0, "0", "0", ));
+
   final nilaiKhusus = TextEditingController();
   final keterampilanKhusus = TextEditingController();
   final nilaiUmum = TextEditingController();
@@ -30,61 +42,63 @@ class TesSiswaController extends GetxController {
         .collection(semester)
         .doc(kelas)
         .collection('Siswa')
+        .orderBy('nama', descending: false)
         .get()
         .then(
-          (value) => dataSiswa.value = value.docs
-              .map(
-                (e) => SiswaData(
-                  e.id,
-                  e.data()['nama'],
-                  e.data()['nis'],
-                ),
-              )
-              .toList(),
+          (value) => dataSiswa.value = value.docs.map((e) {
+            var dataListUmum = e.data()['nilai_umum'] as List;
+            // dataListKhusus.sort(
+            //     (a, b) => a['nama'].toString().compareTo(b['nama'].toString()));
+            var dataListKhusus = e.data()['nilai_khusus'] as List;
+            var listPelajaranDataUmum = <Pelajaran>[];
+            var listPelajaranDataKhusus = <Pelajaran>[];
+            dataListKhusus.forEach((element) {
+              var val = element as Map;
+
+              val.forEach((key, value) {
+                // var noKhusus = 0;
+                // print(noKhusus++);
+                listPelajaranDataKhusus.add(
+                  Pelajaran(
+                    key,
+                    value['nama'],
+                    value['kkn'],
+                    value['Pengetahuan'].toString(),
+                    value['Keterampilan'].toString(),
+                  
+                  ),
+                );
+              });
+            });
+            dataListUmum.forEach((element) {
+              var val = element as Map;
+
+              val.forEach((key, value) {
+                // print(key);
+                // print(value['nama']);
+                listPelajaranDataUmum.add(
+                  Pelajaran(
+                      key,
+                      value['nama'],
+                      value['kkn'],
+                      value['Pengetahuan'].toString(),
+                      value['Keterampilan'].toString(),
+                    ),
+                );
+              });
+            });
+
+            return SiswaData(
+              e.id,
+              e.data()['nama'],
+              e.data()['nis'],
+              listPelajaranDataKhusus,
+              listPelajaranDataUmum,
+              no++,
+            );
+          }).toList(),
         )
         .whenComplete(() => onloading.value = !onloading.value);
-  }
-
-  var pelajranKhususC1;
-  var pelajranKhususC2;
-  var pelajranKhususC3;
-  var nilaiKknKhususC1;
-  var nilaiKknKhususC2;
-  var nilaiKknKhususC3;
-
-  Future getDataPelajaranKhusus() async {
-    var data = await users
-        .collection('Data Sekolah')
-        .doc('Data Pelajaran')
-        .collection('Pelajaran Khusus')
-        .doc(jurusan)
-        .get();
-    data.data()!.forEach((key, value) {
-      pelajranKhususC1 = value['C1'];
-      pelajranKhususC2 = value['C2'];
-      pelajranKhususC3 = value['C3'];
-      nilaiKknKhususC1 = value['kknC1'];
-      nilaiKknKhususC2 = value['kknC2'];
-      nilaiKknKhususC3 = value['kknC3'];
-    });
-    print(data.data()!);
-    print(pelajranKhususC1);
-    print(pelajranKhususC2);
-    print(pelajranKhususC3);
-  }
-
-  Future addNilaiPelajaran() async {
-    onloading.value = !onloading.value;
-    await users
-        .collection(tahunAjaran)
-        .doc(jurusan)
-        .collection(semester)
-        .doc(kelas)
-        .collection('Siswa')
-        .doc(indexDataSiswa.value.id)
-        .update({
-      'nilai': jurusan,
-    });
   }
 
   Future<void> inputDataSiswa() async {
@@ -92,39 +106,35 @@ class TesSiswaController extends GetxController {
 
     var listNilaiKhusus = [];
     var listNilaiUmum = [];
-
-    var typeUmum = dataNilaiUmum.value.type;
-    var nameUmum = dataNilaiUmum.value.name;
-    var kknUmum = dataNilaiUmum.value.kkn;
-    var typeKhusus = dataNilaiKhusus.value.type;
-    var nameKhusus = dataNilaiKhusus.value.name;
-    var kknKhusus = dataNilaiKhusus.value.kkn;
-
-    listNilaiKhusus.add(
-      {
-        typeKhusus: {
-          'nama': nameKhusus,
-          'kkn': kknKhusus,
-          'Pengetahuan': nilaiKhusus.text,
-          'Keterampilan': keterampilanKhusus.text,
+    indexDataSiswa.value.pelajaranUmum.forEach((element) {
+      listNilaiUmum.add({
+        element.type: {
+          'nama': element.name,
+          'kkn': element.kkn,
+          'Pengetahuan': element.name == dataPelajaranaUmum.value.name
+              ? nilaiUmum.text
+              : element.pengetahuan,
+          'Keterampilan': element.name == dataPelajaranaUmum.value.name
+              ? keterampilanUmum.text
+              : element.keterampilan,
         }
-      },
-    );
+      });
+    });
 
-    listNilaiUmum.add(
-      {
-        typeUmum: {
-          'nama': nameUmum,
-          'kkn': kknUmum,
-          'Pengetahuan': nilaiUmum.text,
-          'Keterampilan': keterampilanUmum.text,
+    indexDataSiswa.value.pelajaranKhusus.forEach((element) {
+      listNilaiKhusus.add({
+        element.type: {
+          'nama': element.name,
+          'kkn': element.kkn,
+          'Pengetahuan': element.name == dataPelajaranaKhusus.value.name
+              ? nilaiKhusus.text
+              : element.pengetahuan,
+          'Keterampilan': element.name == dataPelajaranaKhusus.value.name
+              ? keterampilanKhusus.text
+              : element.keterampilan,
         }
-      },
-    );
-
-    // if (nilaiBlmTuntas != 0) {
-    //     Get.defaultDialog(title: tidakLulus);
-    //   }
+      });
+    });
 
     await users
         .collection(tahunAjaran)
@@ -137,117 +147,76 @@ class TesSiswaController extends GetxController {
       {
         "nilai_umum": listNilaiUmum,
         "nilai_khusus": listNilaiKhusus,
-
-        // "namaOrtu": namaOrtu.text,
-        // "catatanAkademik": catatanAkademik.text,
       },
-    ).whenComplete(() {
-      nilaiKhusus.clear();
-      keterampilanKhusus.clear();
-      nilaiUmum.clear();
-      keterampilanUmum.clear();
+    ).then((_) async {
+      // dataSiswa.value = [];
+      await getDataSiswa().whenComplete(() {
+        indexDataSiswa.value = dataSiswa.value[indexDataSiswa.value.no];
+        // onChangeSiswa();
+        ganti();
+        onChangePelajaranKhusus();
+        onChangePelajaranUmum();
+      });
+    }).whenComplete(() {
+      Get.defaultDialog(
+        title: 'Berhasil',
+        middleText: 'Nilai Berhasil Di Simpan',
+      );
     });
   }
 
-  late List<ListPelajaran> listGabunganUmum = [];
-  late List<PelajaranUmum> listPelajaranUmum = <PelajaranUmum>[];
-  late RxList<int> panjangListUmum = <int>[].obs;
-  Future getPelajaranUmum() async {
-    await users
-        .collection('Data Sekolah')
-        .doc('Data Pelajaran')
-        .collection('Pelajaran Umum')
-        .get()
-        .then((value) {
-      print(value.size);
-      value.docs.forEach((element) {
-        element.data().forEach(
-              (key, value) => listPelajaranUmum.add(
-                PelajaranUmum(
-                  key,
-                  value['umum'] as List,
-                  value['kknUmum'] as List,
-                  element.id,
-                ),
-              ),
-            );
-      });
-    });
-    listPelajaranUmum.forEach((element) {
-      print(element.namaSingkat);
-      panjangListUmum.add(element.pelajaran.length);
-    });
+  void ganti() {
+   var indexUmum = indexDataSiswa.value.pelajaranUmum.asMap().entries.where((entry) {
+        return entry.value.type == dataPelajaranaUmum.value.type &&
+            entry.value.name == dataPelajaranaUmum.value.name;
+      }).map((val) => val.key).first;
+      var indexKhusus = indexDataSiswa.value.pelajaranKhusus.asMap().entries.where((entry) {
+        return entry.value.type == dataPelajaranaKhusus.value.type &&
+            entry.value.name == dataPelajaranaKhusus.value.name;
+      }).map((val) => val.key).first;
+    dataPelajaranaUmum.value =
+        indexDataSiswa.value.pelajaranUmum[indexUmum];
+    dataPelajaranaKhusus.value =
+        indexDataSiswa.value.pelajaranKhusus[indexKhusus];
+
+    // print(dataPelajaranaUmum.value.no);
+    // print(dataPelajaranaKhusus.value.no);
+  }
+
+  void onChangePelajaranKhusus() {
+    nilaiKhusus.text = dataPelajaranaKhusus.value.pengetahuan;
+    keterampilanKhusus.text = dataPelajaranaKhusus.value.keterampilan;
+  }
+
+  void onChangePelajaranUmum() {
+    nilaiUmum.text = dataPelajaranaUmum.value.pengetahuan;
+    keterampilanUmum.text = dataPelajaranaUmum.value.keterampilan;
+  }
+
+  void onChangeSiswa() {
+    dataPelajaranaUmum.value = indexDataSiswa.value.pelajaranUmum.first;
+    dataPelajaranaKhusus.value = indexDataSiswa.value.pelajaranKhusus.first;
   }
 
   @override
   void onInit() async {
-    await getDataSiswa();
-    await getDataPelajaranKhusus();
-    await getPelajaranUmum();
-    if (kelas.split(' ')[1] != 'X') {
-      var listC3 = <ListPelajaran>[];
-      var list3 = pelajranKhususC3 as List;
-      var listNilai3 = nilaiKknKhususC3 as List;
-      for (var i = 0; i < list3.length; i++) {
-        listC3.add(
-          ListPelajaran(
-            'C3',
-            list3[i],
-            int.parse(listNilai3[i]),
-          ),
-        );
-      }
-      listGabunganKhusus = [...listC3];
+    if (Get.arguments != null) {
+      tahunAjaran = arguments['tahun'];
+      jurusan = arguments['jurusan'];
+      semester = arguments['semester'];
+      kelas = arguments['kelas'];
+      guru = arguments['guru'];
+      nip = arguments['nip'];
+      await getDataSiswa();
+      dataSiswa.value.sort((a, b) => a.nama!.compareTo(b.nama!));
+      indexDataSiswa.value = dataSiswa.value.first;
+      onChangeSiswa();
+      onChangePelajaranKhusus();
+      onChangePelajaranUmum();
     } else {
-      var list1 = pelajranKhususC1 as List;
-      var list2 = pelajranKhususC2 as List;
-      var listNilai1 = nilaiKknKhususC1 as List;
-      var listNilai2 = nilaiKknKhususC2 as List;
-      var listC1 = <ListPelajaran>[];
-      var listC2 = <ListPelajaran>[];
-
-      for (var i = 0; i < list1.length; i++) {
-        listC1.add(
-          ListPelajaran(
-            'C1',
-            list1[i],
-            int.parse(listNilai1[i]),
-          ),
-        );
-      }
-      for (var i = 0; i < list2.length; i++) {
-        listC2.add(
-          ListPelajaran(
-            'C2',
-            list2[i],
-            int.parse(listNilai2[i]),
-          ),
-        );
-      }
-      listGabunganKhusus = [...listC1, ...listC2];
-      listGabunganKhusus.forEach((element) {
-        print(element.name);
-        print(element.kkn);
-      });
+      Get.offAllNamed('/login');
     }
-    listPelajaranUmum.forEach((element) {
-      for (var i = 0; i < element.pelajaran.length; i++) {
-        listGabunganUmum.add(
-          ListPelajaran(
-            element.id,
-            element.pelajaran[i],
-            int.parse(element.kkn[i]),
-          ),
-        );
-      }
-      listGabunganUmum.forEach((element) {
-        print(element.name);
-        print(element.kkn);
-      });
-    });
-    indexDataSiswa.value = dataSiswa.value.first;
-    dataNilaiUmum.value = listGabunganUmum.first;
-    dataNilaiKhusus.value = listGabunganKhusus.first;
+
     super.onInit();
   }
 
@@ -261,31 +230,31 @@ class TesSiswaController extends GetxController {
 }
 
 class SiswaData {
+  final int no;
   final String? id;
   final String? nama;
   final String? nis;
-  SiswaData(this.id, this.nama, this.nis);
+  final List<Pelajaran> pelajaranKhusus;
+  final List<Pelajaran> pelajaranUmum;
+  SiswaData(this.id, this.nama, this.nis, this.pelajaranKhusus,
+      this.pelajaranUmum, this.no);
 }
 
-class PelajaranUmum {
-  final String id;
-  final String namaSingkat;
-  late final List pelajaran;
-  late final List kkn;
-
-  PelajaranUmum(
-    this.namaSingkat,
-    this.pelajaran,
-    this.kkn,
-    this.id,
-  );
-}
-
-class ListPelajaran {
+class Pelajaran {
   //Hello
+  
   final String type;
   final String name;
   final int kkn;
+  final String pengetahuan;
+  final String keterampilan;
 
-  ListPelajaran(this.type, this.name, this.kkn);
+  Pelajaran(this.type, this.name, this.kkn, this.pengetahuan, this.keterampilan,
+      );
 }
+//  typeUmum: {
+//           'nama': nameUmum,
+//           'kkn': kknUmum,
+//           'Pengetahuan': nilaiUmum.text,
+//           'Keterampilan': keterampilanUmum.text,
+//         }

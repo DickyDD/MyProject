@@ -479,7 +479,7 @@ class GuruController extends GetxController {
             ),
           );
         }
-        listKhususC3 = [...listC3];
+        listGabunganKhusus = [...listC3];
       } else {
         var list1 = pelajranKhususC1 as List;
         var list2 = pelajranKhususC2 as List;
