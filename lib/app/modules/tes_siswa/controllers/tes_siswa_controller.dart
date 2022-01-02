@@ -214,7 +214,7 @@ class TesSiswaController extends GetxController {
       onChangePelajaranKhusus();
       onChangePelajaranUmum();
     } else {
-      Get.offAllNamed('/login');
+      Get.offAllNamed('/');
     }
 
     super.onInit();

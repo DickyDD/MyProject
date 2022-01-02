@@ -104,7 +104,7 @@ class HomeView extends GetView<HomeController> {
                             if (index != inputIndex.length) {
                               controller.indexList.value = index;
                             } else {
-                              Get.offNamed('/login');
+                              Get.offNamed('/');
                             }
                           },
                           child: (width >= 944)

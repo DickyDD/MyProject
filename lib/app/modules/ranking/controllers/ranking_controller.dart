@@ -159,7 +159,7 @@ class RankingController extends GetxController {
       nilaiMax = dataSiswa.first.jumlahNilai;
       nilaiMin = dataSiswa.last.jumlahNilai;
     } else {
-      Get.offAllNamed('/login');
+      Get.offAllNamed('/');
     }
 
     super.onInit();

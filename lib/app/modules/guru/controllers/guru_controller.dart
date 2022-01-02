@@ -551,7 +551,7 @@ class GuruController extends GetxController {
       onLoading.value = false;
       await getKepalaSekolah();
     } else {
-      Get.offAllNamed('/login');
+      Get.offAllNamed('/');
     }
     super.onInit();
   }

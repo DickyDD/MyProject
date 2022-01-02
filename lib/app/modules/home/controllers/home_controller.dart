@@ -972,7 +972,7 @@ contoh pengisian :
       ListTahun =
           List.generate(tahun.length, (index) => TextEditingController().obs);
     } else {
-      Get.offAllNamed('/login');
+      Get.offAllNamed('/');
     }
     super.onInit();
   }
