@@ -18,6 +18,7 @@ class GuruController extends GetxController {
     'Tanggal',
     'Input',
     'Lihat',
+    'Biodata',
     'Exit',
   ];
 
@@ -133,6 +134,30 @@ class GuruController extends GetxController {
   var password = "";
   var kepalaSekolahNama = "";
   var kepalaSekolahNIP = "";
+  late Rx<List<Map<String, dynamic>>> listBioadata =
+      Rx(<Map<String, dynamic>>[]);
+
+  Future<List<Map<String, dynamic>?>> getBiodata() async {
+    var data = await users
+        .collection(tahunAjaran)
+        .doc(jurusan)
+        .collection(semester)
+        .doc(kelas)
+        .collection("Siswa")
+        .get();
+
+    var list = <Map<String, dynamic>>[];
+
+    data.docChanges.forEach((element) {
+      if (element.doc.data()!['Bioadata'] != null) {
+        list.add(element.doc.data()!);
+        print(element.doc.data());
+      }
+    });
+    list.sort((a, b) => a['nama'].toString().compareTo(b['nama'].toString()));
+    listBioadata.value = [...list];
+    return listBioadata.value;
+  }
 
   Future getKepalaSekolah() async {
     await users
@@ -449,7 +474,7 @@ class GuruController extends GetxController {
         1,
         (index) => TextEditingController(),
       );
-      
+
       if (semester.toLowerCase() == "semester 2") {
         lulus = kelas.split(' ')[1] == 'X'
             ? 'Naik ke Kelas XI'
@@ -550,6 +575,7 @@ class GuruController extends GetxController {
       tanggalPdf.text = 'Makassar, $hari ${bulan[month - 1]} $tahun';
       onLoading.value = false;
       await getKepalaSekolah();
+      await getBiodata();
     } else {
       Get.offAllNamed('/');
     }

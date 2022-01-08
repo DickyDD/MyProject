@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tes_database/app/modules/biodata/bindings/biodata_siswa_binding.dart';
 import 'package:tes_database/app/modules/siswa/bindings/siswa_binding.dart';
 import 'package:tes_database/app/modules/siswa/views/siswa_view.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'app/modules/auth/bindings/auth_binding.dart';
 import 'app/modules/auth/views/auth_view.dart';
+import 'app/modules/biodata/views/biodata_siswa_view.dart';
 import 'app/modules/home/bindings/home_binding.dart';
 import 'app/modules/home/views/home_view.dart';
 import 'app/modules/guru/bindings/guru_binding.dart';
@@ -57,6 +59,11 @@ Future<void> main() async {
           name: '/ranking',
           page: () => RankingView(),
           binding: RankingBinding(),
+        ),
+        GetPage(
+          name: '/biodata',
+          page: () => BiodataSiswaView(),
+          binding: BiodataSiswaBinding(),
         ),
       ],
       theme: ThemeData(

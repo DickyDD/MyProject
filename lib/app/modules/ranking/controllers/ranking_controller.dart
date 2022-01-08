@@ -13,6 +13,7 @@ class RankingController extends GetxController {
       nip = '23423 452643 5 646',
       guru = 'Dicky1';
   final users = FirebaseFirestore.instance;
+  final kurangKKM = 0;
   final indexDataSiswa = RankingSiswa(
     '213321',
     'diki',
@@ -94,8 +95,10 @@ class RankingController extends GetxController {
             });
 
             listPelajaranDataKhusus.forEach((element) {
-              jumlahNilaiKhusus = jumlahNilaiKhusus +
-                  ((element.keterampilan + element.pengetahuan) / 2);
+              var nilaiPengetahuan = (element.pengetahuan / 100 * 30);
+              var nilaiKeterampilan = (element.keterampilan / 100 * 70);
+              jumlahNilaiKhusus =
+                  jumlahNilaiKhusus + (nilaiKeterampilan + nilaiPengetahuan);
               // print("keterampilan : ${element.keterampilan}");
               // print("pengetahuan : ${element.pengetahuan}");
               // print("jumlah Nilai Khusus : $jumlahNilaiKhusus");
@@ -103,8 +106,10 @@ class RankingController extends GetxController {
             });
 
             listPelajaranDataUmum.forEach((element) {
-              jumlahNilaiUmum = jumlahNilaiUmum +
-                  ((element.keterampilan + element.pengetahuan) / 2);
+              var nilaiPengetahuan = (element.pengetahuan / 100 * 30);
+              var nilaiKeterampilan = (element.keterampilan / 100 * 70);
+              jumlahNilaiUmum =
+                  jumlahNilaiUmum + (nilaiKeterampilan + nilaiPengetahuan);
               // print("keterampilan : ${element.keterampilan}");
               // print("pengetahuan : ${element.pengetahuan}");
               // print("jumlah Nilai Umum : $jumlahNilaiUmum");
@@ -112,6 +117,8 @@ class RankingController extends GetxController {
             });
 
             // jumlahNilai = 0;
+            var nilaiAkhir = (jumlahNilaiKhusus + jumlahNilaiUmum) /
+                (listPelajaranDataKhusus.length + listPelajaranDataUmum.length);
 
             return RankingSiswa(
               e.id,
@@ -120,7 +127,7 @@ class RankingController extends GetxController {
               listPelajaranDataKhusus,
               listPelajaranDataUmum,
               no++,
-              jumlahNilaiKhusus + jumlahNilaiUmum,
+              nilaiAkhir,
             );
           }).toList(),
         )

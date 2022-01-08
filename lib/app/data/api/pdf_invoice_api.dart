@@ -15,6 +15,8 @@ Future<Uint8List> generateDocument(
 
   // final myFont = pw.Font.ttf(datFont.buffer.asByteData());
   // final myFontB = pw.Font.ttf(datFontB.buffer.asByteData());
+
+  print(invoice.info.semester.split(' ')[0]);
   final myFont = await PdfGoogleFonts.pTSerifRegular();
   final myFontB = await PdfGoogleFonts.pTSerifBold();
 
@@ -47,7 +49,8 @@ Future<Uint8List> generateDocument(
   pw.Widget buildHal1(
       List<InvoiceItem> items, pw.TextStyle style, pw.TextStyle styleB) {
     final data = items.map((item) {
-      final total = (item.pengetahuan + item.keterampilan) / 2;
+      final total =
+          (item.pengetahuan / 100 * 30) + (item.keterampilan / 100 * 70);
       var predikat = '';
       if (total >= 95) {
         predikat = 'A +';
@@ -637,30 +640,39 @@ Future<Uint8List> generateDocument(
               ),
               pw.Expanded(flex: 4, child: pw.SizedBox()),
             ]),
-            pw.SizedBox(height: 10 * PdfPageFormat.mm),
+            
             // pw.SizedBox(height: 1 * PdfPageFormat.mm),
-            pw.Text(
-              'F. KENAIKAN KELAS',
-              style: styleFontB,
-            ),
-            pw.SizedBox(height: 1 * PdfPageFormat.mm),
-            pw.Container(
-              height: 18 * PdfPageFormat.mm,
-              width: double.infinity,
-              // alignment: pw.Alignment.to,
-              padding: const pw.EdgeInsets.all(3),
-              child: pw.Text(
-                invoice.kenaikanKelas,
-                textAlign: pw.TextAlign.left,
-                style: styleFont,
-              ),
-              decoration: pw.BoxDecoration(
-                border: pw.Border.all(
-                  color: PdfColors.black,
-                  width: 1,
-                ),
-              ),
-            ),
+            invoice.info.semester.split(' ')[0] == '2'
+                ? pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.SizedBox(height: 10 * PdfPageFormat.mm),
+                      pw.Text(
+                        'F. KENAIKAN KELAS',
+                        style: styleFontB,
+                      ),
+                      pw.SizedBox(height: 1 * PdfPageFormat.mm),
+                      pw.Container(
+                        height: 18 * PdfPageFormat.mm,
+                        width: double.infinity,
+                        // alignment: pw.Alignment.to,
+                        padding: const pw.EdgeInsets.all(3),
+                        child: pw.Text(
+                          invoice.kenaikanKelas,
+                          textAlign: pw.TextAlign.left,
+                          style: styleFont,
+                        ),
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(
+                            color: PdfColors.black,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : pw.SizedBox(),
+
             footer(styleFont, styleFontB),
           ],
         );

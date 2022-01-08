@@ -8,6 +8,7 @@ import '../controllers/ranking_controller.dart';
 class RankingView extends GetView<RankingController> {
   @override
   Widget build(BuildContext context) {
+    var sC = ScrollController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.yellow[600],
@@ -19,17 +20,22 @@ class RankingView extends GetView<RankingController> {
       ),
       body: Obx(
         () => controller.onloading.value == false
-            ? ListView.builder(
-                itemCount: controller.dataSiswa.length,
-                itemBuilder: (ctx, i) {
-                  var data = controller.dataSiswa[i];
-                  return Column(
-                    children: [
-                      if (i == 0) infoNilai(),
-                      listSiswa(i, data),
-                    ],
-                  );
-                },
+            ? Scrollbar(
+                controller: sC,
+                isAlwaysShown: true,
+                child: ListView.builder(
+                  controller: sC,
+                  itemCount: controller.dataSiswa.length,
+                  itemBuilder: (ctx, i) {
+                    var data = controller.dataSiswa[i];
+                    return Column(
+                      children: [
+                        if (i == 0) infoNilai(),
+                        listSiswa(i, data),
+                      ],
+                    );
+                  },
+                ),
               )
             : Center(
                 child: CircularProgressIndicator(),
@@ -78,13 +84,45 @@ class RankingView extends GetView<RankingController> {
   }
 
   CardShadow listSiswa(int i, RankingSiswa data) {
+    var kurangKKM = 0;
+
+    data.pelajaranKhusus.forEach((e) {
+      var nilaiPengetahuan = (e.pengetahuan / 100 * 30);
+      var nilaiKeterampilan = (e.keterampilan / 100 * 70);
+      if ((nilaiKeterampilan + nilaiPengetahuan) < e.kkn) {
+        // print(e.kkn);
+        // print(nilaiKeterampilan + nilaiPengetahuan);
+        kurangKKM++;
+      }
+    });
+    data.pelajaranUmum.forEach((e) {
+      var nilaiPengetahuan = (e.pengetahuan / 100 * 30);
+      var nilaiKeterampilan = (e.keterampilan / 100 * 70);
+      if ((nilaiKeterampilan + nilaiPengetahuan) < e.kkn) {
+        // print(e.kkn);
+        // print(nilaiKeterampilan + nilaiPengetahuan);
+        kurangKKM++;
+      }
+    });
     return CardShadow(
       child: ExpansionTile(
+        collapsedBackgroundColor:
+            kurangKKM == 0 ? Colors.white : Colors.red[100],
+        backgroundColor: kurangKKM == 0 ? Colors.white : Colors.red[100],
         leading: CircleAvatar(child: Text("${i + 1}")),
         title: Text(data.nama!),
         subtitle: Text(data.nis!),
-        trailing: Text(
-          "Jumlah Nilai Akhir : ${data.jumlahNilai.toString()}",
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Jumlah Nilai Akhir : ${data.jumlahNilai.toString()}",
+            ),
+            Text(
+              "Jumlah Nilai Yang di Isi : ${data.pelajaranKhusus.length + data.pelajaranUmum.length}",
+            ),
+          ],
         ),
         expandedAlignment: Alignment.topLeft,
         childrenPadding: EdgeInsets.all(15),
@@ -143,7 +181,7 @@ class RankingView extends GetView<RankingController> {
               "Pengetahuan : ${value.pengetahuan.toString()}",
             ),
             Text(
-              "Nilai Akhir : ${(value.pengetahuan + value.keterampilan) / 2}",
+              "Nilai Akhir : ${(value.pengetahuan / 100 * 30) + (value.keterampilan / 100 * 70)}",
             ),
           ],
         ),
