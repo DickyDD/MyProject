@@ -1911,437 +1911,435 @@ class ViewDataSiswa extends StatelessWidget {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Row(
-                                    children: [
-                                      ElevatedButton(
-                                          onPressed: () async {
-                                            controller.onLoading.value = true;
-                                            int no1 = 1;
-                                            int no2 = 1;
-                                            int no3 = 1;
-                                            int no4 = 1;
-                                            int no5 = 1;
-                                            int no6 = 1;
-                                            var dataUmum1 = <NilaiPDF>[];
-                                            var dataUmum2 = <NilaiPDF>[];
-                                            var dataKhususC1 = <NilaiPDF>[];
-                                            var dataKhususC2 = <NilaiPDF>[];
-                                            var dataKhususC3 = <NilaiPDF>[];
+                                  Center(
+                                    child: ElevatedButton(
+                                        onPressed: () async {
+                                          controller.onLoading.value = true;
+                                          int no1 = 1;
+                                          int no2 = 1;
+                                          int no3 = 1;
+                                          int no4 = 1;
+                                          int no5 = 1;
+                                          int no6 = 1;
+                                          var dataUmum1 = <NilaiPDF>[];
+                                          var dataUmum2 = <NilaiPDF>[];
+                                          var dataKhususC1 = <NilaiPDF>[];
+                                          var dataKhususC2 = <NilaiPDF>[];
+                                          var dataKhususC3 = <NilaiPDF>[];
 
-                                            nilaiUmum.forEach((element) {
-                                              element.forEach((key, value) {
-                                                print(key);
-                                                if (key.toString() ==
-                                                    "Muatan Kewilayahan") {
-                                                  dataUmum2.add(
-                                                    NilaiPDF(
-                                                      value['nama'],
-                                                      value['Pengetahuan'],
-                                                      value['Keterampilan'],
-                                                    ),
-                                                  );
-                                                } else {
-                                                  dataUmum1.add(
-                                                    NilaiPDF(
-                                                      value['nama'],
-                                                      value['Pengetahuan'],
-                                                      value['Keterampilan'],
-                                                    ),
-                                                  );
-                                                }
-                                              });
+                                          nilaiUmum.forEach((element) {
+                                            element.forEach((key, value) {
+                                              print(key);
+                                              if (key.toString() ==
+                                                  "Muatan Kewilayahan") {
+                                                dataUmum2.add(
+                                                  NilaiPDF(
+                                                    value['nama'],
+                                                    value['Pengetahuan'],
+                                                    value['Keterampilan'],
+                                                  ),
+                                                );
+                                              } else {
+                                                dataUmum1.add(
+                                                  NilaiPDF(
+                                                    value['nama'],
+                                                    value['Pengetahuan'],
+                                                    value['Keterampilan'],
+                                                  ),
+                                                );
+                                              }
                                             });
+                                          });
 
-                                            nilaiKhusus.forEach((element) {
-                                              element.forEach((key, value) {
-                                                if (key == "C1") {
-                                                  dataKhususC1.add(
-                                                    NilaiPDF(
-                                                      value['nama'] ?? "",
-                                                      value['Pengetahuan'] ??
-                                                          "",
-                                                      value['Keterampilan'] ??
-                                                          "",
-                                                    ),
-                                                  );
-                                                } else if (key == "C2") {
-                                                  dataKhususC2.add(
-                                                    NilaiPDF(
-                                                      value['nama'] ?? "",
-                                                      value['Pengetahuan'] ??
-                                                          "",
-                                                      value['Keterampilan'] ??
-                                                          "",
-                                                    ),
-                                                  );
-                                                } else if (key == "C3") {
-                                                  dataKhususC3.add(
-                                                    NilaiPDF(
-                                                      value['nama'] ?? "",
-                                                      value['Pengetahuan'] ??
-                                                          "",
-                                                      value['Keterampilan'] ??
-                                                          "",
-                                                    ),
-                                                  );
-                                                  print(
-                                                      dataKhususC3.first.nama);
-                                                }
-                                              });
+                                          nilaiKhusus.forEach((element) {
+                                            element.forEach((key, value) {
+                                              if (key == "C1") {
+                                                dataKhususC1.add(
+                                                  NilaiPDF(
+                                                    value['nama'] ?? "",
+                                                    value['Pengetahuan'] ??
+                                                        "",
+                                                    value['Keterampilan'] ??
+                                                        "",
+                                                  ),
+                                                );
+                                              } else if (key == "C2") {
+                                                dataKhususC2.add(
+                                                  NilaiPDF(
+                                                    value['nama'] ?? "",
+                                                    value['Pengetahuan'] ??
+                                                        "",
+                                                    value['Keterampilan'] ??
+                                                        "",
+                                                  ),
+                                                );
+                                              } else if (key == "C3") {
+                                                dataKhususC3.add(
+                                                  NilaiPDF(
+                                                    value['nama'] ?? "",
+                                                    value['Pengetahuan'] ??
+                                                        "",
+                                                    value['Keterampilan'] ??
+                                                        "",
+                                                  ),
+                                                );
+                                                print(
+                                                    dataKhususC3.first.nama);
+                                              }
                                             });
-                                            var dataPKL = <InvoiceItemPKL>[];
-                                            if (inputNilai != 'X') {
-                                              pkl.forEach((element) {
-                                                element.forEach((key, value) {
-                                                  dataPKL.add(
-                                                    InvoiceItemPKL(
-                                                      keterangan:
-                                                          value['nilai'],
-                                                      lama: value['lama'],
-                                                      lokasi: value['lokasi'],
-                                                      mitra: key,
-                                                      no: "${no5++}",
-                                                    ),
-                                                  );
-                                                });
-                                              });
-                                            } else {
-                                              dataPKL.add(
-                                                InvoiceItemPKL(
-                                                  keterangan: "",
-                                                  lama: "",
-                                                  lokasi: "",
-                                                  mitra: "",
-                                                  no: "1",
-                                                ),
-                                              );
-                                            }
-                                            var dataExtr = <InvoiceItemExtra>[];
-
-                                            extr.forEach((element) {
+                                          });
+                                          var dataPKL = <InvoiceItemPKL>[];
+                                          if (inputNilai != 'X') {
+                                            pkl.forEach((element) {
                                               element.forEach((key, value) {
-                                                dataExtr.add(
-                                                  InvoiceItemExtra(
+                                                dataPKL.add(
+                                                  InvoiceItemPKL(
                                                     keterangan:
-                                                        value['keterangan'] ??
-                                                            "",
-                                                    nama: key.toString(),
-                                                    nilai: value['nilai'] ?? "",
-                                                    no: no6++,
+                                                        value['nilai'],
+                                                    lama: value['lama'],
+                                                    lokasi: value['lokasi'],
+                                                    mitra: key,
+                                                    no: "${no5++}",
                                                   ),
                                                 );
                                               });
                                             });
-                                            if (dataExtr.length == 2) {
-                                              dataExtr.add(
-                                                InvoiceItemExtra(
-                                                  keterangan: " ",
-                                                  nama: " ",
-                                                  nilai: " ",
-                                                  no: no6++,
-                                                ),
-                                              );
-                                            } else if (dataExtr.length == 1) {
-                                              dataExtr.add(
-                                                InvoiceItemExtra(
-                                                  keterangan: " ",
-                                                  nama: " ",
-                                                  nilai: " ",
-                                                  no: no6++,
-                                                ),
-                                              );
-                                              dataExtr.add(
-                                                InvoiceItemExtra(
-                                                  keterangan: " ",
-                                                  nama: " ",
-                                                  nilai: " ",
-                                                  no: no6++,
-                                                ),
-                                              );
-                                            }
+                                          } else {
+                                            dataPKL.add(
+                                              InvoiceItemPKL(
+                                                keterangan: "",
+                                                lama: "",
+                                                lokasi: "",
+                                                mitra: "",
+                                                no: "1",
+                                              ),
+                                            );
+                                          }
+                                          var dataExtr = <InvoiceItemExtra>[];
 
-                                            var dataKehadiran =
-                                                <InvoiceItemKehadiran>[];
+                                          extr.forEach((element) {
+                                            element.forEach((key, value) {
+                                              dataExtr.add(
+                                                InvoiceItemExtra(
+                                                  keterangan:
+                                                      value['keterangan'] ??
+                                                          "",
+                                                  nama: key.toString(),
+                                                  nilai: value['nilai'] ?? "",
+                                                  no: no6++,
+                                                ),
+                                              );
+                                            });
+                                          });
+                                          if (dataExtr.length == 2) {
+                                            dataExtr.add(
+                                              InvoiceItemExtra(
+                                                keterangan: " ",
+                                                nama: " ",
+                                                nilai: " ",
+                                                no: no6++,
+                                              ),
+                                            );
+                                          } else if (dataExtr.length == 1) {
+                                            dataExtr.add(
+                                              InvoiceItemExtra(
+                                                keterangan: " ",
+                                                nama: " ",
+                                                nilai: " ",
+                                                no: no6++,
+                                              ),
+                                            );
+                                            dataExtr.add(
+                                              InvoiceItemExtra(
+                                                keterangan: " ",
+                                                nama: " ",
+                                                nilai: " ",
+                                                no: no6++,
+                                              ),
+                                            );
+                                          }
 
-                                            kehadiran.forEach((element) {
-                                              element.forEach((key, value) {
-                                                dataKehadiran.add(
+                                          var dataKehadiran =
+                                              <InvoiceItemKehadiran>[];
+
+                                          kehadiran.forEach((element) {
+                                            element.forEach((key, value) {
+                                              dataKehadiran.add(
+                                                InvoiceItemKehadiran(
+                                                  nama: key.toString(),
+                                                  nilai: value['nilai']
+                                                      .toString(),
+                                                ),
+                                              );
+                                            });
+                                          });
+                                          var dataDPK =
+                                              <InvoiceItemKehadiran>[];
+                                          final dataNilaiDPK = [
+                                            "Kurang".toUpperCase(),
+                                            "Cukup".toUpperCase(),
+                                            "Baik".toUpperCase(),
+                                            "Sangat Baik".toUpperCase(),
+                                          ];
+
+                                          // final String tanggal =
+                                          //     'Makassar, ${controller.hari} ${controller.bulan[controller.month]} ${controller.tahun}';
+
+                                          var dataI = 0;
+                                          var dataR = 0;
+                                          var dataN = 0;
+                                          var dataM = 0;
+                                          var dataG = 0;
+                                          final InR = [
+                                            "Meningkatkan",
+                                            "Meningkatkan",
+                                            "Mempertahankan",
+                                            "Mempertahankan",
+                                          ];
+                                          final dpkLain = [
+                                            "Lebih",
+                                            "Lebih",
+                                            "Telah",
+                                            "Telah",
+                                          ];
+
+                                          dpk.forEach((element) {
+                                            element.forEach((key, value) {
+                                              if (key.toString() ==
+                                                  "Integritas") {
+                                                dataDPK.add(
                                                   InvoiceItemKehadiran(
                                                     nama: key.toString(),
-                                                    nilai: value['nilai']
-                                                        .toString(),
+                                                    nilai:
+                                                        "Anda memiliki pola kehidupan kemasyarakatan yang ${dataNilaiDPK[(int.tryParse(value['nilai']) ?? 1) - 1]} di Lingkungan sekolah",
                                                   ),
                                                 );
-                                              });
+                                                dataI = int.tryParse(
+                                                    value['nilai'])!;
+                                              } else if (key.toString() ==
+                                                  "Religius") {
+                                                dataDPK.add(
+                                                  InvoiceItemKehadiran(
+                                                    nama: key.toString(),
+                                                    nilai:
+                                                        "Anda menunjukkan ketakwaan pada agama yang dianut dan toleran pada penganut yang berbeda ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} di Lingkungan sekolah",
+                                                  ),
+                                                );
+                                                dataR = int.tryParse(
+                                                    value['nilai'])!;
+                                              } else if (key.toString() ==
+                                                  "Nasionalis") {
+                                                dataDPK.add(
+                                                  InvoiceItemKehadiran(
+                                                    nama: key.toString(),
+                                                    nilai:
+                                                        "Anda ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} dalam kegiatan yang bernuansa nasionalis di Lingkungan sekolah",
+                                                  ),
+                                                );
+                                                dataN = int.tryParse(
+                                                    value['nilai'])!;
+                                              } else if (key.toString() ==
+                                                  "Mandiri") {
+                                                dataDPK.add(
+                                                  InvoiceItemKehadiran(
+                                                    nama: key.toString(),
+                                                    nilai:
+                                                        "Anda menunjukkan sikap kemandirian yang ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} di lingkungan sekolah",
+                                                  ),
+                                                );
+                                                dataM = int.tryParse(
+                                                    value['nilai'])!;
+                                              } else {
+                                                dataDPK.add(
+                                                  InvoiceItemKehadiran(
+                                                    nama: key.toString(),
+                                                    nilai:
+                                                        "Anda menunjukkan kegotong-royongan yang ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} dalam lingkungan sekolah",
+                                                  ),
+                                                );
+                                                dataG = int.tryParse(
+                                                    value['nilai'])!;
+                                              }
                                             });
-                                            var dataDPK =
-                                                <InvoiceItemKehadiran>[];
-                                            final dataNilaiDPK = [
-                                              "Kurang".toUpperCase(),
-                                              "Cukup".toUpperCase(),
-                                              "Baik".toUpperCase(),
-                                              "Sangat Baik".toUpperCase(),
-                                            ];
+                                          });
 
-                                            // final String tanggal =
-                                            //     'Makassar, ${controller.hari} ${controller.bulan[controller.month]} ${controller.tahun}';
+                                          final dpkG =
+                                              "Anda harus ${InR[dataI - 1]} INTEGRITAS di Lingkungan sekolah, ${InR[dataR - 1]} sifat RELIGIUS, ${dpkLain[dataN - 1]} menunjukkan sifat NASIONALISME. ${dpkLain[dataM - 1]} menunjukkan sifat KEMANDIRIAN  dan ${dpkLain[dataG - 1]} menunjukkan sifat KEGOTONGROYONGAN  di lingkungan sekolah.";
 
-                                            var dataI = 0;
-                                            var dataR = 0;
-                                            var dataN = 0;
-                                            var dataM = 0;
-                                            var dataG = 0;
-                                            final InR = [
-                                              "Meningkatkan",
-                                              "Meningkatkan",
-                                              "Mempertahankan",
-                                              "Mempertahankan",
-                                            ];
-                                            final dpkLain = [
-                                              "Lebih",
-                                              "Lebih",
-                                              "Telah",
-                                              "Telah",
-                                            ];
-
-                                            dpk.forEach((element) {
-                                              element.forEach((key, value) {
-                                                if (key.toString() ==
-                                                    "Integritas") {
-                                                  dataDPK.add(
-                                                    InvoiceItemKehadiran(
-                                                      nama: key.toString(),
-                                                      nilai:
-                                                          "Anda memiliki pola kehidupan kemasyarakatan yang ${dataNilaiDPK[(int.tryParse(value['nilai']) ?? 1) - 1]} di Lingkungan sekolah",
+                                          final invoice = Invoice(
+                                            //  lulus: 'das',
+                                            tanggal:
+                                                controller.tanggalPdf.text,
+                                            info: Info(
+                                              nama: value['nama'] ??
+                                                  dataKososng,
+                                              nik:
+                                                  value['nis'] ?? dataKososng,
+                                              namaSekolah:
+                                                  'SMK Negeri 10 Makassar',
+                                              alamat:
+                                                  'Jl. Bontomanai No. 14 Gunungsari Baru Makassar',
+                                              kelas: controller.kelas
+                                                  .split('kelas')
+                                                  .join()
+                                                  .trim()
+                                                  .split(' ')
+                                                  .join(' '),
+                                              semester: controller.semester ==
+                                                      'semester 1'
+                                                  ? "1 (Satu)"
+                                                  : '2 (Dua)',
+                                              tahunPelajaran:
+                                                  controller.tahunAjaran,
+                                            ),
+                                            itemsA: List.generate(
+                                              dataUmum1.length,
+                                              (index) => InvoiceItem(
+                                                no: no1++,
+                                                mP: dataUmum1[index].nama,
+                                                pengetahuan: int.parse(
+                                                  dataUmum1[index]
+                                                      .pengetahuan,
+                                                ),
+                                                keterampilan: int.parse(
+                                                  dataUmum1[index]
+                                                      .keterampilan,
+                                                ),
+                                              ),
+                                            ),
+                                            itemsB: List.generate(
+                                              dataUmum2.length,
+                                              (index) => InvoiceItem(
+                                                no: no2++,
+                                                mP: dataUmum2[index].nama,
+                                                pengetahuan: int.parse(
+                                                  dataUmum2[index]
+                                                      .pengetahuan,
+                                                ),
+                                                keterampilan: int.parse(
+                                                  dataUmum2[index]
+                                                      .keterampilan,
+                                                ),
+                                              ),
+                                            ),
+                                            itemsC: List.generate(
+                                              dataKhususC1.length,
+                                              (index) => InvoiceItem(
+                                                no: no3++,
+                                                mP: dataKhususC1[index].nama,
+                                                pengetahuan: int.parse(
+                                                  dataKhususC1[index]
+                                                      .pengetahuan,
+                                                ),
+                                                keterampilan: int.parse(
+                                                  dataKhususC1[index]
+                                                      .keterampilan,
+                                                ),
+                                              ),
+                                            ),
+                                            itemsD: inputNilai != 'X'
+                                                ? List.generate(
+                                                    dataKhususC3.length,
+                                                    (index) => InvoiceItem(
+                                                      no: no4++,
+                                                      mP: dataKhususC3[index]
+                                                          .nama,
+                                                      pengetahuan: int.parse(
+                                                        dataKhususC3[index]
+                                                            .pengetahuan,
+                                                      ),
+                                                      keterampilan: int.parse(
+                                                        dataKhususC3[index]
+                                                            .keterampilan,
+                                                      ),
                                                     ),
-                                                  );
-                                                  dataI = int.tryParse(
-                                                      value['nilai'])!;
-                                                } else if (key.toString() ==
-                                                    "Religius") {
-                                                  dataDPK.add(
-                                                    InvoiceItemKehadiran(
-                                                      nama: key.toString(),
-                                                      nilai:
-                                                          "Anda menunjukkan ketakwaan pada agama yang dianut dan toleran pada penganut yang berbeda ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} di Lingkungan sekolah",
+                                                  )
+                                                : List.generate(
+                                                    dataKhususC2.length,
+                                                    (index) => InvoiceItem(
+                                                      no: no4++,
+                                                      mP: dataKhususC2[index]
+                                                          .nama,
+                                                      pengetahuan: int.parse(
+                                                        dataKhususC2[index]
+                                                            .pengetahuan,
+                                                      ),
+                                                      keterampilan: int.parse(
+                                                        dataKhususC2[index]
+                                                            .keterampilan,
+                                                      ),
                                                     ),
-                                                  );
-                                                  dataR = int.tryParse(
-                                                      value['nilai'])!;
-                                                } else if (key.toString() ==
-                                                    "Nasionalis") {
-                                                  dataDPK.add(
-                                                    InvoiceItemKehadiran(
-                                                      nama: key.toString(),
-                                                      nilai:
-                                                          "Anda ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} dalam kegiatan yang bernuansa nasionalis di Lingkungan sekolah",
-                                                    ),
-                                                  );
-                                                  dataN = int.tryParse(
-                                                      value['nilai'])!;
-                                                } else if (key.toString() ==
-                                                    "Mandiri") {
-                                                  dataDPK.add(
-                                                    InvoiceItemKehadiran(
-                                                      nama: key.toString(),
-                                                      nilai:
-                                                          "Anda menunjukkan sikap kemandirian yang ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} di lingkungan sekolah",
-                                                    ),
-                                                  );
-                                                  dataM = int.tryParse(
-                                                      value['nilai'])!;
-                                                } else {
-                                                  dataDPK.add(
-                                                    InvoiceItemKehadiran(
-                                                      nama: key.toString(),
-                                                      nilai:
-                                                          "Anda menunjukkan kegotong-royongan yang ${dataNilaiDPK[int.tryParse(value['nilai'])! - 1]} dalam lingkungan sekolah",
-                                                    ),
-                                                  );
-                                                  dataG = int.tryParse(
-                                                      value['nilai'])!;
-                                                }
-                                              });
-                                            });
-
-                                            final dpkG =
-                                                "Anda harus ${InR[dataI - 1]} INTEGRITAS di Lingkungan sekolah, ${InR[dataR - 1]} sifat RELIGIUS, ${dpkLain[dataN - 1]} menunjukkan sifat NASIONALISME. ${dpkLain[dataM - 1]} menunjukkan sifat KEMANDIRIAN  dan ${dpkLain[dataG - 1]} menunjukkan sifat KEGOTONGROYONGAN  di lingkungan sekolah.";
-
-                                            final invoice = Invoice(
-                                              //  lulus: 'das',
-                                              tanggal:
-                                                  controller.tanggalPdf.text,
-                                              info: Info(
-                                                nama: value['nama'] ??
+                                                  ),
+                                            catatanAkademik:
+                                                value['catatanAkademik'] ??
                                                     dataKososng,
-                                                nik:
-                                                    value['nis'] ?? dataKososng,
-                                                namaSekolah:
-                                                    'SMK Negeri 10 Makassar',
-                                                alamat:
-                                                    'Jl. Bontomanai No. 14 Gunungsari Baru Makassar',
-                                                kelas: controller.kelas
-                                                    .split('kelas')
-                                                    .join()
-                                                    .trim()
-                                                    .split(' ')
-                                                    .join(' '),
-                                                semester: controller.semester ==
-                                                        'semester 1'
-                                                    ? "1 (Satu)"
-                                                    : '2 (Dua)',
-                                                tahunPelajaran:
-                                                    controller.tahunAjaran,
+                                            namaKepalaSekolah:
+                                                controller.kepalaSekolahNama,
+                                            namaOrangTua: value["namaOrtu"],
+                                            namaWalikelas: controller.guru,
+                                            nipKepalaSekolah:
+                                                controller.kepalaSekolahNIP,
+                                            nipWalikelas:
+                                                '19701005 199903 1 012'
+                                                            .length ==
+                                                        controller.nip.length
+                                                    ? controller.nip
+                                                    : '-',
+                                            itemsExtra: List.generate(
+                                              dataExtr.length,
+                                              (index) => InvoiceItemExtra(
+                                                no: dataExtr[index].no,
+                                                nilai: dataExtr[index].nilai,
+                                                nama: dataExtr[index].nama,
+                                                keterangan: dataExtr[index]
+                                                    .keterangan,
                                               ),
-                                              itemsA: List.generate(
-                                                dataUmum1.length,
-                                                (index) => InvoiceItem(
-                                                  no: no1++,
-                                                  mP: dataUmum1[index].nama,
-                                                  pengetahuan: int.parse(
-                                                    dataUmum1[index]
-                                                        .pengetahuan,
-                                                  ),
-                                                  keterampilan: int.parse(
-                                                    dataUmum1[index]
-                                                        .keterampilan,
-                                                  ),
-                                                ),
+                                            ),
+                                            itemsKehadiran: List.generate(
+                                              dataKehadiran.length,
+                                              (index) => InvoiceItemKehadiran(
+                                                nilai: dataKehadiran[index]
+                                                            .nilai ==
+                                                        ""
+                                                    ? "-"
+                                                    : dataKehadiran[index]
+                                                        .nilai,
+                                                nama:
+                                                    dataKehadiran[index].nama,
                                               ),
-                                              itemsB: List.generate(
-                                                dataUmum2.length,
-                                                (index) => InvoiceItem(
-                                                  no: no2++,
-                                                  mP: dataUmum2[index].nama,
-                                                  pengetahuan: int.parse(
-                                                    dataUmum2[index]
-                                                        .pengetahuan,
-                                                  ),
-                                                  keterampilan: int.parse(
-                                                    dataUmum2[index]
-                                                        .keterampilan,
-                                                  ),
-                                                ),
+                                            ),
+                                            itemsPkl: List.generate(
+                                              dataPKL.length,
+                                              (index) => InvoiceItemPKL(
+                                                keterangan:
+                                                    dataPKL[index].keterangan,
+                                                lama: dataPKL[index].lama,
+                                                lokasi: dataPKL[index].lokasi,
+                                                mitra: dataPKL[index].mitra,
+                                                no: dataPKL[index].no,
                                               ),
-                                              itemsC: List.generate(
-                                                dataKhususC1.length,
-                                                (index) => InvoiceItem(
-                                                  no: no3++,
-                                                  mP: dataKhususC1[index].nama,
-                                                  pengetahuan: int.parse(
-                                                    dataKhususC1[index]
-                                                        .pengetahuan,
-                                                  ),
-                                                  keterampilan: int.parse(
-                                                    dataKhususC1[index]
-                                                        .keterampilan,
-                                                  ),
-                                                ),
-                                              ),
-                                              itemsD: inputNilai != 'X'
-                                                  ? List.generate(
-                                                      dataKhususC3.length,
-                                                      (index) => InvoiceItem(
-                                                        no: no4++,
-                                                        mP: dataKhususC3[index]
-                                                            .nama,
-                                                        pengetahuan: int.parse(
-                                                          dataKhususC3[index]
-                                                              .pengetahuan,
-                                                        ),
-                                                        keterampilan: int.parse(
-                                                          dataKhususC3[index]
-                                                              .keterampilan,
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : List.generate(
-                                                      dataKhususC2.length,
-                                                      (index) => InvoiceItem(
-                                                        no: no4++,
-                                                        mP: dataKhususC2[index]
-                                                            .nama,
-                                                        pengetahuan: int.parse(
-                                                          dataKhususC2[index]
-                                                              .pengetahuan,
-                                                        ),
-                                                        keterampilan: int.parse(
-                                                          dataKhususC2[index]
-                                                              .keterampilan,
-                                                        ),
-                                                      ),
-                                                    ),
-                                              catatanAkademik:
-                                                  value['catatanAkademik'] ??
-                                                      dataKososng,
-                                              namaKepalaSekolah:
-                                                  controller.kepalaSekolahNama,
-                                              namaOrangTua: value["namaOrtu"],
-                                              namaWalikelas: controller.guru,
-                                              nipKepalaSekolah:
-                                                  controller.kepalaSekolahNIP,
-                                              nipWalikelas:
-                                                  '19701005 199903 1 012'
-                                                              .length ==
-                                                          controller.nip.length
-                                                      ? controller.nip
-                                                      : '-',
-                                              itemsExtra: List.generate(
-                                                dataExtr.length,
-                                                (index) => InvoiceItemExtra(
-                                                  no: dataExtr[index].no,
-                                                  nilai: dataExtr[index].nilai,
-                                                  nama: dataExtr[index].nama,
-                                                  keterangan: dataExtr[index]
-                                                      .keterangan,
-                                                ),
-                                              ),
-                                              itemsKehadiran: List.generate(
-                                                dataKehadiran.length,
-                                                (index) => InvoiceItemKehadiran(
-                                                  nilai: dataKehadiran[index]
-                                                              .nilai ==
-                                                          ""
-                                                      ? "-"
-                                                      : dataKehadiran[index]
-                                                          .nilai,
-                                                  nama:
-                                                      dataKehadiran[index].nama,
-                                                ),
-                                              ),
-                                              itemsPkl: List.generate(
-                                                dataPKL.length,
-                                                (index) => InvoiceItemPKL(
-                                                  keterangan:
-                                                      dataPKL[index].keterangan,
-                                                  lama: dataPKL[index].lama,
-                                                  lokasi: dataPKL[index].lokasi,
-                                                  mitra: dataPKL[index].mitra,
-                                                  no: dataPKL[index].no,
-                                                ),
-                                              ),
+                                            ),
 
-                                              itemsDPK: List.generate(
-                                                dataDPK.length,
-                                                (index) => InvoiceItemKehadiran(
-                                                  nilai: dataDPK[index].nilai ==
-                                                          ""
-                                                      ? "-"
-                                                      : dataDPK[index].nilai,
-                                                  nama: dataDPK[index].nama,
-                                                ),
+                                            itemsDPK: List.generate(
+                                              dataDPK.length,
+                                              (index) => InvoiceItemKehadiran(
+                                                nilai: dataDPK[index].nilai ==
+                                                        ""
+                                                    ? "-"
+                                                    : dataDPK[index].nilai,
+                                                nama: dataDPK[index].nama,
                                               ),
-                                              dpk: dpkG,
-                                              kenaikanKelas: value["lulus"],
-                                              // 'Makassar, ${controller.hari} ${controller.bulan[controller.month]} ${controller.tahun}',
-                                            );
-                                            // compute<int, >();
-                                            Get.to(MyPDF(raport: invoice));
+                                            ),
+                                            dpk: dpkG,
+                                            kenaikanKelas: value["lulus"],
+                                            // 'Makassar, ${controller.hari} ${controller.bulan[controller.month]} ${controller.tahun}',
+                                          );
+                                          // compute<int, >();
+                                          Get.to(MyPDF(raport: invoice));
 
-                                            controller.onLoading.value = false;
-                                          },
-                                          child: Text("PDF")),
-                                    ],
+                                          controller.onLoading.value = false;
+                                        },
+                                        child: Text("PDF")),
                                   ),
                                   SizedBox(
                                     height: 10,
@@ -2381,7 +2379,7 @@ class BioData extends StatelessWidget {
   Widget build(BuildContext context) {
     // final controller = Get.find<GuruController>();
 
-    // print(controller.listBioadata.length);
+    
     final sC = ScrollController();
 
     return GetX<GuruController>(
@@ -2389,8 +2387,10 @@ class BioData extends StatelessWidget {
       initState: (controller) async {
         await controller.controller!.getBiodata();
       },
+      
       builder: (controller) {
-        return Scrollbar(
+        print(controller.listBioadata.value.length);
+        return controller.listBioadata.value.length != 0 ? Scrollbar(
           isAlwaysShown: true,
           controller: sC,
           child: GridView.extent(
@@ -2568,7 +2568,7 @@ class BioData extends StatelessWidget {
               }).toList(),
             ],
           ),
-        );
+        ) : Center(child: Text("Data Belum Ada"),);
       },
     );
   }

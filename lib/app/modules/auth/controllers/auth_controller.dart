@@ -7,8 +7,8 @@ import 'package:line_icons/line_icons.dart';
 class AuthController extends GetxController {
   final users = FirebaseFirestore.instance;
   final List<TextEditingController> listC = [
-    TextEditingController(text: "23423 452643 5 646"),
-    TextEditingController(text: "kelas X BKP 1 2021-2022 semester 2"),
+    TextEditingController(text: ""),
+    TextEditingController(text: ""),
   ];
   final hintText = [
     'NIP/NIK',

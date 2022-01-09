@@ -137,6 +137,19 @@ class TesSiswaController extends GetxController {
     });
 
     await users
+        .collection("Siswa")
+        .doc(indexDataSiswa.value.nama)
+        .collection('nilai')
+        .doc(
+            "${tahunAjaran.split('-').join(' ').toString()}-$jurusan-$semester-$kelas")
+        .update(
+      {
+        "nilai_umum": listNilaiUmum,
+        "nilai_khusus": listNilaiKhusus,
+      },
+    );
+
+    await users
         .collection(tahunAjaran)
         .doc(jurusan)
         .collection(semester)

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:tes_database/app/data/model/dataDiri.dart';
 // import 'package:printing/printing.dart';
 
@@ -10,6 +11,8 @@ Future<Uint8List> generateDocumentBiodata(
 ) async {
   // final myFont = await PdfGoogleFonts.arial();
   // final myFontB = await PdfGoogleFonts.pTSerifBold();
+  final myFontHall = await PdfGoogleFonts.pTSerifRegular();
+  final myFont = await PdfGoogleFonts.pTSerifItalic();
   const space3 = '    ';
   const space1 = '     ';
   const space2 = '   ';
@@ -193,13 +196,17 @@ Future<Uint8List> generateDocumentBiodata(
     pw.Page(
       // margin:
       pageTheme: pw.PageTheme(
+        pageFormat: PdfPageFormat.letter,
         orientation: pw.PageOrientation.portrait,
         // buildBackground: (context) => buildBackground,
         theme: pw.ThemeData.withFont(
             // base: myFont,
             // bold: myFontB,
             ),
-        // margin: pw.EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        margin: const pw.EdgeInsets.symmetric(
+          horizontal: 20 * PdfPageFormat.mm,
+          vertical: 15 * PdfPageFormat.mm,
+        ),
       ),
       build: (context) =>
           // buildBackground,
@@ -216,7 +223,7 @@ Future<Uint8List> generateDocumentBiodata(
               ),
             ),
           ),
-          pw.SizedBox(height: 15 * PdfPageFormat.mm),
+          pw.SizedBox(height: 20 * PdfPageFormat.mm),
           pw.ListView.builder(
             spacing: 1 * PdfPageFormat.mm,
             itemBuilder: (ctx, i) {
@@ -285,20 +292,48 @@ Future<Uint8List> generateDocumentBiodata(
               pw.Padding(
                   padding: const pw.EdgeInsets.only(
                     left: 1.15 * PdfPageFormat.cm,
+                    bottom: 4,
                   ),
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text(dataDiri.tanggal, style: styleFont),
+                      pw.SizedBox(height: 1 * PdfPageFormat.mm),
                       pw.Text('Kepala Sekolah,', style: styleFont),
-                      pw.SizedBox(height: 8 * PdfPageFormat.mm),
+                      pw.SizedBox(height: 23.5 * PdfPageFormat.mm),
                       pw.Text(dataDiri.namaKepalaSekolah, style: styleFontB),
+                      pw.SizedBox(height: 1 * PdfPageFormat.mm),
                       pw.Text('NIP. ${dataDiri.nip}', style: styleFont),
                     ],
                   )),
               // pw.SizedBox(child: ),
             ],
           ),
+          // pw.SizedBox(height: 19 * PdfPageFormat.mm),
+          pw.Spacer(),
+          pw.Divider(
+            height: 0.05,
+            thickness: 0.05,
+            indent: 0.05,
+            endIndent: 0.05,
+            color: PdfColors.black,
+          ),
+          pw.Row(children: [
+            pw.Text(
+              'Raport-SMK Negeri 10 Makassar',
+              style: styleFont.copyWith(
+                font: myFont,
+                fontStyle: pw.FontStyle.italic,
+              ),
+            ),
+            pw.Spacer(),
+            pw.Text(
+              'Hal. - iii',
+              style: styleFont.copyWith(
+                font: myFontHall,
+              ),
+            ),
+          ]),
         ],
       ),
     ),

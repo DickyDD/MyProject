@@ -333,6 +333,31 @@ class GuruController extends GetxController {
     // if (nilaiBlmTuntas != 0) {
     //     Get.defaultDialog(title: tidakLulus);
     //   }
+    await users
+        .collection("Siswa")
+        .doc(nama.text)
+        .collection('nilai')
+        .doc(
+            "${tahunAjaran.split('-').join(' ').toString()}-$jurusan-$semester-$kelas")
+        .set(
+      {
+        "nilai_umum": listNilaiUmum,
+        "nilai_khusus": listNilaiKhusus,
+        "pkl": listPl,
+        "extr": x,
+        "kehadiran": k,
+        "dpk": d,
+        "lulus": nilaiBlmTuntas != 0 ? tidakLulus : lulus,
+        "catatanAkademik": catatanAkademik.text,
+      },
+    );
+
+    await users.collection("Siswa").doc(nama.text).set({
+      'nis': nis.text,
+      "imageSiswa": urlsSiswa == '' ? image : urlsSiswa,
+      "noOrtu": noOrtu.text,
+      "namaOrtu": namaOrtu.text,
+    });
 
     await users
         .collection(tahunAjaran)
