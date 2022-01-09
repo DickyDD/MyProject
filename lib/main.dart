@@ -65,6 +65,11 @@ Future<void> main() async {
           page: () => BiodataSiswaView(),
           binding: BiodataSiswaBinding(),
         ),
+        // GetPage(
+        //   name: '/siswadata',
+        //   page: () => SiswaDataView(),
+        //   binding: SiswaDataBinding(),
+        // ),
       ],
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(),
