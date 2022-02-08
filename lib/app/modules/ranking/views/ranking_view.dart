@@ -51,10 +51,10 @@ class RankingView extends GetView<RankingController> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            nilaiRow("Jumlah Semua Nilai : ${controller.jumlahNilai}",
+            nilaiRow("Jumlah Semua Nilai : ${controller.jumlahNilai.toStringAsFixed(2)}",
                 "Jumlah Nilai Rata-Rata : ${controller.jumlahNilaiRata.toStringAsFixed(2)}"),
-            nilaiRow("Nilai Tertinggi : ${controller.nilaiMax}",
-                "Nilai Terendah : ${controller.nilaiMin}"),
+            nilaiRow("Nilai Tertinggi : ${controller.nilaiMax.toStringAsFixed(2)}",
+                "Nilai Terendah : ${controller.nilaiMin.toStringAsFixed(2)}"),
           ],
         ),
       ),
@@ -117,7 +117,7 @@ class RankingView extends GetView<RankingController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Jumlah Nilai Akhir : ${data.jumlahNilai.toString()}",
+              "Jumlah Nilai Akhir : ${data.jumlahNilai.toStringAsFixed(2)}",
             ),
             Text(
               "Jumlah Nilai Yang di Isi : ${data.pelajaranKhusus.length + data.pelajaranUmum.length}",

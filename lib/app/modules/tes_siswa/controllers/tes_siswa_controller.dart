@@ -141,7 +141,7 @@ class TesSiswaController extends GetxController {
         .doc(indexDataSiswa.value.nama)
         .collection('nilai')
         .doc(
-            "${tahunAjaran.split('-').join(' ').toString()}-$jurusan-$semester-$kelas")
+            "")
         .update(
       {
         "nilai_umum": listNilaiUmum,

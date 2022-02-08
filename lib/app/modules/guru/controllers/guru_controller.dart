@@ -226,6 +226,7 @@ class GuruController extends GetxController {
         },
       );
       nilaiEXR[i].clear();
+      keteranganEXR[i].clear();
     }
 
     for (var i = 0; i < listKehadiran.length; i++) {
@@ -309,7 +310,7 @@ class GuruController extends GetxController {
       keterampilanUmum[i].clear();
     }
     print(listNilaiUmum);
-    if (kelas.split(' ')[1] != 'X') {
+    if (kelas.split(' ')[1] == 'XII') {
       for (var i = 0; i < nialiPKL.length; i++) {
         var lokasi = lokasiPKL[i].text;
         var mitra = mitraPKL[i].text;
@@ -333,9 +334,16 @@ class GuruController extends GetxController {
     // if (nilaiBlmTuntas != 0) {
     //     Get.defaultDialog(title: tidakLulus);
     //   }
+
+    var nisSiswa = "";
+    if (nis.text.split('/').toList().length == 2) {
+      nisSiswa = nis.text.split('/').join(' ').trim().toString();
+    } else {
+      nisSiswa = nis.text;
+    }
     await users
         .collection("Siswa")
-        .doc(nama.text)
+        .doc(nisSiswa)
         .collection('nilai')
         .doc(
             "${tahunAjaran.split('-').join(' ').toString()}-$jurusan-$semester-$kelas")
@@ -350,13 +358,15 @@ class GuruController extends GetxController {
         "lulus": nilaiBlmTuntas != 0 ? tidakLulus : lulus,
         "catatanAkademik": catatanAkademik.text,
       },
+      
     );
 
-    await users.collection("Siswa").doc(nama.text).set({
-      'nis': nis.text,
+    await users.collection("Siswa").doc(nisSiswa).set({
+      // 'nis': nis.text,
       "imageSiswa": urlsSiswa == '' ? image : urlsSiswa,
       "noOrtu": noOrtu.text,
       "namaOrtu": namaOrtu.text,
+      "nama" : nama.text,
     });
 
     await users

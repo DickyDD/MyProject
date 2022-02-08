@@ -217,7 +217,7 @@ class SiswaController extends GetxController {
       );
     }
     print(listNilaiUmum);
-    if (kelas.split(' ')[1] != 'X') {
+    if (kelas.split(' ')[1] == 'XII') {
       for (var i = 0; i < nialiPKL.length; i++) {
         var lokasi = lokasiPKL[i].text;
         var mitra = mitraPKL[i].text;
@@ -234,12 +234,19 @@ class SiswaController extends GetxController {
       }
     }
 
+    var nisSiswa = "";
+    if (nis.text.split('/').toList().length == 2) {
+      nisSiswa = nis.text.split('/').join(' ').trim().toString();
+    } else {
+      nisSiswa = nis.text;
+    }
+
     await users
         .collection("Siswa")
-        .doc(nama.text)
+        .doc(nisSiswa)
         .collection('nilai')
         .doc(
-            "${tahunAjaran.split('-').join(' ').toString()}-$jurusan-semester 2-$kelas")
+            "${tahunAjaran.split('-').join(' ').toString()}-$jurusan-$semester-$kelas")
         .set(
       {
         "nilai_umum": listNilaiUmum,
@@ -253,8 +260,9 @@ class SiswaController extends GetxController {
       },
     );
 
-    await users.collection("Siswa").doc(nama.text).set({
-      'nis': nis.text,
+    await users.collection("Siswa").doc(nisSiswa).set({
+      // 'nis': nis.text,
+      "nama" : nama.text,
       "imageSiswa": urlsSiswa == '' ? image : urlsSiswa,
       "noOrtu": noOrtu.text,
       "namaOrtu": namaOrtu.text,
